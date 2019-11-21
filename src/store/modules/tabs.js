@@ -1,4 +1,4 @@
-import { setStore, getStore } from '@/util/store'
+import { setStore, getStore } from '@/util/browser-storage'
 import { diff } from '@/util/util'
 import website from '@/config/website'
 

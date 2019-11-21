@@ -10,7 +10,9 @@ import NProgress from 'nprogress'
 
 NProgress.configure({ showSpinner: false })
 
-const lockPage = store.getters.website.lockPage // 锁屏页
+console.log(store)
+// 锁屏页
+const lockPage = store.getters.website.lockPage
 
 router.beforeEach((to, from, next) => {
   const meta = Object.assign({ isAuth: false, isTab: false }, (to.meta || {}))
@@ -37,7 +39,7 @@ router.beforeEach((to, from, next) => {
   } else {
     // 如果用户信息为空则获取用户信息失败，跳转到登录页
     if (store.getters.token.length === 0) {
-      store.dispatch('FedLogOut').then(() => {
+      store.dispatch('user/clearAllAuthInfos').then(() => {
         next({ path: '/login' })
       })
     } else {
@@ -61,7 +63,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
   NProgress.done()
-  let title = store.getters.tag.label
+  let title = store.getters.nowTab.label
   // 根据当前的标签也获取label的值动态设置浏览器标题
   if (title) {
     document.title = store.getters.website.title + ' - ' + title

@@ -109,8 +109,8 @@ const user = {
       commit('SET_TOKEN', '')
       commit('SET_MENU_LIST', [])
       commit('SET_ROLE_LIST', [])
-      commit('DEL_ALL_TAG')
-      commit('CLEAR_LOCK')
+      commit('tabs/CLOSE_ALL')
+      commit('common/UNLOCK')
       removeToken()
       removeRefreshToken()
     },

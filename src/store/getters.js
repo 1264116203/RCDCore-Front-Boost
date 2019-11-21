@@ -10,9 +10,9 @@ const getters = {
   actualCollapse: (state, getters) =>
     getters.screen > 1 ? getters.isCollapse : false,
 
-  nowTab: state => state.tags.nowTab,
-  tabList: state => state.tags.tabList,
-  dashboardTab: state => state.tags.dashboardTab,
+  nowTab: state => state.tabs.nowTab,
+  tabList: state => state.tabs.tabList,
+  dashboardTab: state => state.tabs.dashboardTab,
 
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,

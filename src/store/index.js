@@ -5,6 +5,7 @@ import dict from './modules/dict'
 import logs from './modules/logs'
 import tabs from './modules/tabs'
 import user from './modules/user'
+import getters from '@/store/getters'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
     logs,
     tabs,
     user
-  }
+  },
+  getters
 })
 
 export default store
