@@ -62,8 +62,8 @@ const user = {
             commit('SET_REFRESH_TOKEN', data.refresh_token)
             commit('SET_TENANT_ID', data.tenant_id)
             commit('SET_USER_INFO', data)
-            commit('tab/REMOVE_ALL_TAB')
-            commit('common/UNLOCK')
+            commit('tabs/CLOSE_ALL', null, { root: true })
+            commit('common/UNLOCK', null, { root: true })
           }
         })
     },
@@ -78,7 +78,7 @@ const user = {
       return login(userInfo.phone, userInfo.code).then(res => {
         const data = res.data.data
         commit('SET_TOKEN', data)
-        commit('tab/REMOVE_ALL_TAB')
+        commit('tabs/CLOSE_ALL', null, { root: true })
         commit('common/UNLOCK')
       })
     },
@@ -109,8 +109,8 @@ const user = {
       commit('SET_TOKEN', '')
       commit('SET_MENU_LIST', [])
       commit('SET_ROLE_LIST', [])
-      commit('tabs/CLOSE_ALL')
-      commit('common/UNLOCK')
+      commit('tabs/CLOSE_ALL', null, { root: true })
+      commit('common/UNLOCK', null, { root: true })
       removeToken()
       removeRefreshToken()
     },

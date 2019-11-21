@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 import Home from '../views/Home.vue'
+import { RouteInitializer } from '@/router/RouteInitializer'
+import LoginIndex from '@/page/login/LoginIndex'
 
 Vue.use(VueRouter)
 
@@ -14,6 +17,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/login',
+    name: 'loginPage',
+    component: LoginIndex
   }
 ]
 
@@ -40,5 +48,19 @@ const router = new VueRouter({
   },
   routes
 })
+
+RouteInitializer.install(router, store)
+const routeList = router.$enhancer.formatRoutes(store.state.user.menuList)
+
+router.addRoutes([{
+  path: '/main',
+  name: '主框架',
+  meta: {
+    isTab: false
+  },
+  component: () => import('@/views/About'),
+  children: routeList
+}])
+debugger
 
 export default router

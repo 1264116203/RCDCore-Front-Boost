@@ -17,7 +17,7 @@ export default {
   firstPageClosable: false,
   firstPage: {
     label: '首页',
-    value: '/wel/index',
+    value: '/about',
     params: {},
     query: {},
     group: [],
