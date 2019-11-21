@@ -84,20 +84,14 @@ export const getAll = (storageType = 'session') => {
     for (let i = 0; i <= window.sessionStorage.length; i++) {
       list.push({
         name: window.sessionStorage.key(i),
-        content: getStore({
-          name: window.sessionStorage.key(i),
-          type: 'session'
-        })
+        content: getStore(window.sessionStorage.key(i), 'session')
       })
     }
   } else {
     for (let i = 0; i <= window.localStorage.length; i++) {
       list.push({
         name: window.localStorage.key(i),
-        content: getStore({
-          name: window.localStorage.key(i),
-          type: 'local'
-        })
+        content: getStore(window.sessionStorage.key(i), 'local')
       })
     }
   }

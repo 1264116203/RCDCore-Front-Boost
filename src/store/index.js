@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import common from './modules/common'
 import dict from './modules/dict'
 import logs from './modules/logs'
-import tags from './modules/tags'
+import tabs from './modules/tabs'
 import user from './modules/user'
 
 Vue.use(Vuex)
@@ -12,7 +12,7 @@ const store = new Vuex.Store({
     common,
     dict,
     logs,
-    tags,
+    tabs,
     user
   }
 })

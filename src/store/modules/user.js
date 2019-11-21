@@ -35,19 +35,19 @@ const user = {
   namespaced: true,
   state: {
     // 租户ID
-    tenantId: getStore({ name: 'tenantId' }) || '',
+    tenantId: getStore('tenantId') || '',
     // 用户信息
-    userInfo: getStore({ name: 'userInfo' }) || {},
+    userInfo: getStore('userInfo') || {},
     // 权限Map，键：权限名，值：布尔
-    permission: getStore({ name: 'permission' }) || {},
+    permission: getStore('permission') || {},
     // 角色列表
     roleList: [],
     // 菜单列表
-    menuList: getStore({ name: 'menuList' }) || [],
+    menuList: getStore('menuList') || [],
     // 令牌
-    token: getStore({ name: 'token' }) || '',
+    token: getStore('token') || '',
     // 刷新令牌
-    refreshToken: getStore({ name: 'refreshToken' }) || ''
+    refreshToken: getStore('refreshToken') || ''
   },
   actions: {
     // 根据用户名登录

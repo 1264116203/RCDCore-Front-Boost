@@ -1,11 +1,10 @@
-import { getStore, setStore } from '@/util/store'
-
+import { getStore, setStore } from '@/util/browser-storage'
 import { getDictionary } from '@/api/system/dict'
 
 const dict = {
   namespaced: true,
   state: {
-    flowRoutes: getStore({ name: 'flowRoutes' }) || {}
+    flowRoutes: getStore('flowRoutes') || {}
   },
   actions: {
     // 发送错误日志

@@ -48,10 +48,7 @@ const common = {
   mutations: {
     SET_LANGUAGE: (state, language) => {
       state.language = language
-      setStore({
-        name: 'language',
-        content: state.language
-      })
+      setStore('language', state.language, 'local')
     },
     TOGGLE_COLLAPSE: (state) => {
       state.isCollapse = !state.isCollapse
@@ -61,41 +58,24 @@ const common = {
     },
     SET_LOCK: (state) => {
       state.isLock = true
-      setStore({
-        name: 'isLock',
-        content: state.isLock,
-        type: 'session'
-      })
+      setStore('isLock', state.isLock)
     },
     SET_SCREEN: (state, screen) => {
       state.screen = screen
     },
     SET_THEME_NAME: (state, themeName) => {
       state.themeName = themeName
-      setStore({
-        name: 'themeName',
-        content: state.themeName
-      })
+      setStore('themeName', state.themeName, 'locale')
     },
     SET_LOCK_PASSWORD: (state, password) => {
       state.lockPasswd = password
-      setStore({
-        name: 'lockPwd',
-        content: state.lockPassword,
-        type: 'session'
-      })
+      setStore('lockPwd', state.lockPassword)
     },
     UNLOCK: (state) => {
       state.isLock = false
       state.lockPassword = ''
-      removeStore({
-        name: 'lockPwd',
-        type: 'session'
-      })
-      removeStore({
-        name: 'isLock',
-        type: 'session'
-      })
+      removeStore('lockPwd')
+      removeStore('isLock')
     }
   }
 }

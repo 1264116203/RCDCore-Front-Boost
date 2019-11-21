@@ -14,8 +14,8 @@ export default {
   // http的status默认放行不用统一处理的,
   statusWhiteList: [],
   // 配置首页不可关闭
-  isFirstPage: false,
-  fistPage: {
+  firstPageClosable: false,
+  firstPage: {
     label: '首页',
     value: '/wel/index',
     params: {},

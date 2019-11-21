@@ -2,75 +2,78 @@ import { setStore, getStore } from '@/util/store'
 import { diff } from '@/util/util'
 import website from '@/config/website'
 
-const isFirstPage = website.isFirstPage
-const tagWel = website.fistPage
-const tagObj = {
+const firstPageClosable = website.firstPageClosable
+const dashboardView = website.firstPage
+
+class Tab {
   // 标题名称
-  label: '',
+  label = ''
   // 标题的路径
-  value: '',
+  value = ''
   // 标题的路径参数
-  params: '',
+  params = ''
   // 标题的参数
-  query: '',
+  query = ''
   // 额外参数
-  meta: {},
+  meta = {}
   // 分组
-  group: []
+  group = []
 }
 
 // 处理首个标签
-function setFistTag(list) {
+function setFirstTag(list) {
   if (list.length === 1) {
     list[0].close = false
   } else {
     list.forEach(ele => {
-      if (ele.value === tagWel.value && isFirstPage === false) {
-        ele.close = false
-      } else {
-        ele.close = true
-      }
+      ele.close = !(ele.value === dashboardView.value && firstPageClosable === false)
     })
   }
 }
 
 const tabs = {
+  namespaced: true,
   state: {
-    tagList: getStore({ name: 'tagList' }) || [],
-    tag: getStore({ name: 'tag' }) || tagObj,
-    tagWel: tagWel
+    // 当前标签
+    nowTab: getStore('tab') || new Tab(),
+    // 标签列表
+    tabList: getStore('tabList') || [],
+    // 首页标签
+    dashboardTab: dashboardView
   },
   actions: {},
   mutations: {
-    ADD_TAG: (state, action) => {
-      state.tag = action
-      setStore({ name: 'tag', content: state.tag, type: 'session' })
-      if (state.tagList.some(ele => diff(ele, action))) return
-      state.tagList.push(action)
-      setFistTag(state.tagList)
-      setStore({ name: 'tagList', content: state.tagList, type: 'session' })
+    ADD_TAB: (state, tab) => {
+      state.nowTab = tab
+      setStore('nowTab', state.tab)
+
+      if (!state.tabList.some(ele => diff(ele, tab))) {
+        state.tabList.push(tab)
+        setFirstTag(state.tabList)
+        setStore('tabList', state.tabList)
+      }
     },
-    DEL_TAG: (state, action) => {
-      state.tagList = state.tagList.filter(item => {
+    CLOSE_TAB: (state, action) => {
+      state.tabList = state.tabList.filter(item => {
         return !diff(item, action)
       })
-      setFistTag(state.tagList)
-      setStore({ name: 'tagList', content: state.tagList, type: 'session' })
+      setFirstTag(state.tabList)
+      setStore('tabList', state.tabList)
     },
-    DEL_ALL_TAG: (state) => {
-      state.tagList = [state.tagWel]
-      setStore({ name: 'tagList', content: state.tagList, type: 'session' })
+    CLOSE_ALL: (state) => {
+      state.tabList = [state.dashboardTab]
+      setStore('tabList', state.tabList)
     },
-    DEL_TAG_OTHER: (state) => {
-      state.tagList = state.tagList.filter(item => {
-        if (item.value === state.tag.value) {
+    CLOSE_OTHER: (state) => {
+      state.tabList = state.tabList.filter(item => {
+        if (item.value === state.tab.value) {
           return true
-        } else if (!website.isFirstPage && item.value === website.fistPage.value) {
+        } else if (!firstPageClosable && item.value === dashboardView.value) {
           return true
         }
       })
-      setFistTag(state.tagList)
-      setStore({ name: 'tagList', content: state.tagList, type: 'session' })
+      setFirstTag(state.tabList)
+      setStore('tabList', state.tabList)
     }
   }
 }

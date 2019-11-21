@@ -1,26 +1,21 @@
-import { setStore, getStore } from '@/util/store'
+import { setStore, getStore } from '@/util/browser-storage'
 import { dateFormat } from '@/util/date'
 import { sendLogs } from '@/api/user'
 
 const logs = {
   state: {
-    logsList: getStore({ name: 'logsList' }) || []
+    logList: getStore('logList') || []
   },
   actions: {
-    SendLogs({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        sendLogs(state.logsList).then(() => {
-          commit('CLEAR_LOGS')
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+    sendLogs({ state, commit }) {
+      return sendLogs(state.logList).then(() => {
+        commit('CLEAR_LOGS')
       })
     }
   },
   mutations: {
     ADD_LOGS: (state, { type, message, stack, info }) => {
-      state.logsList.push(Object.assign({
+      state.logList.push(Object.assign({
         url: window.location.href,
         time: dateFormat(new Date())
       }, {
@@ -29,11 +24,11 @@ const logs = {
         stack,
         info: info.toString()
       }))
-      setStore({ name: 'logsList', content: state.logsList })
+      setStore('logList', state.logList, 'locale')
     },
     CLEAR_LOGS: (state) => {
-      state.logsList = []
-      setStore({ name: 'logsList', content: state.logsList })
+      state.logList = []
+      setStore('logList', state.logList, 'locale')
     }
   }
 
