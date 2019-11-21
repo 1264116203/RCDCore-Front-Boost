@@ -1,0 +1,190 @@
+import { message } from 'ant-design-vue'
+import { setToken, setRefreshToken, removeToken, removeRefreshToken } from '@/util/auth'
+import { setStore, getStore } from '@/util/browser-storage'
+import { validateNull } from '@/util/validate'
+import { deepClone } from '@/util/util'
+import website from '@/config/website'
+import { login, getUserInfo, logout, refreshToken, getButtons } from '@/api/user'
+import { getTopMenu, getRoutes } from '@/api/system/menu'
+
+function addPath(ele, first = false) {
+  const propsConfig = website.menu.props
+  const propsDefault = {
+    label: propsConfig.label || 'name',
+    path: propsConfig.path || 'path',
+    icon: propsConfig.icon || 'icon',
+    children: propsConfig.children || 'children'
+  }
+
+  // 设置图标，如果不存在则使用默认图标
+  const icon = ele[propsDefault.icon]
+  ele[propsDefault.icon] = validateNull(icon) ? website.menu.iconDefault : icon
+
+  const hasChildren = ele[propsDefault.children] && ele[propsDefault.children].length !== 0
+
+  if (hasChildren) {
+    ele[propsDefault.children].forEach(child => {
+      addPath(child)
+    })
+  } else {
+    ele[propsDefault.children] = []
+  }
+}
+
+const user = {
+  namespaced: true,
+  state: {
+    // 租户ID
+    tenantId: getStore({ name: 'tenantId' }) || '',
+    // 用户信息
+    userInfo: getStore({ name: 'userInfo' }) || {},
+    // 权限Map，键：权限名，值：布尔
+    permission: getStore({ name: 'permission' }) || {},
+    // 角色列表
+    roleList: [],
+    // 菜单列表
+    menuList: getStore({ name: 'menuList' }) || [],
+    // 令牌
+    token: getStore({ name: 'token' }) || '',
+    // 刷新令牌
+    refreshToken: getStore({ name: 'refreshToken' }) || ''
+  },
+  actions: {
+    // 根据用户名登录
+    loginByUsername({ commit }, userInfo) {
+      return login(userInfo.tenantId, userInfo.username, userInfo.password, userInfo.type)
+        .then(res => {
+          const data = res.data
+          if (data.error_description) {
+            message.error({ content: data.error_description })
+          } else {
+            commit('SET_TOKEN', data.access_token)
+            commit('SET_REFRESH_TOKEN', data.refresh_token)
+            commit('SET_TENANT_ID', data.tenant_id)
+            commit('SET_USER_INFO', data)
+            commit('tab/REMOVE_ALL_TAB')
+            commit('common/UNLOCK')
+          }
+        })
+    },
+    getButtons({ commit }) {
+      return getButtons().then(res => {
+        const data = res.data.data
+        commit('SET_PERMISSION', data)
+      })
+    },
+    // 根据手机号登录
+    loginByPhone({ commit }, userInfo) {
+      return login(userInfo.phone, userInfo.code).then(res => {
+        const data = res.data.data
+        commit('SET_TOKEN', data)
+        commit('tab/REMOVE_ALL_TAB')
+        commit('common/UNLOCK')
+      })
+    },
+    getRoleList({ commit }) {
+      return getUserInfo().then((res) => {
+        const data = res.data.data
+        commit('SET_ROLE_LIST', data.roles)
+        return Promise.resolve(data)
+      })
+    },
+    // 刷新token
+    refreshToken({ state, commit }) {
+      console.log('handle refresh token')
+      return refreshToken(state.refreshToken, state.tenantId).then(res => {
+        const data = res.data
+        commit('SET_TOKEN', data.access_token)
+        commit('SET_REFRESH_TOKEN', data.refresh_token)
+      })
+    },
+    // 登出
+    logout({ commit, dispatch }) {
+      return logout().then(() => {
+        dispatch('clearAllAuthInfos')
+      })
+    },
+    // 注销session
+    clearAllAuthInfos({ commit }) {
+      commit('SET_TOKEN', '')
+      commit('SET_MENU_LIST', [])
+      commit('SET_ROLE_LIST', [])
+      commit('DEL_ALL_TAG')
+      commit('CLEAR_LOCK')
+      removeToken()
+      removeRefreshToken()
+    },
+    // 获取顶部菜单
+    getTopMenu() {
+      return getTopMenu().then((res) => {
+        const data = res.data.data || []
+        return Promise.resolve(data)
+      })
+    },
+    // 获取系统菜单
+    getMenu({ commit, dispatch }, topMenuId) {
+      return getRoutes(topMenuId).then((res) => {
+        const data = res.data.data
+        let menu = deepClone(data)
+        menu.forEach(ele => {
+          addPath(ele, true)
+        })
+        commit('SET_MENU_LIST', menu)
+        dispatch('getButtons')
+        return Promise.resolve(menu)
+      })
+    }
+  },
+  mutations: {
+    SET_TOKEN: (state, token) => {
+      state.token = token
+      setToken(token)
+      setStore('token', state.token)
+    },
+    SET_REFRESH_TOKEN: (state, refreshToken) => {
+      state.refreshToken = refreshToken
+      setRefreshToken(refreshToken)
+      setStore('refreshToken', state.refreshToken)
+    },
+    SET_TENANT_ID: (state, tenantId) => {
+      state.tenantId = tenantId
+      setStore('tenantId', state.tenantId)
+    },
+    SET_USER_INFO: (state, userInfo) => {
+      state.userInfo = userInfo
+      setStore('userInfo', state.userInfo, 'local')
+    },
+    SET_MENU_LIST: (state, list) => {
+      state.menuList = list
+      setStore('menuList', state.menuList)
+    },
+    SET_ROLE_LIST: (state, roles) => {
+      state.roleList = roles
+    },
+    SET_PERMISSION: (state, permission) => {
+      let result = [];
+
+      (function getCode(list) {
+        list.forEach(ele => {
+          if (typeof (ele) === 'object') {
+            const children = ele.children
+            const code = ele.code
+            if (children) {
+              getCode(children)
+            } else {
+              result.push(code)
+            }
+          }
+        })
+      })(permission)
+
+      state.permission = {}
+      result.forEach(ele => {
+        state.permission[ele] = true
+      })
+      setStore('permission', state.permission)
+    }
+  }
+
+}
+export default user
