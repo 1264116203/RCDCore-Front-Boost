@@ -10,7 +10,7 @@
       </span>
       <div class="quick-action">
         <a-dropdown>
-          <span class="pointer"> <a-icon type="dashboard" /> 快捷操作</span>
+          <span class="pointer"> <a-icon type="block" /> 快捷操作</span>
           <a-menu slot="overlay">
             <a-menu-item>
               <a href="javascript:;">1st menu item</a>

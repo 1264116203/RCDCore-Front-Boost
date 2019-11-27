@@ -1,22 +1,14 @@
 <template>
   <a-spin :spinning="spinning">
-    <a-form
-      ref="loginForm"
-      :rules="loginRules"
-      :model="loginForm"
-      class="login-form"
-      status-icon
-      label-width="0"
-    >
+    <a-form>
       <a-form-item prop="username">
         <a-input
           v-model="loginForm.username"
           placeholder="请输入用户名"
-          size="small"
           auto-complete="off"
           @keyup.enter.native="handleLogin"
         >
-          <i slot="prefix" class="icon-yonghu"></i>
+          <a-icon slot="prefix" type="user" />
         </a-input>
       </a-form-item>
       <a-form-item prop="password">
@@ -24,19 +16,18 @@
           v-model="loginForm.password"
           :type="passwordType"
           placeholder="请输入密码"
-          size="small"
           auto-complete="off"
           @keyup.enter.native="handleLogin"
         >
-          <i slot="suffix" class="el-icon-view el-input__icon" @click="showPassword"></i>
-          <i slot="prefix" class="icon-mima"></i>
+          <a-icon slot="suffix" :type="passwordType ? 'eye' : 'eye-invisible'" @click="showPassword" />
+          <a-icon slot="prefix" type="lock" />
         </a-input>
       </a-form-item>
-      <a-form-item>
-        <a-button type="primary" class="login-submit" @click.native.prevent="handleLogin">
+      <div>
+        <a-button type="primary" block @click.native.prevent="handleLogin">
           提交
         </a-button>
-      </a-form-item>
+      </div>
     </a-form>
   </a-spin>
 </template>

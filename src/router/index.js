@@ -60,7 +60,8 @@ router.addRoutes([{
     path: 'about',
     name: '关于',
     meta: {
-      isTab: true
+      isTab: true,
+      isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }]
