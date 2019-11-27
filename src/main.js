@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 import { baseUrl } from '@/config/env'
 
-import '@/router/auth-interceptor'
+import '@/router/interceptor/auth-interceptor'
 import './record-error'
 // import './view-state-cache'
 

@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '@/store'
-import Home from '../views/Home.vue'
-import { RouteInitializer } from '@/router/RouteInitializer'
 import LoginIndex from '@/page/login/LoginIndex'
 
 Vue.use(VueRouter)
@@ -10,8 +7,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home
+    name: 'root',
+    redirect: '/main'
   },
   {
     path: '/about',
@@ -26,10 +23,9 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  // TODO 行为不对，后需改掉
   scrollBehavior(to, from, savedPosition) {
-    const avueView = document.getElementById('avue-view')
-    if (!avueView) {
+    const mainContentDom = document.getElementById('main-content')
+    if (!mainContentDom) {
       return {
         x: 0,
         y: 0
@@ -39,28 +35,35 @@ const router = new VueRouter({
       return savedPosition
     } else {
       if (from.meta.keepAlive) {
-        from.meta.savedPosition = avueView.scrollTop
+        from.meta.savedPosition = mainContentDom.scrollTop
       } else {
         from.meta.savedPosition = 0
       }
-      avueView.scrollTop = to.meta.savedPosition
+      mainContentDom.scrollTop = to.meta.savedPosition
     }
   },
   routes
 })
 
-RouteInitializer.install(router, store)
-const routeList = router.$enhancer.formatRoutes(store.state.user.menuList)
+// RouteInitializer.install(router, store)
+// const routeList = router.$enhancer.formatRoutes(store.state.user.menuList)
 
 router.addRoutes([{
   path: '/main',
+  redirect: '/main/about',
   name: '主框架',
   meta: {
     isTab: false
   },
-  component: () => import('@/views/About'),
-  children: routeList
+  component: () => import(/* webpackChunkName: "base" */ '@/page/layout/LayoutIndex'),
+  children: [{
+    path: 'about',
+    name: '关于',
+    meta: {
+      isTab: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  }]
 }])
-debugger
 
 export default router

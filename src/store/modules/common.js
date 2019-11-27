@@ -34,6 +34,8 @@ const common = {
     showTheme: true,
     // 是否显示菜单
     showMenu: true,
+    // 是否显示页脚
+    showFooter: true,
     // 是否显示主题颜色切换按钮
     showColor: true,
     // 主题颜色

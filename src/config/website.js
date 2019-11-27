@@ -2,14 +2,23 @@
  * 全局配置文件
  */
 export default {
+  // 网站标题
   title: 'RCDCore',
-  logo: 'S',
-  key: 'RCDCore', // 配置主键,目前用于存储
+  // 网站简写
+  subtitle: 'R',
+  // 配置主键,目前用于存储
+  key: 'RCDCore',
+  // 首页文字
   indexTitle: 'RCDCore Front Boost',
-  clientId: 'RCDCore', // 客户端id
-  clientSecret: 'rcore_secret', // 客户端密钥
-  tenantMode: false, // 是否开启租户模式
+  // 客户端id
+  clientId: 'RCDCore',
+  // 客户端密钥
+  clientSecret: 'rcore_secret',
+  // 是否开启租户模式
+  tenantMode: false,
+  // 锁屏页路由路径
   lockPage: '/lock',
+  // 令牌有效期（单位？）
   tokenTime: 3000,
   // http的status默认放行不用统一处理的,
   statusWhiteList: [],
@@ -17,7 +26,7 @@ export default {
   firstPageClosable: false,
   firstPage: {
     label: '首页',
-    value: '/about',
+    value: '/',
     params: {},
     query: {},
     group: [],
@@ -25,7 +34,7 @@ export default {
   },
   // 配置菜单的属性
   menu: {
-    iconDefault: 'iconfont icon-caidan',
+    iconDefault: 'check-circle',
     props: {
       label: 'name',
       path: 'path',

@@ -212,7 +212,7 @@ export function diff(obj1, obj2) {
     return false
   }
 
-  for (const attr of Object.keys[obj1]) {
+  for (const attr of Object.keys(obj1)) {
     const t1 = obj1[attr] instanceof Object
     const t2 = obj2[attr] instanceof Object
     if (t1 && t2) {

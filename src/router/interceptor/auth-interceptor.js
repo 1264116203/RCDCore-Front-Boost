@@ -1,7 +1,5 @@
-/**
- * 全站权限配置
- *
- */
+// 全站权限配置
+
 import router from '@/router'
 import store from '@/store'
 import { validateNull } from '@/util/validate'
@@ -10,7 +8,6 @@ import NProgress from 'nprogress'
 
 NProgress.configure({ showSpinner: false })
 
-console.log(store)
 // 锁屏页
 const lockPage = store.getters.website.lockPage
 
@@ -48,7 +45,7 @@ router.beforeEach((to, from, next) => {
       const meta = to.meta || {}
       // 如果路由meta信息中isTab不为false，则将其加入标签页中
       if (meta.isTab && !validateNull(value) && !validateNull(label)) {
-        store.commit('ADD_TAG', {
+        store.commit('tabs/ADD_TAB', {
           label: label,
           value: value,
           params: to.params,
