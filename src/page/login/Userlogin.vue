@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['dashboardTab'])
+    ...mapGetters(['homepageTab'])
   },
   created() {
   },
@@ -81,7 +81,7 @@ export default {
       this.spinning = true
       this.$store.dispatch('user/loginByUsername', this.loginForm)
         .then(() => {
-          this.$router.push({ path: this.dashboardTab.value })
+          this.$router.push({ path: this.homepageTab.path })
         })
         .finally(() => {
           this.spinning = false

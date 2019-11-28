@@ -23,24 +23,19 @@ export default {
   // http的status默认放行不用统一处理的,
   statusWhiteList: [],
   // 配置首页不可关闭
-  firstPageClosable: false,
-  firstPage: {
+  firstPageCloseable: false,
+  homepageTab: {
+    key: '1',
     label: '首页',
-    value: '/',
+    path: '/main/about',
     params: {},
     query: {},
     group: [],
-    close: false
+    closeable: false
   },
   // 配置菜单的属性
   menu: {
-    iconDefault: 'check-circle',
-    props: {
-      label: 'name',
-      path: 'path',
-      icon: 'source',
-      children: 'children'
-    }
+    iconDefault: 'check-circle'
   },
   // 流程设计器地址
   flowDesignUrl: 'http://localhost:9999'

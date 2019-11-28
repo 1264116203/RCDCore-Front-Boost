@@ -1,79 +1,145 @@
 import { setStore, getStore } from '@/util/browser-storage'
-import { diff } from '@/util/util'
 import website from '@/config/website'
+import router from '@/router'
+import { diff, guid } from '@/util/util'
 
-const firstPageClosable = website.firstPageClosable
-const dashboardView = website.firstPage
+const { firstPageCloseable, homepageTab } = website
 
+// eslint-disable-next-line no-unused-vars
 class Tab {
+  // tab的主键
+  key = ''
   // 标题名称
   label = ''
   // 标题的路径
-  value = ''
+  path = ''
   // 标题的路径参数
-  params = ''
-  // 标题的参数
-  query = ''
+  params = {}
+  // 标题的请求参数
+  query = {}
   // 额外参数
   meta = {}
   // 分组
   group = []
+  // 是否可关闭
+  closeable = true
 }
 
-// 处理首个标签
-function setFirstTag(list) {
+/**
+ * 处理首个标签
+ * @param list {[Tab]}
+ */
+function handleTabCloseable(list) {
   if (list.length === 1) {
-    list[0].close = false
+    list[0].closeable = false
   } else {
     list.forEach(ele => {
-      ele.close = !(ele.value === dashboardView.value && firstPageClosable === false)
+      if (firstPageCloseable) {
+        ele.closeable = true
+      } else {
+        ele.closeable = !(ele.path === homepageTab.path)
+      }
     })
   }
+}
+
+function tabDiff(tab1, tab2) {
+  // const name = tab1.label === tab2.label
+  const path = tab1.path === tab2.path
+  const params = diff(tab1.query, tab2.query)
+  const query = diff(tab1.query, tab2.query)
+  const meta = diff(tab1.meta, tab2.meta)
+
+  return path && params && query && meta
 }
 
 const tabs = {
   namespaced: true,
   state: {
-    // 当前标签
-    nowTab: getStore('tab') || new Tab(),
+    // 是否显示右键菜单
+    contextmenuShowing: false,
+    contextmenuPosition: { x: 0, y: 0 },
+
     // 标签列表
-    tabList: getStore('tabList') || [],
+    tabList: getStore('tabList') || [homepageTab],
+
+    // 当前标签key
+    activeTabKey: '1',
+
     // 首页标签
-    dashboardTab: dashboardView
+    homepageTab: homepageTab
   },
-  actions: {},
+  actions: {
+    navTo({ commit, state }, tabElem) {
+      if (!tabElem) {
+        tabElem = this.homepageTab
+      }
+
+      router.push({
+        path: tabElem.path,
+        params: tabElem.params,
+        query: tabElem.query,
+        meta: tabElem.meta
+      }).then(() => {
+        commit('UPDATE_ACTIVE_TAB_KEY', tabElem.key)
+      }).catch(reason => {
+        if (reason && reason.name === 'NavigationDuplicated') {
+        } else {
+          console.error(reason)
+        }
+      })
+
+      // if (!this.tabList.find((val) => val.key === tabElem.key)) {
+      //   commit('ADD_TAB', tabElem)
+      // }
+    }
+  },
   mutations: {
     ADD_TAB: (state, tab) => {
-      state.nowTab = tab
-      setStore('nowTab', state.tab)
-
-      if (!state.tabList.some(ele => diff(ele, tab))) {
-        state.tabList.push(tab)
-        setFirstTag(state.tabList)
-        setStore('tabList', state.tabList)
+      // 如果已存在类似的Tab
+      if (state.tabList.some(val => tabDiff(tab, val))) {
+        return
       }
+      if (!tab.key) {
+        tab.key = guid()
+      }
+      state.tabList.push(tab)
+      handleTabCloseable(state.tabList)
+      setStore('tabList', state.tabList)
     },
-    CLOSE_TAB: (state, action) => {
+    CLOSE_TAB: (state, key) => {
       state.tabList = state.tabList.filter(item => {
-        return !diff(item, action)
+        return item.key !== key
       })
-      setFirstTag(state.tabList)
+      handleTabCloseable(state.tabList)
       setStore('tabList', state.tabList)
     },
     CLOSE_ALL: (state) => {
-      state.tabList = [state.dashboardTab]
+      state.tabList = [state.homepageTab]
       setStore('tabList', state.tabList)
     },
     CLOSE_OTHER: (state) => {
       state.tabList = state.tabList.filter(item => {
-        if (item.value === state.tab.value) {
+        if (item.path === state.nowTab.path) {
           return true
-        } else if (!firstPageClosable && item.value === dashboardView.value) {
+        } else if (!firstPageCloseable && item.path === homepageTab.path) {
           return true
         }
       })
-      setFirstTag(state.tabList)
+      handleTabCloseable(state.tabList)
       setStore('tabList', state.tabList)
+    },
+
+    UPDATE_ACTIVE_TAB_KEY: (state, key) => {
+      state.activeTabKey = key
+    },
+
+    UPDATE_CONTEXTMENU_SHOWING: (state, payload) => {
+      state.contextmenuShowing = !!payload
+    },
+    UPDATE_CONTEXTMENU_POSITION: (state, payload) => {
+      state.contextmenuPosition.x = payload.x
+      state.contextmenuPosition.y = payload.y
     }
   }
 }

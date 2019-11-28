@@ -8,26 +8,18 @@ import { login, getUserInfo, logout, refreshToken, getButtons } from '@/api/user
 import { getTopMenu, getRoutes } from '@/api/system/menu'
 
 function addPath(ele, first = false) {
-  const propsConfig = website.menu.props
-  const propsDefault = {
-    label: propsConfig.label || 'name',
-    path: propsConfig.path || 'path',
-    icon: propsConfig.icon || 'icon',
-    children: propsConfig.children || 'children'
-  }
-
   // 设置图标，如果不存在则使用默认图标
-  const icon = ele[propsDefault.icon]
-  ele[propsDefault.icon] = validateNull(icon) ? website.menu.iconDefault : icon
+  const icon = ele.icon
+  ele.icon = validateNull(icon) ? website.menu.iconDefault : icon
 
-  const hasChildren = ele[propsDefault.children] && ele[propsDefault.children].length !== 0
+  const hasChildren = ele.children && ele.children.length !== 0
 
   if (hasChildren) {
-    ele[propsDefault.children].forEach(child => {
+    ele.children.forEach(child => {
       addPath(child)
     })
   } else {
-    ele[propsDefault.children] = []
+    ele.children = []
   }
 }
 

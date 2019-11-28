@@ -17,6 +17,8 @@
         <top-banner />
       </a-layout-header>
 
+      <tabs />
+
       <a-layout-content>
         <div id="main-content" class="padding-content">
           <router-view />
@@ -32,10 +34,11 @@ import SideMenu from '@/page/layout/side-menu/SideMenu'
 import LayoutFooter from './Footer'
 import TopBanner from '@/page/layout/top-banner/TopBanner'
 import TopLogo from '@/page/layout/side-menu/TopLogo'
+import Tabs from '@/page/layout/tabs/Tabs'
 import { mapState } from 'vuex'
 export default {
   name: 'LayoutIndex',
-  components: { TopLogo, TopBanner, SideMenu, LayoutFooter },
+  components: { TopLogo, TopBanner, SideMenu, LayoutFooter, Tabs },
   computed: {
     ...mapState('common', ['showFooter']),
     collapsed: {

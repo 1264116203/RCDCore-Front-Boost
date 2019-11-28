@@ -47,9 +47,10 @@ router.beforeEach((to, from, next) => {
       if (meta.isTab && !validateNull(value) && !validateNull(label)) {
         store.commit('tabs/ADD_TAB', {
           label: label,
-          value: value,
+          path: value,
           params: to.params,
           query: to.query,
+          meta: meta,
           group: []
         })
       }
@@ -60,11 +61,13 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
   NProgress.done()
-  let title = store.getters.nowTab.label
-  // 根据当前的标签也获取label的值动态设置浏览器标题
-  if (title) {
-    document.title = store.getters.website.title + ' - ' + title
-  } else {
-    document.title = store.getters.website.title
+  if (store.getters.nowTab) {
+    let title = store.getters.nowTab.label
+    // 根据当前的标签也获取label的值动态设置浏览器标题
+    if (title) {
+      document.title = store.getters.website.title + ' - ' + title
+    } else {
+      document.title = store.getters.website.title
+    }
   }
 })
