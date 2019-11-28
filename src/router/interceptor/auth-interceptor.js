@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
       const meta = to.meta || {}
       // 如果路由meta信息中isTab不为false，则将其加入标签页中
       if (meta.isTab && !validateNull(value) && !validateNull(label)) {
-        store.commit('tabs/ADD_TAB', {
+        store.commit('tabs/SWITCH_TAB', {
           label: label,
           path: value,
           params: to.params,

@@ -5,7 +5,9 @@
       <span>{{ props.menuInfo.name }}</span>
     </span>
     <template v-for="item in props.menuInfo.children">
-      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
+      <a-menu-item v-if="!item.children || item.children.length === 0"
+                   :key="item.path"
+      >
         <a-icon :type="item.icon ? item.icon : props.defaultIcon" />
         <span>{{ item.name }}</span>
       </a-menu-item>
@@ -15,7 +17,9 @@
 </template>
 
 <script>
+
 export default {
+  functional: true,
   props: {
     menuInfo: { type: Object, required: true },
     defaultIcon: { type: String, required: true }

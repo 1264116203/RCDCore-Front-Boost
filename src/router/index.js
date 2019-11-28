@@ -45,9 +45,6 @@ const router = new VueRouter({
   routes
 })
 
-// RouteInitializer.install(router, store)
-// const routeList = router.$enhancer.formatRoutes(store.state.user.menuList)
-
 router.addRoutes([{
   path: '/main',
   redirect: '/main/about',
@@ -64,6 +61,14 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  }, {
+    path: 'home',
+    name: '欢迎页',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
   }]
 }])
 

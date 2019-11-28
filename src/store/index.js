@@ -3,9 +3,10 @@ import Vuex from 'vuex'
 import common from './modules/common'
 import dict from './modules/dict'
 import logs from './modules/logs'
+import sidemenu from './modules/sidemenu'
 import tabs from './modules/tabs'
 import user from './modules/user'
-import getters from '@/store/getters'
+import getters from '../store/getters'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -13,6 +14,7 @@ const store = new Vuex.Store({
     common,
     dict,
     logs,
+    sidemenu,
     tabs,
     user
   },

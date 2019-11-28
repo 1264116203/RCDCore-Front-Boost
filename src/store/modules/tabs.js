@@ -48,18 +48,14 @@ function tabDiff(tab1, tab2) {
   const path = tab1.path === tab2.path
   const params = diff(tab1.query, tab2.query)
   const query = diff(tab1.query, tab2.query)
-  const meta = diff(tab1.meta, tab2.meta)
+  // const meta = diff(tab1.meta, tab2.meta)
 
-  return path && params && query && meta
+  return path && params && query
 }
 
 const tabs = {
   namespaced: true,
   state: {
-    // 是否显示右键菜单
-    contextmenuShowing: false,
-    contextmenuPosition: { x: 0, y: 0 },
-
     // 标签列表
     tabList: getStore('tabList') || [homepageTab],
 
@@ -80,32 +76,34 @@ const tabs = {
         params: tabElem.params,
         query: tabElem.query,
         meta: tabElem.meta
-      }).then(() => {
-        commit('UPDATE_ACTIVE_TAB_KEY', tabElem.key)
-      }).catch(reason => {
-        if (reason && reason.name === 'NavigationDuplicated') {
-        } else {
-          console.error(reason)
-        }
       })
-
-      // if (!this.tabList.find((val) => val.key === tabElem.key)) {
-      //   commit('ADD_TAB', tabElem)
-      // }
+        .then(() => {
+          commit('sidemenu/UPDATE_MENU_PATH', tabElem.path, { root: true })
+        })
+        .catch(reason => {
+          if (reason && reason.name === 'NavigationDuplicated') {
+          } else {
+            console.error(reason)
+          }
+        })
     }
   },
   mutations: {
-    ADD_TAB: (state, tab) => {
+    SWITCH_TAB: (state, tab) => {
       // 如果已存在类似的Tab
-      if (state.tabList.some(val => tabDiff(tab, val))) {
+      const found = state.tabList.find(val => tabDiff(tab, val))
+      if (found) {
+        state.activeTabKey = found.key
         return
       }
+
       if (!tab.key) {
         tab.key = guid()
       }
       state.tabList.push(tab)
       handleTabCloseable(state.tabList)
       setStore('tabList', state.tabList)
+      state.activeTabKey = tab.key
     },
     CLOSE_TAB: (state, key) => {
       state.tabList = state.tabList.filter(item => {
@@ -132,14 +130,6 @@ const tabs = {
 
     UPDATE_ACTIVE_TAB_KEY: (state, key) => {
       state.activeTabKey = key
-    },
-
-    UPDATE_CONTEXTMENU_SHOWING: (state, payload) => {
-      state.contextmenuShowing = !!payload
-    },
-    UPDATE_CONTEXTMENU_POSITION: (state, payload) => {
-      state.contextmenuPosition.x = payload.x
-      state.contextmenuPosition.y = payload.y
     }
   }
 }

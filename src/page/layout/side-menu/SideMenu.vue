@@ -1,18 +1,15 @@
 <template>
-  <a-menu theme="dark" mode="inline"
-          :default-selected-keys="['4']"
+  <a-menu v-model="selectedKeys" theme="dark" mode="inline"
+          :default-selected-keys="selectedKeys"
+          @select="menuSelected"
   >
-    <a-menu-item key="/main">
+    <a-menu-item key="/main/about">
       <a-icon type="home" />
       <span>首页</span>
     </a-menu-item>
-    <template v-for="item in menuList">
-      <a-menu-item v-if="!item.children" :key="item.path">
-        <a-icon :type="item.icon ? item.icon : iconDefault" />
-        <span>{{ item.name }}</span>
-      </a-menu-item>
-      <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="iconDefault" />
-    </template>
+    <my-sub-menu v-for="item in menuList" :key="item.path"
+                 :menu-info="item" :default-icon="iconDefault"
+    />
   </a-menu>
 </template>
 
@@ -32,7 +29,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['menuList'])
+    ...mapGetters(['menuList']),
+    selectedKeys: {
+      get() {
+        return this.$store.state.sidemenu.selectedKeys
+      },
+      set(val) {
+        this.$store.commit('sidemenu/UPDATE_SELECTED_KEYS', val)
+      }
+    }
   },
   created() {
     this.getMenu().then(data => {
@@ -40,10 +45,39 @@ export default {
     })
   },
   methods: {
-    ...mapActions('user', ['getMenu'])
-    // onItemClicked({ item }) {
-    //   this.$router.push(item.eventKey)
-    // }
+    ...mapActions('user', ['getMenu']),
+    ...mapActions('tabs', ['navTo']),
+    menuSelected(item) {
+      const menuItem = deepSearch(this.menuList, item.key)
+      if (!menuItem) {
+        this.navTo({
+          path: '/main/home',
+          meta: {
+            isAuth: true,
+            isTab: true
+          }
+        })
+      } else {
+        this.navTo({
+          path: menuItem.path,
+          meta: menuItem.meta,
+          query: menuItem.query,
+          params: menuItem.params
+        })
+      }
+    }
+  }
+}
+
+function deepSearch(list, key) {
+  const found = list.find(val => val.key === key)
+  if (!found) {
+    list.forEach(val => {
+      if (val.children) {
+        return deepSearch(val.children, key)
+      }
+    })
+    return found
   }
 }
 </script>

@@ -1,15 +1,20 @@
 <template>
-  <div class="no-border-margin-tabs" @contextmenu.prevent.stop="showTabContextmenu">
-    <a-tabs v-model="activeTabKey" hide-add
+  <div class="no-border-margin-tabs">
+    <a-tabs v-model="activeTabKey" type="editable-card" :hide-add="true"
             @tabClick="onTabClick" @edit="onEdit"
     >
       <a-tab-pane v-for="tabElem in tabList"
                   :key="tabElem.key"
-                  :tab="tabElem.label"
                   :closeable="tabElem.closeable"
-      />
+      >
+        <span slot="tab" v-contextmenu:contextmenu class="tab-slot">
+          {{ tabElem.label }}
+        </span>
+      </a-tab-pane>
     </a-tabs>
-    <tab-contextmenu />
+    <v-contextmenu ref="contextmenu">
+      <tab-contextmenu />
+    </v-contextmenu>
   </div>
 </template>
 
@@ -27,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('tabs', ['contextmenuShowing', 'tabList', 'homepageTab']),
+    ...mapState('tabs', ['tabList', 'homepageTab']),
     activeTabKey: {
       get () {
         return this.$store.state.tabs.activeTabKey
@@ -38,17 +43,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('tabs', ['UPDATE_CONTEXTMENU_SHOWING',
-      'UPDATE_CONTEXTMENU_POSITION', 'ADD_TAB', 'CLOSE_TAB']),
+    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB']),
     ...mapActions('tabs', ['navTo']),
 
-    showTabContextmenu(event) {
-      event.preventDefault()
-      event.stopPropagation()
-
-      this.UPDATE_CONTEXTMENU_SHOWING(true)
-      this.UPDATE_CONTEXTMENU_POSITION({ x: event.clientX, y: event.clientY })
-    },
     onEdit(targetKey, action) {
       if (action === 'remove') {
         this.closeTab(targetKey)
@@ -114,10 +111,23 @@ export default {
 <style lang="less">
   @import "../../../custom-variables";
 
-  .no-border-margin-tabs .ant-tabs-bar {
-    border-top: 1px solid #e8e8e8;
-    margin: 0;
-    padding: 0 1rem;
+  .no-border-margin-tabs {
+    padding-top: 1px;
     background-color: @body-background;
+    border-top: 1px solid #e8e8e8;
+    .ant-tabs-bar {
+      margin: 0;
+      padding: 0 1rem;
+
+      .ant-tabs-nav {
+        .ant-tabs-tab {
+          padding: 0 16px 0 0;
+          .tab-slot {
+            padding: 0 0 0 16px;
+            user-select: none;
+          }
+        }
+      }
+    }
   }
 </style>

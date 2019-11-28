@@ -7,10 +7,12 @@ import { baseUrl } from '@/config/env'
 
 import '@/router/interceptor/auth-interceptor'
 import './record-error'
-// import './view-state-cache'
-
 import BasicContainer from '@/components/basic-container/BasicContainer'
 import App from './App.vue'
+import contentmenu from 'v-contextmenu'
+import 'v-contextmenu/dist/index.css'
+
+Vue.use(contentmenu)
 
 // 注册全局容器
 Vue.component('basicContainer', BasicContainer)

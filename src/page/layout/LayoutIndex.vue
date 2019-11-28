@@ -73,7 +73,7 @@ export default {
     height: 100vh;
   }
   .padding-content {
-    margin: 24px 16px 0;
+    margin: 0;
     background-color: @body-background;
     overflow: auto
   }
