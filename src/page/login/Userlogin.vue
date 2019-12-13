@@ -36,6 +36,9 @@
 import { mapGetters } from 'vuex'
 import website from '@/config/website'
 
+const devUsername = process.env.NODE_ENV === 'dev' ? 'admin' : ''
+const devPassword = process.env.NODE_ENV === 'dev' ? 'admin' : ''
+
 export default {
   name: 'UserLogin',
   props: [],
@@ -45,8 +48,8 @@ export default {
       tenantMode: website.tenantMode,
       loginForm: {
         tenantId: '000000',
-        username: 'superadmin',
-        password: 'admin',
+        username: devUsername,
+        password: devPassword,
         type: 'account'
       },
       loginRules: {
