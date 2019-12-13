@@ -1,4 +1,3 @@
-import { message } from 'ant-design-vue'
 import { setToken, setRefreshToken, removeToken, removeRefreshToken } from '@/util/auth'
 import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
@@ -48,7 +47,7 @@ const user = {
         .then(res => {
           const data = res.data
           if (data.error_description) {
-            message.error({ content: data.error_description })
+            return Promise.reject(data.error_description)
           } else {
             commit('SET_TOKEN', data.access_token)
             commit('SET_REFRESH_TOKEN', data.refresh_token)

@@ -83,6 +83,9 @@ export default {
         .then(() => {
           this.$router.push({ path: this.homepageTab.path })
         })
+        .catch(err => {
+          this.$message.error(err)
+        })
         .finally(() => {
           this.spinning = false
         })
