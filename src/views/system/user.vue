@@ -19,7 +19,7 @@
       </a-form-item>
     </a-form>
 
-    <div>
+    <div class="operation-btn">
       <a-button class="editable-add-btn" type="primary" @click="handleAdd">
         添加
       </a-button>
@@ -65,7 +65,12 @@
       </template>
     </a-table>
 
-    <userEdit ref="modal" @ok="onModalOk" />
+    <user-edit
+      :record-id="recordId"
+      :handle-type="handleType"
+      @fetchTableData="fetchTableData"
+      @resetHandler="resetHandler"
+    />
   </a-spin>
 </template>
 <script>
@@ -73,7 +78,7 @@ import {
   getList,
   remove
 } from '@/api/system/user'
-import userEdit from './userEdit.vue'
+import UserEdit from './UserEdit.vue'
 
 const columns = [
   {
@@ -110,15 +115,17 @@ const columns = [
 ]
 export default {
   components: {
-    userEdit
+    UserEdit
   },
   data () {
     return {
       tableDataList: [],
+      /** 搜索的条件  登录账号 用户昵称 */
       searchInfo: {
         account: '',
         name: ''
       },
+      handleType: '',
       columns,
       pagination: {
         total: 200,
@@ -130,17 +137,18 @@ export default {
       /** 页面是否加载 */
       isLoading: false,
       formLabelWidth: '120px',
+      /** 当前行ID */
       recordId: '1',
+      /** 全选 */
       selectedRowKeys: [],
-      selectedRowIds: [],
-
-      modalVisible: false
+      selectedRowIds: []
     }
   },
   created () {
     this.fetchTableData()
   },
   methods: {
+    /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
       getList(this.pagination.current, this.pagination.pageSize, this.searchInfo)
@@ -162,6 +170,7 @@ export default {
     openDetailModal(id) {
       this.$refs.modal.open('detail', id)
     },
+    /** 清空按钮事件 */
     clearSearch () {
       this.searchInfo = {
         account: '',
@@ -173,12 +182,15 @@ export default {
       this.pagination = { ...this.pagination, ...pagination }
       this.fetchTableData()
     },
+    /** 添加按钮事件 */
     handleAdd () {
       this.openCreateModal()
     },
-    handleSearch () {
+    /** 搜索按钮事件 */
+    onSearch () {
       this.fetchTableData()
     },
+    /** 全选按钮事件 */
     onModalOk(type, payload) {
       if (type !== 'detail') {
         this.handleSearch()
@@ -188,12 +200,14 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRowIds = selectedRows.map(item => item.id)
     },
-    deleteRecord (id) {
+    /** 单行删除按钮事件 */
+    onDeleteRecord (id) {
       remove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })
     },
+    /** 批量删除 */
     handleBatchDelete () {
       if (this.selectedRowIds.length === 0) {
         this.$message.warning('请选择至少一条数据')
@@ -224,10 +238,14 @@ export default {
 .warp{
   margin: 20px;
 }
-.warp .ant-btn{
+.warp .operation-btn .editable-add-btn{
   margin-right: 20px;
 }
 .editable-row-operations a {
   margin-right: 8px;
+}
+
+.warp .operation-btn{
+  margin: 20px 0;
 }
 </style>

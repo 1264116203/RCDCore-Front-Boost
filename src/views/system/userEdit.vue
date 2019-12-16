@@ -83,6 +83,21 @@
           <a-date-picker v-decorator="['birthdayObj']" placeholder="请输入用户生日" style="width: 100%;" />
         </a-form-item>
       </a-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <a-button @click="cancel">
+          取 消
+        </a-button>
+        <a-button
+          v-if="handleType!='view'"
+          type="primary"
+          @click="okHandle"
+        >
+          确 定
+        </a-button>
+      </div>
     </a-modal>
   </div>
 </template>
