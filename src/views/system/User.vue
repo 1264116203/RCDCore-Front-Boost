@@ -43,7 +43,7 @@
       >
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
-            <a-icon type="edit" />查看
+            <a-icon type="eye" />查看
           </a>
           <a @click="openUpdateModal(record.id)">
             <a-icon type="edit" />修改
