@@ -41,7 +41,7 @@ export default {
   },
   created() {
     this.getMenu().then(data => {
-      // TODO 添加动态路由
+
     })
   },
   methods: {
@@ -69,16 +69,30 @@ export default {
   }
 }
 
+// function deepSearch(list, key) {
+//   const found = list.find(val => val.key === key);
+//   if (!found) {
+//     list.forEach(val => {
+//       if (val.children) {
+//         return deepSearch(val.children, key)
+//       }
+//     })
+//     return found
+//   }
+// }
 function deepSearch(list, key) {
-  const found = list.find(val => val.key === key)
+  const found = list.find(val => val.path === key)
   if (!found) {
-    list.forEach(val => {
-      if (val.children) {
-        return deepSearch(val.children, key)
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].children) {
+        let result = deepSearch(list[i].children, key)
+        if (result) {
+          return result
+        }
       }
-    })
-    return found
+    }
   }
+  return found
 }
 </script>
 
