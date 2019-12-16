@@ -69,7 +69,26 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+  },
+  {
+    path: '/system',
+    redirect: '/system/user',
+    name: '用户管理',
+    meta: {
+      isTab: false
+    },
+    component: () => import(/* webpackChunkName: "base" */ '../views/system/user.vue'),
+    children: [{
+      path: 'user',
+      name: '用户',
+      meta: {
+        isTab: true,
+        isAuth: true
+      },
+      component: () => import(/* webpackChunkName: "about" */ '../views/system/user.vue')
+    }]
   }]
-}])
+}
+])
 
 export default router
