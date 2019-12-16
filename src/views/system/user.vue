@@ -23,7 +23,7 @@
       <a-button class="editable-add-btn" type="primary" @click="handleAdd">
         添加
       </a-button>
-      <a-button class="editable-add-btn" type="danger" @click="handleDeleteList">
+      <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
         批量删除
       </a-button>
     </div>
@@ -42,19 +42,14 @@
         slot-scope="text, record"
       >
         <div class="editable-row-operations">
-          <a @click="() => view(record.id)">
+          <a @click="openDetailModal(record.id)">
             <a-icon type="edit" />查看
           </a>
-          <a @click="() => edit(record.id)">
+          <a @click="openUpdateModal(record.id)">
             <a-icon type="edit" />修改
           </a>
-          <a-popconfirm
-            title="是否删除?"
-            @confirm="() => deleteRecord(record.id)"
-          >
-            <a>
-              <a-icon type="delete" />删除
-            </a>
+          <a-popconfirm title="是否删除?" @confirm="() => deleteRecord(record.id)">
+            <a><a-icon type="delete" />删除</a>
           </a-popconfirm>
         </div>
       </template>
@@ -70,12 +65,7 @@
       </template>
     </a-table>
 
-    <userEdit
-      :record-id="recordId"
-      :handle-type="handleType"
-      @fetchTableData="fetchTableData"
-      @resetHandler="resetHandler"
-    />
+    <userEdit ref="modal" @ok="onModalOk" />
   </a-spin>
 </template>
 <script>
@@ -129,7 +119,6 @@ export default {
         account: '',
         name: ''
       },
-      handleType: '',
       columns,
       pagination: {
         total: 200,
@@ -143,7 +132,9 @@ export default {
       formLabelWidth: '120px',
       recordId: '1',
       selectedRowKeys: [],
-      selectedRowIds: []
+      selectedRowIds: [],
+
+      modalVisible: false
     }
   },
   created () {
@@ -162,9 +153,14 @@ export default {
           this.isLoading = false
         })
     },
-    resetHandler() {
-      this.handleType = ''
-      this.recordId = ''
+    openCreateModal() {
+      this.$refs.modal.open('create')
+    },
+    openUpdateModal(id) {
+      this.$refs.modal.open('update', id)
+    },
+    openDetailModal(id) {
+      this.$refs.modal.open('detail', id)
     },
     clearSearch () {
       this.searchInfo = {
@@ -173,25 +169,21 @@ export default {
       }
       this.fetchTableData()
     },
-    edit (id) {
-      this.handleType = 'edit'
-      this.recordId = id
-    },
-    view(id) {
-      this.handleType = 'view'
-      this.recordId = id
-    },
     handleTableChange(pagination) {
       this.pagination = { ...this.pagination, ...pagination }
       this.fetchTableData()
     },
     handleAdd () {
-      this.handleType = 'add'
+      this.openCreateModal()
     },
     handleSearch () {
       this.fetchTableData()
     },
-
+    onModalOk(type, payload) {
+      if (type !== 'detail') {
+        this.handleSearch()
+      }
+    },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRowIds = selectedRows.map(item => item.id)
@@ -202,7 +194,7 @@ export default {
         this.$message.success('操作成功!')
       })
     },
-    handleDeleteList () {
+    handleBatchDelete () {
       if (this.selectedRowIds.length === 0) {
         this.$message.warning('请选择至少一条数据')
         return

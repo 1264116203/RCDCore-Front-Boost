@@ -1,205 +1,88 @@
 <template>
   <div>
     <a-modal
-      :title="title"
-      :visible.sync="formVisible"
+      v-model="formVisible"
       width="600px"
-      @cancel="cancel"
+      :title="title"
+      :mask-closable="false"
+      @cancel="onCancel"
     >
-      <a-form
-        class="ant-advanced-search-form"
-        :form="form"
-      >
-        <a-row :gutter="24">
-          <a-col :span="24">
-            <a-form-item
-              label="登录账号"
-              :label-col="{ span: 5 }"
-              :wrapper-col="{ span: 19 }"
-            >
-              <a-input
-                v-model="form.account"
-                v-decorator="[
-                  'form.account',
-                  { rules: [{ required: true, message: '请输入登录账号' }] },
-                ]"
-                placeholder="登录账号"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row v-if="handleType=='add'" :gutter="24">
-          <a-col :span="12">
-            <a-form-item
-              label="密码"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-input
-                v-model="form.password"
-                placeholder="请输入密码"
-                type="password"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item
-              label="确认密码"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-input
-                v-model="confirmPassword"
-                placeholder="请再次输入密码"
-                type="password"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row :gutter="24">
-          <a-col :span="12">
-            <a-form-item
-              label="用户姓名:"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-input
-                v-model="form.name"
-                placeholder="请输入用户姓名"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item
-              label="用户昵称"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-input
-                v-model="form.realName"
-                placeholder="请输入用户昵称"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row :gutter="24">
-          <a-col :span="12">
-            <a-form-item
-              ref="role"
-              label="所属角色"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-tree-select
-                v-model="currentRoles"
-                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                :tree-data="roleData"
-                placeholder="请选择所属角色"
-                tree-default-expand-all
-                tree-checkable
-                :get-popup-container="getPopupContainer"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item
-              ref="dept"
-              label="所属部门"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-tree-select
-                v-model="currentDepts"
-                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                :tree-data="deptData"
-                placeholder="请选择所属部门"
-                tree-default-expand-all
-                tree-checkable
-                :get-popup-container="getPopupContainer"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row :gutter="24">
-          <a-col :span="12">
-            <a-form-item
-              label="手机号"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-input
-                v-model="form.phone"
-                placeholder="请输入手机号"
-                type="phone"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item
-              label="电子邮箱"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-input
-                v-model="form.email"
-                placeholder="请输入电子邮箱"
-                type="email"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row :gutter="24">
-          <a-col :span="12">
-            <a-form-item
-              label="用户性别"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-select
-                v-model="form.sex"
-                placeholder="请输入用户性别"
-              >
-                <a-select-option value="1">
-                  男
-                </a-select-option>
-                <a-select-option value="2">
-                  女
-                </a-select-option>
-                <a-select-option value="3">
-                  未知
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item
-              label="用户生日"
-              :label-col="{ span: 10 }"
-              :wrapper-col="{ span: 14 }"
-            >
-              <a-date-picker
-                v-model="birthdayObj"
-                placeholder="请输入用户生日"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
+      <a-form :form="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" @submit="onSubmit">
+        <a-form-item label="登录账号">
+          <a-input
+            v-decorator="[
+              'account',
+              { rules: [{ required: true, message: '请输入登录账号' }] },
+            ]"
+            placeholder="登录账号"
+          />
+        </a-form-item>
+
+        <a-form-item v-show="actionType === 'creation'" label="密码">
+          <a-input v-decorator="['password']" placeholder="请输入密码" type="password" />
+        </a-form-item>
+        <a-form-item v-show="actionType === 'creation'" label="确认密码">
+          <a-input v-decorator="['passwordAgain']" placeholder="请再次输入密码" type="password" />
+        </a-form-item>
+
+        <a-form-item label="用户姓名">
+          <a-input v-decorator="['name']" placeholder="请输入用户姓名" />
+        </a-form-item>
+
+        <a-form-item label="用户昵称">
+          <a-input v-decorator="['realName']" placeholder="请输入用户昵称" />
+        </a-form-item>
+
+        <a-form-item ref="role" label="所属角色">
+          <a-tree-select
+            v-decorator="['currentRoles']"
+            placeholder="请选择所属角色"
+            :tree-data="roleData"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :get-popup-container="getPopupContainer"
+            tree-default-expand-all
+            tree-checkable
+          />
+        </a-form-item>
+
+        <a-form-item ref="dept" label="所属部门">
+          <a-tree-select
+            v-decorator="['currentDepts']"
+            :tree-data="deptData"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :get-popup-container="getPopupContainer"
+            placeholder="请选择所属部门"
+            tree-default-expand-all
+            tree-checkable
+          />
+        </a-form-item>
+
+        <a-form-item label="手机号">
+          <a-input v-decorator="['phone']" placeholder="请输入手机号" type="phone" />
+        </a-form-item>
+
+        <a-form-item label="电子邮箱">
+          <a-input v-decorator="['email']" placeholder="请输入电子邮箱" type="email" />
+        </a-form-item>
+
+        <a-form-item label="用户性别">
+          <a-select v-decorator="['sex']" placeholder="请输入用户性别">
+            <a-select-option value="1">
+              男
+            </a-select-option>
+            <a-select-option value="2">
+              女
+            </a-select-option>
+            <a-select-option value="3">
+              未知
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+
+        <a-form-item label="用户生日">
+          <a-date-picker v-decorator="['birthdayObj']" placeholder="请输入用户生日" style="width: 100%;" />
+        </a-form-item>
       </a-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <a-button @click="cancel">
-          取 消
-        </a-button>
-        <a-button
-          v-if="handleType!='view'"
-          type="primary"
-          @click="okHandle"
-        >
-          确 定
-        </a-button>
-      </div>
     </a-modal>
   </div>
 </template>
@@ -213,72 +96,31 @@ import {
 } from '@/api/system/user'
 import { getDeptTree } from '@/api/system/dept'
 import { getRoleTree } from '@/api/system/role'
+
+const EmptyUserForm = {
+  account: '',
+  password: '',
+  passwordAgain: '',
+  name: '',
+  realName: '',
+  currentRoles: [],
+  currentDepts: [],
+  phone: '',
+  email: '',
+  sex: '',
+  birthdayObj: moment('2018-01-01', 'YYYY-MM-DD')
+}
+
 export default {
-  props: {
-    'recordId': {
-      type: String,
-      default: null
-    },
-    handleType: {
-      type: String,
-      default: ''
-    }
-  },
-  data () {
+  data() {
     return {
-      form: {
-        account: '',
-        name: '',
-        realName: '',
-        roleId: '',
-        deptId: '',
-        phone: '',
-        operation: '',
-        birthday: '',
-        password: '',
-        sex: '',
-        email: ''
-      },
+      form: this.$form.createForm(this),
       title: '',
-      confirmPassword: '',
+      actionType: 'creation',
+      id: '',
       formVisible: false,
       deptData: [],
-      roleData: [],
-      currentDepts: [],
-      currentRoles: [],
-      birthdayObj: moment('2018-01-01', 'YYYY-MM-DD')
-    }
-  },
-  watch: {
-    handleType (value) {
-      if (value) {
-        this.formVisible = true
-      }
-      if (this.handleType === 'add') {
-        this.title = '添加信息'
-        this.form = {}
-      } else if (this.handleType === 'view') {
-        this.title = '查看信息'
-      } else if (this.handleType === 'edit') {
-        this.title = '修改信息'
-      }
-    },
-    recordId(id) {
-      if (id) {
-        getUser(id).then(res => {
-          this.form = res.data.data
-          this.form.sex = res.data.data.sex + ''
-          if (this.form.deptId) {
-            this.currentDepts = this.form.deptId.split(',')
-          }
-          if (this.form.roleId) {
-            this.currentRoles = this.form.roleId.split(',')
-          }
-          if (res.data.data.birthday) {
-            this.birthdayObj = moment(res.data.data.birthday, 'YYYY-MM-DD HH:mm:ss')
-          }
-        })
-      }
+      roleData: []
     }
   },
   created() {
@@ -286,58 +128,111 @@ export default {
     this.loadRole()
   },
   methods: {
-    loadDeptTree () {
+    open(type, id) {
+      if (type === 'create') {
+        this.title = '添加信息'
+      } else if (type === 'detail') {
+        this.title = '查看信息'
+      } else if (type === 'update') {
+        this.title = '修改信息'
+      } else {
+        return
+      }
+      this.actionType = type
+      this.formVisible = true
+
+      if (id) {
+        this.id = id
+        getUser(id).then(res => {
+          const requestData = res.data.data
+          requestData.sex = res.data.data.sex + ''
+
+          if (requestData.deptId) {
+            requestData.currentDepts = requestData.deptId.split(',')
+          }
+          if (requestData.roleId) {
+            requestData.currentRoles = requestData.roleId.split(',')
+          }
+          if (res.data.data.birthday) {
+            requestData.birthdayObj = moment(res.data.data.birthday, 'YYYY-MM-DD HH:mm:ss')
+          }
+
+          const formData = {}
+
+          Object.keys(EmptyUserForm).forEach(key => {
+            formData[key] = requestData[key]
+          })
+
+          this.form.setFieldsValue(formData)
+        })
+      } else {
+        this.$nextTick(() => {
+          this.form.setFieldsValue({ ...EmptyUserForm })
+        })
+      }
+    },
+    loadDeptTree() {
       getDeptTree().then(res => {
         this.deptData = res.data.data
       })
     },
-    loadRole () {
+    loadRole() {
       getRoleTree().then(res => {
         this.roleData = res.data.data
       })
     },
-    okHandle () {
-      this[this.handleType] && this[this.handleType]()
-      this.$emit('resetHandler')
+    onSubmit() {
+      switch (this.actionType) {
+        case 'creation':
+          this.doCreation()
+          break
+        case 'update':
+          this.doUpdate()
+          break
+        case 'detail':
+        default:
+          this.doDetail()
+      }
     },
-    cancel() {
-      this.$emit('resetHandler')
+    onCancel() {
+      this.$emit('cancel')
+    },
+    doDetail() {
+      this.$emit('ok', this.actionType)
       this.formVisible = false
     },
-    add () {
-      this.form.deptId = this.currentDepts.join(',')
-      this.form.roleId = this.currentRoles.join(',')
-      add(this.form).then(
-        () => {
-          this.$emit('fetchTableData')
+    doCreation() {
+      const formData = this.form.getFieldsValue()
+
+      formData.deptId = this.currentDepts.join(',')
+      formData.roleId = this.currentRoles.join(',')
+      add(formData)
+        .then(() => {
+          this.$emit('ok', this.actionType, formData)
           this.$message.success('操作成功!')
           this.formVisible = false
-        },
-        error => {
-          console.log(error)
-        }
-      )
+        })
+        .catch(error => { this.$message.error(error) })
     },
-    edit() {
-      this.form.deptId = this.currentDepts.join(',')
-      this.form.roleId = this.currentRoles.join(',')
-      update(this.form).then(
-        () => {
-          this.$emit('fetchTableData')
+    doUpdate() {
+      const formData = this.form.getFieldsValue()
+
+      formData.deptId = this.currentDepts.join(',')
+      formData.roleId = this.currentRoles.join(',')
+      update(formData)
+        .then(() => {
+          this.$emit('ok', this.actionType, formData)
           this.$message.success('操作成功!')
           this.formVisible = false
-        },
-        error => {
-          console.log(error)
-        }
-      )
+        })
+        .catch(error => { this.$message.error(error) })
     },
     getPopupContainer(triggerNode) {
-      return triggerNode
+      return triggerNode.parentNode
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 </style>
