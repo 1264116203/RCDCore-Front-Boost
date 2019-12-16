@@ -19,7 +19,7 @@
 
       <tabs />
 
-      <a-layout-content>
+      <a-layout-content style="min-height: auto;">
         <div id="main-content" class="padding-content">
           <router-view />
         </div>

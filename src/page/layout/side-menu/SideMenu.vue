@@ -69,17 +69,6 @@ export default {
   }
 }
 
-// function deepSearch(list, key) {
-//   const found = list.find(val => val.key === key);
-//   if (!found) {
-//     list.forEach(val => {
-//       if (val.children) {
-//         return deepSearch(val.children, key)
-//       }
-//     })
-//     return found
-//   }
-// }
 function deepSearch(list, key) {
   const found = list.find(val => val.path === key)
   if (!found) {

@@ -1,26 +1,14 @@
 <template>
-  <a-spin
-    class="warp"
-    :spinning="isLoading"
-  >
+  <a-spin class="warp" :spinning="isLoading">
     <a-form layout="inline">
       <a-form-item label="登录账号">
-        <a-input
-          v-model="searchInfo.account"
-          placeholder="登录账号"
-        />
+        <a-input v-model="searchInfo.account" placeholder="登录账号" />
       </a-form-item>
       <a-form-item label="用户昵称">
-        <a-input
-          v-model="searchInfo.name"
-          placeholder="用户昵称"
-        />
+        <a-input v-model="searchInfo.name" placeholder="用户昵称" />
       </a-form-item>
       <a-form-item>
-        <a-button
-          type="primary"
-          @click="handleSearch"
-        >
+        <a-button type="primary" @click="handleSearch">
           搜索
         </a-button>
       </a-form-item>
@@ -30,29 +18,24 @@
         </a-button>
       </a-form-item>
     </a-form>
-    <br>
+
     <div>
-      <a-button
-        class="editable-add-btn"
-        @click="handleAdd"
-      >
+      <a-button class="editable-add-btn" type="primary" @click="handleAdd">
         添加
       </a-button>
-      <a-button
-        class="editable-add-btn"
-        @click="handleDeleteList"
-      >
+      <a-button class="editable-add-btn" type="danger" @click="handleDeleteList">
         批量删除
       </a-button>
     </div>
-    <br>
+
     <a-table
+      bordered
+      row-key="id"
+      :pagination="pagination"
       :columns="columns"
       :data-source="tableDataList"
-      bordered
-      :pagination="false"
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-      row-key="id"
+      @change="handleTableChange"
     >
       <template
         slot="operation"
@@ -75,31 +58,18 @@
           </a-popconfirm>
         </div>
       </template>
-      <template
-        slot="roleId"
-        slot-scope="text, record"
-      >
+      <template #roleId="text, record">
         <a-tag v-if="record.roleName" color="blue">
           {{ record.roleName }}
         </a-tag>
       </template>
-      <template
-        slot="deptId"
-        slot-scope="text, record"
-      >
+      <template #deptId="text, record">
         <a-tag v-if="record.deptName" color="blue">
           {{ record.deptName }}
         </a-tag>
       </template>
     </a-table>
-    <br>
-    <a-pagination
-      v-model="current"
-      :total="total"
-      show-size-changer
-      show-quick-jumper
-      :page-size.sync="pageSize"
-    />
+
     <userEdit
       :record-id="recordId"
       :handle-type="handleType"
@@ -154,6 +124,13 @@ export default {
   },
   data () {
     return {
+      pagination: {
+        total: 200,
+        current: 1,
+        pageSize: 10,
+        showQuickJumper: true,
+        showSizeChanger: true
+      },
       confirmPassword: '',
       tableDataList: [],
       columns,
@@ -165,9 +142,6 @@ export default {
         account: '',
         name: ''
       },
-      total: 0,
-      pageSize: 10,
-      current: 1,
       recordId: '1',
       selectedRowKeys: [],
       selectedRowIds: []
@@ -185,12 +159,16 @@ export default {
     this.fetchTableData()
   },
   methods: {
+    handleTableChange(pagination) {
+      this.pagination = { ...this.pagination, ...pagination }
+      this.fetchTableData()
+    },
     fetchTableData () {
       this.isLoading = true
-      getList(this.current, this.pageSize, this.searchInfo)
+      getList(this.pagination.current, this.pagination.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.data.records
-          this.total = res.data.data.total
+          this.pagination.total = res.data.data.total
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -259,6 +237,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .warp{
   margin: 20px;
