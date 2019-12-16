@@ -124,6 +124,13 @@ export default {
   },
   data () {
     return {
+      tableDataList: [],
+      searchInfo: {
+        account: '',
+        name: ''
+      },
+      handleType: '',
+      columns,
       pagination: {
         total: 200,
         current: 1,
@@ -131,38 +138,18 @@ export default {
         showQuickJumper: true,
         showSizeChanger: true
       },
-      confirmPassword: '',
-      tableDataList: [],
-      columns,
       /** 页面是否加载 */
       isLoading: false,
       formLabelWidth: '120px',
-      handleType: '',
-      searchInfo: {
-        account: '',
-        name: ''
-      },
       recordId: '1',
       selectedRowKeys: [],
       selectedRowIds: []
-    }
-  },
-  watch: {
-    pageSize () {
-      this.fetchTableData()
-    },
-    current () {
-      this.fetchTableData()
     }
   },
   created () {
     this.fetchTableData()
   },
   methods: {
-    handleTableChange(pagination) {
-      this.pagination = { ...this.pagination, ...pagination }
-      this.fetchTableData()
-    },
     fetchTableData () {
       this.isLoading = true
       getList(this.pagination.current, this.pagination.pageSize, this.searchInfo)
@@ -175,11 +162,9 @@ export default {
           this.isLoading = false
         })
     },
-    handleAdd () {
-      this.handleType = 'add'
-    },
-    handleSearch () {
-      this.fetchTableData()
+    resetHandler() {
+      this.handleType = ''
+      this.recordId = ''
     },
     clearSearch () {
       this.searchInfo = {
@@ -196,43 +181,48 @@ export default {
       this.handleType = 'view'
       this.recordId = id
     },
-    deleteRecord (id) {
-      remove(id).then(() => {
-        this.fetchTableData()
-        this.$message.success('操作成功!')
-      })
+    handleTableChange(pagination) {
+      this.pagination = { ...this.pagination, ...pagination }
+      this.fetchTableData()
+    },
+    handleAdd () {
+      this.handleType = 'add'
+    },
+    handleSearch () {
+      this.fetchTableData()
     },
 
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRowIds = selectedRows.map(item => item.id)
     },
+    deleteRecord (id) {
+      remove(id).then(() => {
+        this.fetchTableData()
+        this.$message.success('操作成功!')
+      })
+    },
     handleDeleteList () {
       if (this.selectedRowIds.length === 0) {
         this.$message.warning('请选择至少一条数据')
         return
       }
-      let _this = this
       this.$confirm({
         title: '系统提示',
         content: '确定将选择数据删除?',
         okText: '是',
         okType: 'danger',
         cancelText: '否',
-        onOk () {
-          remove(_this.selectedRowIds.join(',')).then(() => {
-            _this.fetchTableData()
-            _this.$message.success('操作成功!')
+        onOk: () => {
+          remove(this.selectedRowIds.join(',')).then(() => {
+            this.fetchTableData()
+            this.$message.success('操作成功!')
           })
         },
-        onCancel () {
+        onCancel: () => {
           console.log('Cancel')
         }
       })
-    },
-    resetHandler() {
-      this.handleType = ''
-      this.recordId = ''
     }
   }
 }
