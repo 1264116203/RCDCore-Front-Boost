@@ -24,6 +24,7 @@
                   { rules: [{ required: true, message: '请输入登录账号' }] },
                 ]"
                 placeholder="登录账号"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -66,6 +67,7 @@
               <a-input
                 v-model="form.name"
                 placeholder="请输入用户姓名"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -78,6 +80,7 @@
               <a-input
                 v-model="form.realName"
                 placeholder="请输入用户昵称"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -98,6 +101,7 @@
                 tree-default-expand-all
                 tree-checkable
                 :get-popup-container="getPopupContainer"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -116,6 +120,8 @@
                 tree-default-expand-all
                 tree-checkable
                 :get-popup-container="getPopupContainer"
+                :show-checked-strategy="SHOW_PARENT"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -131,6 +137,7 @@
                 v-model="form.phone"
                 placeholder="请输入手机号"
                 type="phone"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -144,6 +151,7 @@
                 v-model="form.email"
                 placeholder="请输入电子邮箱"
                 type="email"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -158,6 +166,7 @@
               <a-select
                 v-model="form.sex"
                 placeholder="请输入用户性别"
+                :disabled="isDisabled"
               >
                 <a-select-option value="1">
                   男
@@ -180,6 +189,7 @@
               <a-date-picker
                 v-model="birthdayObj"
                 placeholder="请输入用户生日"
+                :disabled="isDisabled"
               />
             </a-form-item>
           </a-col>
@@ -205,6 +215,7 @@
 </template>
 
 <script>
+import { TreeSelect } from 'ant-design-vue'
 import moment from 'moment'
 import {
   add,
@@ -246,7 +257,9 @@ export default {
       roleData: [],
       currentDepts: [],
       currentRoles: [],
-      birthdayObj: moment('2018-01-01', 'YYYY-MM-DD')
+      birthdayObj: moment('2018-01-01', 'YYYY-MM-DD'),
+      SHOW_PARENT: TreeSelect.SHOW_PARENT,
+      isDisabled: false
     }
   },
   watch: {
@@ -255,12 +268,17 @@ export default {
         this.formVisible = true
       }
       if (this.handleType === 'add') {
+        this.isDisabled = false
         this.title = '添加信息'
         this.form = {}
+        this.currentDepts = []
+        this.currentRoles = []
       } else if (this.handleType === 'view') {
         this.title = '查看信息'
+        this.isDisabled = true
       } else if (this.handleType === 'edit') {
         this.title = '修改信息'
+        this.isDisabled = false
       }
     },
     recordId(id) {

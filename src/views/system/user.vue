@@ -8,7 +8,7 @@
         <a-input v-model="searchInfo.name" placeholder="用户昵称" />
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" @click="handleSearch">
+        <a-button type="primary" @click="onSearch">
           搜索
         </a-button>
       </a-form-item>
@@ -19,11 +19,11 @@
       </a-form-item>
     </a-form>
 
-    <div>
-      <a-button class="editable-add-btn" type="primary" @click="handleAdd">
+    <div class="operation-btn">
+      <a-button class="editable-add-btn" type="primary" @click="onAdd">
         添加
       </a-button>
-      <a-button class="editable-add-btn" type="danger" @click="handleDeleteList">
+      <a-button class="editable-add-btn" type="danger" @click="onDeleteAll">
         批量删除
       </a-button>
     </div>
@@ -42,15 +42,15 @@
         slot-scope="text, record"
       >
         <div class="editable-row-operations">
-          <a @click="() => view(record.id)">
+          <a @click="() => onView(record.id)">
             <a-icon type="edit" />查看
           </a>
-          <a @click="() => edit(record.id)">
+          <a @click="() => onEdit(record.id)">
             <a-icon type="edit" />修改
           </a>
           <a-popconfirm
             title="是否删除?"
-            @confirm="() => deleteRecord(record.id)"
+            @confirm="() => onDeleteRecord(record.id)"
           >
             <a>
               <a-icon type="delete" />删除
@@ -70,7 +70,7 @@
       </template>
     </a-table>
 
-    <userEdit
+    <UserEdit
       :record-id="recordId"
       :handle-type="handleType"
       @fetchTableData="fetchTableData"
@@ -83,7 +83,7 @@ import {
   getList,
   remove
 } from '@/api/system/user'
-import userEdit from './userEdit.vue'
+import UserEdit from './userEdit.vue'
 
 const columns = [
   {
@@ -120,15 +120,17 @@ const columns = [
 ]
 export default {
   components: {
-    userEdit
+    UserEdit
   },
   data () {
     return {
       tableDataList: [],
+      /** 搜索的条件  登录账号 用户昵称 */
       searchInfo: {
         account: '',
         name: ''
       },
+      /** 事件触发的类型 */
       handleType: '',
       columns,
       pagination: {
@@ -141,7 +143,9 @@ export default {
       /** 页面是否加载 */
       isLoading: false,
       formLabelWidth: '120px',
+      /** 当前行ID */
       recordId: '1',
+      /** 全选 */
       selectedRowKeys: [],
       selectedRowIds: []
     }
@@ -150,6 +154,7 @@ export default {
     this.fetchTableData()
   },
   methods: {
+    /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
       getList(this.pagination.current, this.pagination.pageSize, this.searchInfo)
@@ -166,6 +171,7 @@ export default {
       this.handleType = ''
       this.recordId = ''
     },
+    /** 清空按钮事件 */
     clearSearch () {
       this.searchInfo = {
         account: '',
@@ -173,36 +179,43 @@ export default {
       }
       this.fetchTableData()
     },
-    edit (id) {
+    /** 修改事件 */
+    onEdit (id) {
       this.handleType = 'edit'
       this.recordId = id
     },
-    view(id) {
+    /** 查看事件 */
+    onView(id) {
       this.handleType = 'view'
       this.recordId = id
     },
+    /** 分页改变事件 */
     handleTableChange(pagination) {
       this.pagination = { ...this.pagination, ...pagination }
       this.fetchTableData()
     },
-    handleAdd () {
+    /** 添加按钮事件 */
+    onAdd () {
       this.handleType = 'add'
     },
-    handleSearch () {
+    /** 搜索按钮事件 */
+    onSearch () {
       this.fetchTableData()
     },
-
+    /** 全选按钮事件 */
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRowIds = selectedRows.map(item => item.id)
     },
-    deleteRecord (id) {
+    /** 单行删除按钮事件 */
+    onDeleteRecord (id) {
       remove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })
     },
-    handleDeleteList () {
+    /** 批量删除 */
+    onDeleteAll () {
       if (this.selectedRowIds.length === 0) {
         this.$message.warning('请选择至少一条数据')
         return
@@ -232,10 +245,14 @@ export default {
 .warp{
   margin: 20px;
 }
-.warp .ant-btn{
+.warp .operation-btn .editable-add-btn{
   margin-right: 20px;
 }
 .editable-row-operations a {
   margin-right: 8px;
+}
+
+.warp .operation-btn{
+  margin: 20px 0;
 }
 </style>
