@@ -77,7 +77,7 @@ router.addRoutes([{
     meta: {
       isTab: false
     },
-    component: () => import(/* webpackChunkName: "base" */ '../views/system/user.vue'),
+    component: () => import(/* webpackChunkName: "base" */ '../views/system/User.vue'),
     children: [{
       path: 'user',
       name: '用户',
@@ -85,7 +85,7 @@ router.addRoutes([{
         isTab: true,
         isAuth: true
       },
-      component: () => import(/* webpackChunkName: "about" */ '../views/system/user.vue')
+      component: () => import(/* webpackChunkName: "about" */ '../views/system/User.vue')
     }]
   }]
 }

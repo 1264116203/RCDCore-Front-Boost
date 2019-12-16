@@ -8,7 +8,7 @@
         <a-input v-model="searchInfo.name" placeholder="用户昵称" />
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" @click="handleSearch">
+        <a-button type="primary" @click="onSearch">
           搜索
         </a-button>
       </a-form-item>
@@ -48,7 +48,7 @@
           <a @click="openUpdateModal(record.id)">
             <a-icon type="edit" />修改
           </a>
-          <a-popconfirm title="是否删除?" @confirm="() => deleteRecord(record.id)">
+          <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
             <a><a-icon type="delete" />删除</a>
           </a-popconfirm>
         </div>
@@ -65,12 +65,7 @@
       </template>
     </a-table>
 
-    <user-edit
-      :record-id="recordId"
-      :handle-type="handleType"
-      @fetchTableData="fetchTableData"
-      @resetHandler="resetHandler"
-    />
+    <user-edit ref="modal" @ok="onModalOk" />
   </a-spin>
 </template>
 <script>
@@ -79,6 +74,7 @@ import {
   remove
 } from '@/api/system/user'
 import UserEdit from './UserEdit.vue'
+import { ACTION_TYPE } from '@/config/env'
 
 const columns = [
   {
@@ -125,7 +121,6 @@ export default {
         account: '',
         name: ''
       },
-      handleType: '',
       columns,
       pagination: {
         total: 200,
@@ -137,8 +132,6 @@ export default {
       /** 页面是否加载 */
       isLoading: false,
       formLabelWidth: '120px',
-      /** 当前行ID */
-      recordId: '1',
       /** 全选 */
       selectedRowKeys: [],
       selectedRowIds: []
@@ -162,13 +155,13 @@ export default {
         })
     },
     openCreateModal() {
-      this.$refs.modal.open('create')
+      this.$refs.modal.open(ACTION_TYPE.CREATION)
     },
     openUpdateModal(id) {
-      this.$refs.modal.open('update', id)
+      this.$refs.modal.open(ACTION_TYPE.UPDATE, id)
     },
     openDetailModal(id) {
-      this.$refs.modal.open('detail', id)
+      this.$refs.modal.open(ACTION_TYPE.DETAIL, id)
     },
     /** 清空按钮事件 */
     clearSearch () {
@@ -190,12 +183,12 @@ export default {
     onSearch () {
       this.fetchTableData()
     },
-    /** 全选按钮事件 */
     onModalOk(type, payload) {
       if (type !== 'detail') {
-        this.handleSearch()
+        this.onSearch()
       }
     },
+    /** 全选按钮事件 */
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRowIds = selectedRows.map(item => item.id)

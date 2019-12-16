@@ -12,8 +12,15 @@ if (env.NODE_ENV === 'development') {
   baseUrl = '' // 测试环境地址
 }
 
+const ACTION_TYPE = {
+  CREATION: 'creation',
+  UPDATE: 'update',
+  DETAIL: 'detail'
+}
+
 export {
   baseUrl,
   codeUrl,
-  env
+  env,
+  ACTION_TYPE
 }

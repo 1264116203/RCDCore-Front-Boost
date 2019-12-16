@@ -6,9 +6,13 @@
       :title="title"
       :mask-closable="false"
       @cancel="onCancel"
+      @ok="onOk"
     >
-      <a-form :form="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" @submit="onSubmit">
-        <a-form-item label="登录账号">
+      <a-form ref="form" :form="form" class="d2-col-form"
+              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+              @submit="onSubmit"
+      >
+        <a-form-item label="登录账号" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
             v-decorator="[
               'account',
@@ -83,21 +87,6 @@
           <a-date-picker v-decorator="['birthdayObj']" placeholder="请输入用户生日" style="width: 100%;" />
         </a-form-item>
       </a-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <a-button @click="cancel">
-          取 消
-        </a-button>
-        <a-button
-          v-if="handleType!='view'"
-          type="primary"
-          @click="okHandle"
-        >
-          确 定
-        </a-button>
-      </div>
     </a-modal>
   </div>
 </template>
@@ -144,7 +133,7 @@ export default {
   },
   methods: {
     open(type, id) {
-      if (type === 'create') {
+      if (type === 'creation') {
         this.title = '添加信息'
       } else if (type === 'detail') {
         this.title = '查看信息'
@@ -197,6 +186,7 @@ export default {
       })
     },
     onSubmit() {
+      console.log('onSubmit!')
       switch (this.actionType) {
         case 'creation':
           this.doCreation()
@@ -208,6 +198,13 @@ export default {
         default:
           this.doDetail()
       }
+    },
+    onOk() {
+      this.form.validateFields((errors, values) => {
+        if (!errors) {
+          this.onSubmit()
+        }
+      })
     },
     onCancel() {
       this.$emit('cancel')
@@ -249,5 +246,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  .d2-col-form {
+    .ant-row {
+      display: inline-block;
+    }
+    .ant-form-item {
+      width: 50%;
+    }
+  }
 </style>
