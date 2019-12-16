@@ -5,7 +5,7 @@
     >
       <a-tab-pane v-for="tabElem in tabList"
                   :key="tabElem.key"
-                  :closeable="tabElem.closeable"
+                  :closable="tabElem.closeable"
       >
         <span slot="tab" v-contextmenu:contextmenu class="tab-slot">
           {{ tabElem.label }}
