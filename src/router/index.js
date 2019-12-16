@@ -47,7 +47,7 @@ const router = new VueRouter({
 
 router.addRoutes([{
   path: '/main',
-  redirect: '/main/about',
+  redirect: '/main/home',
   name: '主框架',
   meta: {
     isTab: false

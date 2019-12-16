@@ -47,7 +47,10 @@ export const sendLogs = (list) => request({
   data: list
 })
 
-export const logout = () => request({
-  url: baseUrl + '/user/logout',
-  method: 'get'
-})
+// TODO 这里的请求是假的，是Mock的，事实上压根没有退出登录请求发出
+export const logout = () => Promise.resolve()
+
+// export const logout = () => request({
+//   url: baseUrl + '/user/logout',
+//   method: 'get'
+// })

@@ -55,8 +55,8 @@
               <a href="javascript:;">2nd menu item</a>
             </a-menu-item>
             <a-menu-divider />
-            <a-menu-item>
-              <a href="javascript:;">3rd menu item</a>
+            <a-menu-item @click="doLogout">
+              退出登录
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'TopBanner',
@@ -75,8 +75,19 @@ export default {
   },
   methods: {
     ...mapMutations('common', ['TOGGLE_COLLAPSE']),
+    ...mapActions('user', ['logout']),
     toggleCollapsed() {
       this.TOGGLE_COLLAPSE()
+    },
+    doLogout() {
+      this.logout()
+        .then(() => {
+          this.$router.push('/login')
+        })
+        .catch(err => {
+          this.$message.error('注销失败！')
+          console.error(err)
+        })
     }
   }
 }
