@@ -9,59 +9,102 @@
       @cancel="onCancel"
       @ok="onOk"
     >
-      <a-form ref="form" :form="form" class="d2-col-form" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" @submit="onSubmit">
-        <a-form-item label="机构名称">
+      <a-form ref="form" :form="form" class="d2-col-form"
+              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+              @submit="onSubmit"
+      >
+        <a-form-item label="菜单名称">
           <a-input
-            v-decorator="['deptName',{ rules: [{required: true,message: '请输入机构名称'}] }]"
-            placeholder="请输入机构名称"
+            v-decorator="['name',{ rules: [{required: true,message: '请输入菜单名称'}] }]"
+            placeholder="请输入菜单名称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="机构全称">
+        <a-form-item label="路由地址">
           <a-input
-            v-decorator="['fullName', { rules: [{ required: true, message: '请输入机构全称' },{whitespace:true,message:'用户昵称不能为空'}] }]"
-            placeholder="请输入机构全称"
+            v-decorator="['path', { rules: [{ required: true, message: '请输入路由地址' },{whitespace:true,message:'用户昵称不能为空'}] }]"
+            placeholder="请输入路由地址"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item ref="role" label="上级机构">
+        <a-form-item ref="dept" label="上级菜单">
           <a-tree-select
-            v-decorator="['parentId',{ rules: [{ required: true, message: '请选择上级机构' }] }]"
-            placeholder="请选择上级机构"
+            v-decorator="[ 'parentId' ]"
             :tree-data="deptData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
+            placeholder="请选择上级菜单"
             tree-default-expand-all
             tree-checkable
+            :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="排序">
+        <a-form-item label="菜单图标">
+          <a-cascader
+            v-decorator="[
+              'source',
+              {
+                initialValue: ['zhejiang', 'hangzhou', 'xihu'],
+                rules: [
+                  { type: 'array', required: true, message: '请输入菜单图标' },
+                ],
+              },
+            ]"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+
+        <a-form-item label="菜单编号">
           <a-input
             v-decorator="[
-              'sort',
+              'code',
               { rules: [{
                 required: true,
-                message: '请输入排序'
-              },{
-                pattern:/\d/,
-                message: '请输入数字'
+                message: '请输入菜单编号'
               }] },
             ]"
-            placeholder="请输入数字"
+            placeholder="请输入菜单编号"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+
+        <a-form-item label="菜单类型">
+          <a-radio-group v-decorator="['category',{ rules: [{required: true,message: '请选择菜单类型'}] }]" :disabled="isDisable">
+            <a-radio value="1">
+              菜单
+            </a-radio>
+            <a-radio value="2">
+              按钮
+            </a-radio>
+          </a-radio-group>
+        </a-form-item>
+
+        <a-form-item label="菜单别名">
+          <a-input
+            v-decorator="['alias',{ rules: [{required: true,message: '请输入菜单别名'}] }]"
+            placeholder="请输入菜单别名"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+
+        <a-form-item label="菜单排序">
+          <a-input
+            v-decorator="['sort', { rules: [{ required: true, message: '请输入菜单排序' }] }]"
+            placeholder="请输入菜单排序"
             type="number"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="备注">
-          <a-input
-            v-decorator="['remark', { rules: [{ required: true, message: '请输入备注'}] }]"
-            placeholder="请输入备注"
-            type="email"
+        <a-form-item label="菜单备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+          <a-textarea
+            v-decorator="['remark']"
+            placeholder="请输入菜单备注"
+            :autosize="{ minRows: 2, maxRows: 6 }"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -73,17 +116,18 @@
 <script>
 import {
   add,
-  getDept,
-  update,
-  getDeptTree
-} from '@/api/system/dept'
+  getUser,
+  update
+} from '@/api/system/menu'
 import { TreeSelect } from 'ant-design-vue'
 
 const EmptyUserForm = {
-  deptName: '',
-  fullName: '',
-  currentDepts: [],
-  select: '',
+  path: '',
+  name: '',
+  code: '',
+  sourceList: [],
+  category: [],
+  alias: '',
   sort: '',
   remark: ''
 }
@@ -97,13 +141,13 @@ export default {
       id: '',
       formVisible: false,
       deptData: [],
+      roleData: [],
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
       SHOW_PARENT: TreeSelect.SHOW_PARENT,
       isDisable: false
     }
   },
   created() {
-    this.loadDeptTree()
   },
   methods: {
     open(type, id) {
@@ -124,13 +168,13 @@ export default {
 
       if (id) {
         this.id = id
-        getDept(id).then(res => {
+        getUser(id).then(res => {
           const requestData = res.data.data
+          requestData.sex = res.data.data.sex + ''
 
-          if (requestData.parentId) {
-            requestData.currentDepts = requestData.parentId.split(',')
+          if (requestData.deptId) {
+            requestData.currentDepts = requestData.deptId.split(',')
           }
-
           const formData = {}
 
           Object.keys(EmptyUserForm).forEach(key => {
@@ -144,11 +188,6 @@ export default {
           this.form.setFieldsValue({ ...EmptyUserForm })
         })
       }
-    },
-    loadDeptTree() {
-      getDeptTree().then(res => {
-        this.deptData = res.data.data
-      })
     },
     onSubmit() {
       switch (this.actionType) {
@@ -183,7 +222,9 @@ export default {
     doCreation() {
       const formData = this.form.getFieldsValue()
 
-      formData.parentId = formData.currentDepts.join(',')
+      formData.deptId = formData.currentDepts.join(',')
+      formData.roleId = formData.currentRoles.join(',')
+      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -194,7 +235,10 @@ export default {
     },
     doUpdate() {
       const formData = this.form.getFieldsValue()
-      formData.parentId = formData.currentDepts.join(',')
+
+      formData.deptId = formData.currentDepts.join(',')
+      formData.roleId = formData.currentRoles.join(',')
+      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
       formData.id = this.id
       update(formData)
         .then(() => {
@@ -213,4 +257,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .d2-col-form {
+    .ant-row {
+      display: inline-block;
+    }
+    .ant-form-item {
+      width: 50%;
+    }
+  }
 </style>

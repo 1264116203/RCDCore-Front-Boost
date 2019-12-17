@@ -82,7 +82,6 @@ import { TreeSelect } from 'ant-design-vue'
 const EmptyUserForm = {
   deptName: '',
   fullName: '',
-  currentDepts: [],
   select: '',
   sort: '',
   remark: ''
@@ -126,11 +125,6 @@ export default {
         this.id = id
         getDept(id).then(res => {
           const requestData = res.data.data
-
-          if (requestData.parentId) {
-            requestData.currentDepts = requestData.parentId.split(',')
-          }
-
           const formData = {}
 
           Object.keys(EmptyUserForm).forEach(key => {
@@ -147,6 +141,7 @@ export default {
     },
     loadDeptTree() {
       getDeptTree().then(res => {
+        console.log(res.data.data)
         this.deptData = res.data.data
       })
     },
@@ -182,8 +177,8 @@ export default {
     },
     doCreation() {
       const formData = this.form.getFieldsValue()
-
-      formData.parentId = formData.currentDepts.join(',')
+      formData.parentId = formData.parentId.join(',')
+      console.log(formData)
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -194,7 +189,7 @@ export default {
     },
     doUpdate() {
       const formData = this.form.getFieldsValue()
-      formData.parentId = formData.currentDepts.join(',')
+      formData.parentId = formData.parentId.join(',')
       formData.id = this.id
       update(formData)
         .then(() => {

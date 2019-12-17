@@ -1,11 +1,11 @@
 <template>
   <a-spin class="warp" :spinning="isLoading">
     <a-form layout="inline">
-      <a-form-item label="机构名称">
-        <a-input v-model="searchInfo.deptName" placeholder="机构名称" />
+      <a-form-item label="菜单名称">
+        <a-input v-model="searchInfo.name" placeholder="菜单名称" />
       </a-form-item>
-      <a-form-item label="机构全称">
-        <a-input v-model="searchInfo.fullName" placeholder="机构全称" />
+      <a-form-item label="菜单编码">
+        <a-input v-model="searchInfo.code" placeholder="菜单编码" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="onSearch">
@@ -52,40 +52,46 @@
           </a-popconfirm>
         </div>
       </template>
-      <template #deptCategory="text, record">
-        <a-tag v-if="record.deptCategory!=-1" color="blue">
-          {{ record.deptCategoryName }}
-        </a-tag>
+      <template #iconList="text, record">
+        <i :class="record.source">{{ record.source }}</i>
       </template>
     </a-table>
 
-    <dept-edit ref="modal" @ok="onModalOk" />
+    <menu-edit ref="modal" @ok="onModalOk" />
   </a-spin>
 </template>
 <script>
 import {
   getList,
   remove
-} from '@/api/system/dept'
+} from '@/api/system/menu'
 import { ACTION_TYPE } from '@/config/env'
-import DeptEdit from './DeptEdit.vue'
+import MenuEdit from './MenuEdit.vue'
 
 const columns = [
   {
-    title: '机构名称',
-    dataIndex: 'deptName'
+    title: '菜单名称',
+    dataIndex: 'name'
   },
   {
-    title: '机构全称',
-    dataIndex: 'fullName'
+    title: '路由地址',
+    dataIndex: 'path'
   },
   {
-    title: '机构类型',
-    dataIndex: 'deptCategory',
-    scopedSlots: { customRender: 'deptCategory' }
+    title: '菜单编号',
+    dataIndex: 'code'
   },
   {
-    title: '排序',
+    title: '菜单图标',
+    dataIndex: 'source',
+    scopedSlots: { customRender: 'iconList' }
+  },
+  {
+    title: '菜单别名',
+    dataIndex: 'alias'
+  },
+  {
+    title: '菜单排序',
     dataIndex: 'sort'
   },
   {
@@ -96,15 +102,15 @@ const columns = [
 ]
 export default {
   components: {
-    DeptEdit
+    MenuEdit
   },
   data () {
     return {
       tableDataList: [],
-      /** 搜索的条件  登录账号 用户昵称 */
+      /** 搜索的条件  菜单名称 菜单编号 */
       searchInfo: {
-        deptName: '',
-        fullName: ''
+        name: '',
+        code: ''
       },
       columns,
       current: 1,
