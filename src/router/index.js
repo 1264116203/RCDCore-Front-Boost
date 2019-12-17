@@ -60,7 +60,7 @@ router.addRoutes([{
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
   }, {
     path: 'home',
     name: '欢迎页',
@@ -68,36 +68,27 @@ router.addRoutes([{
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/views/Home.vue')
   },
   {
-    path: '/system',
-    redirect: '/system/user',
+    path: '/system/user',
     name: '用户管理',
     meta: {
-      isTab: false
+      isTab: true,
+      isAuth: true
     },
-    component: () => import(/* webpackChunkName: "base" */ '../views/system/User.vue'),
-    children: [{
-      path: 'user',
-      name: '用户',
-      meta: {
-        isTab: true,
-        isAuth: true
-      },
-      component: () => import(/* webpackChunkName: "about" */ '../views/system/User.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/views/system/User.vue')
+  },
+  {
+    path: '/system/dept',
+    name: '机构',
+    meta: {
+      isTab: true,
+      isAuth: true
     },
-    {
-      path: 'dept',
-      name: '机构',
-      meta: {
-        isTab: true,
-        isAuth: true
-      },
-      component: () => import(/* webpackChunkName: "about" */ '../views/system/Dept.vue')
-    }]
-  }]
-}
-])
+    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Dept.vue')
+  }
+  ]
+}])
 
 export default router
