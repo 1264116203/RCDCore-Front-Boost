@@ -183,6 +183,7 @@ export default {
     onSearch () {
       this.fetchTableData()
     },
+    /** 弹框确定事件 */
     onModalOk(type, payload) {
       if (type !== 'detail') {
         this.onSearch()

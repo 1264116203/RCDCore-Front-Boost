@@ -24,7 +24,7 @@
           />
         </a-form-item>
 
-        <a-form-item v-show="actionType === 'creation'" label="密码">
+        <a-form-item v-if="actionType === 'creation'" label="密码">
           <a-input
             v-decorator="[
               'password',
@@ -40,7 +40,7 @@
             type="password"
           />
         </a-form-item>
-        <a-form-item v-show="actionType === 'creation'" label="确认密码">
+        <a-form-item v-if="actionType === 'creation'" label="确认密码">
           <a-input
             v-decorator="[
               'passwordAgain',
@@ -312,7 +312,6 @@ export default {
       })
     },
     onSubmit() {
-      console.log('onSubmit!')
       switch (this.actionType) {
         case 'creation':
           this.doCreation()
@@ -347,6 +346,7 @@ export default {
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
+      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -360,6 +360,8 @@ export default {
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
+      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
+      formData.id = this.id
       update(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
