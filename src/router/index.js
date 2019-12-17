@@ -86,6 +86,15 @@ router.addRoutes([{
         isAuth: true
       },
       component: () => import(/* webpackChunkName: "about" */ '../views/system/User.vue')
+    },
+    {
+      path: 'dept',
+      name: '机构',
+      meta: {
+        isTab: true,
+        isAuth: true
+      },
+      component: () => import(/* webpackChunkName: "about" */ '../views/system/Dept.vue')
     }]
   }]
 }
