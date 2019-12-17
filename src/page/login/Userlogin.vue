@@ -36,8 +36,8 @@
 import { mapGetters } from 'vuex'
 import website from '@/config/website'
 
-const devUsername = process.env.NODE_ENV === 'dev' ? 'admin' : ''
-const devPassword = process.env.NODE_ENV === 'dev' ? 'admin' : ''
+const devUsername = process.env.NODE_ENV === 'development' ? 'admin' : ''
+const devPassword = process.env.NODE_ENV === 'development' ? 'admin' : ''
 
 export default {
   name: 'UserLogin',

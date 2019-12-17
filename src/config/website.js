@@ -27,7 +27,7 @@ export default {
   homepageTab: {
     key: '1',
     label: '首页',
-    path: '/main/about',
+    path: '/main/home',
     params: {},
     query: {},
     group: [],

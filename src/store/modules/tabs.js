@@ -68,7 +68,7 @@ const tabs = {
   actions: {
     navTo({ commit, state }, tabElem) {
       if (!tabElem) {
-        tabElem = this.homepageTab
+        tabElem = state.homepageTab
       }
 
       router.push({

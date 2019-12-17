@@ -3,7 +3,7 @@
           :default-selected-keys="selectedKeys"
           @select="menuSelected"
   >
-    <a-menu-item key="/main/about">
+    <a-menu-item key="/main/home">
       <a-icon type="home" />
       <span>首页</span>
     </a-menu-item>
