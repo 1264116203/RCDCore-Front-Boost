@@ -9,59 +9,36 @@
       @cancel="onCancel"
       @ok="onOk"
     >
-      <a-form ref="form" :form="form" class="d2-col-form" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" @submit="onSubmit">
-        <a-form-item label="机构名称">
+      <a-form ref="form" :form="form" class="d2-col-form"
+              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+              @submit="onSubmit"
+      >
+        <a-form-item label="参数名称">
           <a-input
-            v-decorator="['deptName',{ rules: [{required: true,message: '请输入机构名称'}] }]"
-            placeholder="请输入机构名称"
+            v-decorator="['paramName',{ rules: [{required: true,message: '请输入参数名称'}] }]"
+            placeholder="请输入参数名称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="机构全称">
+        <a-form-item label="参数键名">
           <a-input
-            v-decorator="['fullName', { rules: [{ required: true, message: '请输入机构全称' },{whitespace:true,message:'用户昵称不能为空'}] }]"
-            placeholder="请输入机构全称"
+            v-decorator="['paramKey', { rules: [{ required: true, message: '请输入参数键名' }] }]"
+            placeholder="请输入参数键名"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item ref="role" label="上级机构">
-          <a-tree-select
-            v-decorator="['parentId',{ rules: [{ required: true, message: '请选择上级机构' }] }]"
-            placeholder="请选择上级机构"
-            :tree-data="deptData"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :get-popup-container="getPopupContainer"
-            tree-default-expand-all
-            tree-checkable
-            :disabled="isDisable"
-          />
-        </a-form-item>
-
-        <a-form-item label="排序">
+        <a-form-item label="参数键值">
           <a-input
             v-decorator="[
-              'sort',
+              'paramValue',
               { rules: [{
                 required: true,
-                message: '请输入排序'
-              },{
-                pattern:/\d/,
-                message: '请输入数字'
+                message: '请输入参数键值'
               }] },
             ]"
-            placeholder="请输入数字"
-            type="number"
-            :disabled="isDisable"
-          />
-        </a-form-item>
-
-        <a-form-item label="备注">
-          <a-input
-            v-decorator="['remark', { rules: [{ required: true, message: '请输入备注'}] }]"
-            placeholder="请输入备注"
-            type="email"
+            placeholder="请输入参数键值"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -73,18 +50,14 @@
 <script>
 import {
   add,
-  getDept,
   update,
-  getDeptTree
-} from '@/api/system/dept'
-import { TreeSelect } from 'ant-design-vue'
+  getParam
+} from '@/api/system/param'
 
 const EmptyUserForm = {
-  deptName: '',
-  fullName: '',
-  select: '',
-  sort: '',
-  remark: ''
+  paramName: '',
+  paramKey: '',
+  paramValue: ''
 }
 
 export default {
@@ -94,15 +67,12 @@ export default {
       title: '',
       actionType: 'creation',
       id: '',
+      /** *信息展示的弹框 */
       formVisible: false,
-      deptData: [],
-      /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
       isDisable: false
     }
   },
   created() {
-    this.loadDeptTree()
   },
   methods: {
     open(type, id) {
@@ -123,8 +93,12 @@ export default {
 
       if (id) {
         this.id = id
-        getDept(id).then(res => {
+        getParam(id).then(res => {
           const requestData = res.data.data
+
+          if (requestData.deptId) {
+            requestData.currentDepts = requestData.deptId.split(',')
+          }
           const formData = {}
 
           Object.keys(EmptyUserForm).forEach(key => {
@@ -139,10 +113,8 @@ export default {
         })
       }
     },
-    loadDeptTree() {
-      getDeptTree().then(res => {
-        this.deptData = res.data.data
-      })
+    openMenuModal() {
+      this.menuVisible = true
     },
     onSubmit() {
       switch (this.actionType) {
@@ -176,7 +148,6 @@ export default {
     },
     doCreation() {
       const formData = this.form.getFieldsValue()
-      formData.parentId = formData.parentId.join(',')
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -187,7 +158,6 @@ export default {
     },
     doUpdate() {
       const formData = this.form.getFieldsValue()
-      formData.parentId = formData.parentId.join(',')
       formData.id = this.id
       update(formData)
         .then(() => {
@@ -196,14 +166,11 @@ export default {
           this.formVisible = false
         })
         .catch(error => { this.$message.error(error) })
-    },
-    /** 下拉弹层渲染节点固定在触发器的父元素中 */
-    getPopupContainer(triggerNode) {
-      return triggerNode.parentNode
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+
 </style>

@@ -96,6 +96,15 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '@/views/system/Menu.vue')
+  },
+  {
+    path: '/system/param',
+    name: '参数管理',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Param.vue')
   }
   ]
 }])

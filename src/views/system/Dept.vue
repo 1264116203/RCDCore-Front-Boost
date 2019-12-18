@@ -101,7 +101,7 @@ export default {
   data () {
     return {
       tableDataList: [],
-      /** 搜索的条件  登录账号 用户昵称 */
+      /** 搜索的条件  机构名称 机构全称 */
       searchInfo: {
         deptName: '',
         fullName: ''
@@ -145,8 +145,8 @@ export default {
     /** 清空按钮事件 */
     clearSearch () {
       this.searchInfo = {
-        account: '',
-        name: ''
+        deptName: '',
+        fullName: ''
       }
       this.fetchTableData()
     },

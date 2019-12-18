@@ -1,11 +1,11 @@
 <template>
   <a-spin class="warp" :spinning="isLoading">
     <a-form layout="inline">
-      <a-form-item label="菜单名称">
-        <a-input v-model="searchInfo.name" placeholder="菜单名称" />
+      <a-form-item label="参数名称">
+        <a-input v-model="searchInfo.paramName" placeholder="参数名称" />
       </a-form-item>
-      <a-form-item label="菜单编码">
-        <a-input v-model="searchInfo.code" placeholder="菜单编码" />
+      <a-form-item label="参数键名">
+        <a-input v-model="searchInfo.paramKey" placeholder="参数键名" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="onSearch">
@@ -36,10 +36,7 @@
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       :pagination="false"
     >
-      <template
-        slot="operation"
-        slot-scope="text, record"
-      >
+      <template #operation="text, record">
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
             <a-icon type="eye" />查看
@@ -52,49 +49,31 @@
           </a-popconfirm>
         </div>
       </template>
-      <template #MenuIcon="text, record">
-        <a-icon :type="record.source">
-          {{ record.source }}
-        </a-icon>
-      </template>
     </a-table>
 
-    <menu-edit ref="modal" @ok="onModalOk" />
+    <param-edit ref="modal" @ok="onModalOk" />
   </a-spin>
 </template>
 <script>
 import {
   getList,
   remove
-} from '@/api/system/menu'
+} from '@/api/system/param'
 import { ACTION_TYPE } from '@/config/env'
-import MenuEdit from './MenuEdit.vue'
+import ParamEdit from './ParamEdit.vue'
 
 const columns = [
   {
-    title: '菜单名称',
-    dataIndex: 'name'
+    title: '参数名称',
+    dataIndex: 'paramName'
   },
   {
-    title: '路由地址',
-    dataIndex: 'path'
+    title: '参数键名',
+    dataIndex: 'paramKey'
   },
   {
-    title: '菜单编号',
-    dataIndex: 'code'
-  },
-  {
-    title: '菜单图标',
-    dataIndex: 'source',
-    scopedSlots: { customRender: 'MenuIcon' }
-  },
-  {
-    title: '菜单别名',
-    dataIndex: 'alias'
-  },
-  {
-    title: '菜单排序',
-    dataIndex: 'sort'
+    title: '参数键值',
+    dataIndex: 'paramValue'
   },
   {
     title: '操作',
@@ -104,15 +83,15 @@ const columns = [
 ]
 export default {
   components: {
-    MenuEdit
+    ParamEdit
   },
   data () {
     return {
       tableDataList: [],
-      /** 搜索的条件  菜单名称 菜单编号 */
+      /** 搜索的条件  参数名称 参数键名 */
       searchInfo: {
-        name: '',
-        code: ''
+        paramName: '',
+        paramKey: ''
       },
       columns,
       current: 1,
@@ -134,7 +113,7 @@ export default {
       this.isLoading = true
       getList(this.current, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data
+          this.tableDataList = res.data.data.records
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -153,8 +132,8 @@ export default {
     /** 清空按钮事件 */
     clearSearch () {
       this.searchInfo = {
-        name: '',
-        code: ''
+        paramName: '',
+        paramKey: ''
       }
       this.fetchTableData()
     },

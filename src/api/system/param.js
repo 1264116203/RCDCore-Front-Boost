@@ -11,6 +11,17 @@ export const getList = (current, size, params) => {
     }
   })
 }
+
+export const getParam = (id) => {
+  return request({
+    url: '/api/blade-system/param/detail',
+    method: 'get',
+    params: {
+      id
+    }
+  })
+}
+
 export const remove = (ids) => {
   return request({
     url: '/api/blade-system/param/remove',
