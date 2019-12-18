@@ -52,8 +52,10 @@
           </a-popconfirm>
         </div>
       </template>
-      <template #iconList="text, record">
-        <i :class="record.source">{{ record.source }}</i>
+      <template #MenuIcon="text, record">
+        <a-icon :type="record.source">
+          {{ record.source }}
+        </a-icon>
       </template>
     </a-table>
 
@@ -84,7 +86,7 @@ const columns = [
   {
     title: '菜单图标',
     dataIndex: 'source',
-    scopedSlots: { customRender: 'iconList' }
+    scopedSlots: { customRender: 'MenuIcon' }
   },
   {
     title: '菜单别名',

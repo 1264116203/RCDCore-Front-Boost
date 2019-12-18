@@ -29,32 +29,32 @@
           />
         </a-form-item>
 
-        <a-form-item ref="dept" label="上级菜单">
+        <a-form-item ref="menu" label="上级菜单">
           <a-tree-select
             v-decorator="[ 'parentId' ]"
-            :tree-data="deptData"
+            :tree-data="parentData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
             placeholder="请选择上级菜单"
             tree-default-expand-all
-            tree-checkable
             :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
+            :multiple="false"
           />
         </a-form-item>
 
         <a-form-item label="菜单图标">
-          <a-cascader
+          <a-input
             v-decorator="[
               'source',
-              {
-                initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-                rules: [
-                  { type: 'array', required: true, message: '请输入菜单图标' },
-                ],
-              },
+              { rules: [{
+                required: true,
+                message: '请输入菜单图标'
+              }] },
             ]"
+            placeholder="请输入菜单图标"
             :disabled="isDisable"
+            @click="openMenuModal"
           />
         </a-form-item>
 
@@ -74,10 +74,10 @@
 
         <a-form-item label="菜单类型">
           <a-radio-group v-decorator="['category',{ rules: [{required: true,message: '请选择菜单类型'}] }]" :disabled="isDisable">
-            <a-radio value="1">
+            <a-radio :value="1">
               菜单
             </a-radio>
-            <a-radio value="2">
+            <a-radio :value="2">
               按钮
             </a-radio>
           </a-radio-group>
@@ -110,26 +110,42 @@
         </a-form-item>
       </a-form>
     </a-modal>
+    <a-modal
+      v-model="menuVisible"
+      title="请选择菜单图标"
+    >
+      <div class="icons-list">
+        <a-tabs type="card">
+          <a-tab-pane v-for="(item,index) in menuIconList" :key="index" :tab="item.label">
+            <a-icon v-for="(_item,_index) in item.list" :key="_index" :type="_item" class="menu-icon" @click="onChangeMenu(_item)" />
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import {
   add,
-  getUser,
-  update
+  getMenu,
+  update,
+  getRoutes
 } from '@/api/system/menu'
 import { TreeSelect } from 'ant-design-vue'
+import menuIconList from '@/config/menuIcon'
 
 const EmptyUserForm = {
   path: '',
   name: '',
   code: '',
-  sourceList: [],
-  category: [],
+  source: '',
+  category: '',
   alias: '',
   sort: '',
-  remark: ''
+  remark: '',
+  parentId: '',
+  parentName: ''
 }
 
 export default {
@@ -139,15 +155,19 @@ export default {
       title: '',
       actionType: 'creation',
       id: '',
+      /** *信息展示的弹框 */
       formVisible: false,
-      deptData: [],
-      roleData: [],
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
       SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      isDisable: false
+      isDisable: false,
+      /** *菜单图标选择的弹框 */
+      menuVisible: false,
+      menuIconList: menuIconList,
+      parentData: []
     }
   },
   created() {
+    this.loadParentData()
   },
   methods: {
     open(type, id) {
@@ -168,9 +188,8 @@ export default {
 
       if (id) {
         this.id = id
-        getUser(id).then(res => {
+        getMenu(id).then(res => {
           const requestData = res.data.data
-          requestData.sex = res.data.data.sex + ''
 
           if (requestData.deptId) {
             requestData.currentDepts = requestData.deptId.split(',')
@@ -188,6 +207,14 @@ export default {
           this.form.setFieldsValue({ ...EmptyUserForm })
         })
       }
+    },
+    openMenuModal() {
+      this.menuVisible = true
+    },
+    loadParentData() {
+      getRoutes().then(res => {
+        this.parentData = this.handlerTreeData(res.data.data)
+      })
     },
     onSubmit() {
       switch (this.actionType) {
@@ -221,10 +248,6 @@ export default {
     },
     doCreation() {
       const formData = this.form.getFieldsValue()
-
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -235,10 +258,6 @@ export default {
     },
     doUpdate() {
       const formData = this.form.getFieldsValue()
-
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
       formData.id = this.id
       update(formData)
         .then(() => {
@@ -248,9 +267,26 @@ export default {
         })
         .catch(error => { this.$message.error(error) })
     },
+    /** 菜单图标的点击事件 */
+    onChangeMenu(v) {
+      this.form.setFieldsValue({ source: v })
+      this.menuVisible = false
+    },
     /** 下拉弹层渲染节点固定在触发器的父元素中 */
     getPopupContainer(triggerNode) {
       return triggerNode.parentNode
+    },
+    /** Tree 下拉选的数据格式 */
+    handlerTreeData(data) {
+      for (let i = 0; i < data.length; i++) {
+        data[i].title = data[i].name
+        data[i].key = data[i].id
+        data[i].value = data[i].id
+        if (data[i].children && data[i].children.length > 0) {
+          this.handlerTreeData(data[i].children)
+        }
+      }
+      return data
     }
   }
 }
@@ -264,5 +300,18 @@ export default {
     .ant-form-item {
       width: 50%;
     }
+  }
+  .menu-icon{
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 25px;
+  }
+
+  .menu-icon:hover{
+    background-color: aqua;
+    color: white;
   }
 </style>

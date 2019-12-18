@@ -141,7 +141,6 @@ export default {
     },
     loadDeptTree() {
       getDeptTree().then(res => {
-        console.log(res.data.data)
         this.deptData = res.data.data
       })
     },
