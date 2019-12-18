@@ -107,6 +107,15 @@ router.addRoutes([{
     component: () => import(/* webpackChunkName: "about" */ '@/views/system/Menu.vue')
   },
   {
+    path: '/system/topmenu',
+    name: '顶部菜单',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/system/TopMenu.vue')
+  },
+  {
     path: '/system/param',
     name: '参数管理',
     meta: {
