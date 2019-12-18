@@ -132,6 +132,15 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '@/views/system/Client.vue')
+  },
+  {
+    path: '/authority/role',
+    name: '角色管理',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/authority/Role.vue')
   }
   ]
 }])

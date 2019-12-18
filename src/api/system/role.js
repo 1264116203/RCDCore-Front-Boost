@@ -31,6 +31,16 @@ export const grant = (roleIds, menuIds, dataScopeIds, apiScopeIds) => {
   })
 }
 
+export const getRole = (id) => {
+  return request({
+    url: '/api/blade-system/role/detail',
+    method: 'get',
+    params: {
+      id
+    }
+  })
+}
+
 export const remove = (ids) => {
   return request({
     url: '/api/blade-system/role/remove',
@@ -57,7 +67,7 @@ export const update = (row) => {
   })
 }
 
-export const getRole = (roleIds) => {
+export const getRoleTreeKeys = (roleIds) => {
   return request({
     url: '/api/blade-system/menu/role-tree-keys',
     method: 'get',
