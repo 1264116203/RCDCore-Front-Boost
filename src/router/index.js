@@ -89,6 +89,15 @@ router.addRoutes([{
     component: () => import(/* webpackChunkName: "about" */ '@/views/system/Dept.vue')
   },
   {
+    path: '/system/dict',
+    name: '字典管理',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Dict.vue')
+  },
+  {
     path: '/system/menu',
     name: '菜单管理',
     meta: {

@@ -13,29 +13,29 @@
               :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
               @submit="onSubmit"
       >
-        <a-form-item label="菜单名称">
+        <a-form-item label="字典编号" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
-            v-decorator="['name',{ rules: [{required: true,message: '请输入菜单名称'}] }]"
-            placeholder="请输入菜单名称"
+            v-decorator="['code',{ rules: [{required: true,message: '请输入字典编号'}] }]"
+            placeholder="请输入字典编号"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="路由地址">
+        <a-form-item label="字典名称">
           <a-input
-            v-decorator="['path', { rules: [{ required: true, message: '请输入路由地址' }] }]"
-            placeholder="请输入路由地址"
+            v-decorator="['dictValue', { rules: [{ required: true, message: '请输入字典名称' }] }]"
+            placeholder="请输入字典名称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item ref="menu" label="上级菜单">
+        <a-form-item ref="dict" label="上级字典">
           <a-tree-select
             v-decorator="[ 'parentId' ]"
-            :tree-data="MenuParentData"
+            :tree-data="DictParentData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
-            placeholder="请选择上级菜单"
+            placeholder="请选择上级字典"
             tree-default-expand-all
             :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
@@ -43,84 +43,32 @@
           />
         </a-form-item>
 
-        <a-form-item label="菜单图标">
+        <a-form-item label="字典键值">
           <a-input
-            v-decorator="[
-              'source',
-              { rules: [{
-                required: true,
-                message: '请输入菜单图标'
-              }] },
-            ]"
-            placeholder="请输入菜单图标"
-            :disabled="isDisable"
-            @click="openMenuModal"
-          />
-        </a-form-item>
-
-        <a-form-item label="菜单编号">
-          <a-input
-            v-decorator="[
-              'code',
-              { rules: [{
-                required: true,
-                message: '请输入菜单编号'
-              }] },
-            ]"
-            placeholder="请输入菜单编号"
+            v-decorator="['dictKey', { rules: [{ required: true, message: '请输入字典键值' }] }]"
+            placeholder="请输入字典键值"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="菜单类型">
-          <a-radio-group v-decorator="['category',{ rules: [{required: true,message: '请选择菜单类型'}] }]" :disabled="isDisable">
-            <a-radio :value="1">
-              菜单
-            </a-radio>
-            <a-radio :value="2">
-              按钮
-            </a-radio>
-          </a-radio-group>
-        </a-form-item>
-
-        <a-form-item label="菜单别名">
+        <a-form-item label="字典排序">
           <a-input
-            v-decorator="['alias',{ rules: [{required: true,message: '请输入菜单别名'}] }]"
-            placeholder="请输入菜单别名"
-            :disabled="isDisable"
-          />
-        </a-form-item>
-
-        <a-form-item label="菜单排序">
-          <a-input
-            v-decorator="['sort', { rules: [{ required: true, message: '请输入菜单排序' }] }]"
-            placeholder="请输入菜单排序"
+            v-decorator="['sort', { rules: [{ required: true, message: '请输入字典排序' }] }]"
+            placeholder="请输入字典排序"
             type="number"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="菜单备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="字典备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-textarea
             v-decorator="['remark']"
-            placeholder="请输入菜单备注"
+            placeholder="请输入字典备注"
             :autosize="{ minRows: 2, maxRows: 6 }"
             :disabled="isDisable"
           />
         </a-form-item>
       </a-form>
-    </a-modal>
-    <a-modal
-      v-model="menuVisible"
-      title="请选择菜单图标"
-    >
-      <div class="icons-list">
-        <a-tabs type="card">
-          <a-tab-pane v-for="(item,index) in menuIconList" :key="index" :tab="item.label">
-            <a-icon v-for="(_item,_index) in item.list" :key="_index" :type="_item" class="menu-icon" @click="onChangeMenu(_item)" />
-          </a-tab-pane>
-        </a-tabs>
-      </div>
     </a-modal>
   </div>
 </template>
@@ -128,24 +76,19 @@
 <script>
 import {
   add,
-  getMenu,
+  getDict,
   update,
-  getRoutes
-} from '@/api/system/menu'
+  getDictTree
+} from '@/api/system/dict'
 import { TreeSelect } from 'ant-design-vue'
-import menuIconList from '@/config/menuIcon'
 
 const EmptyUserForm = {
-  path: '',
-  name: '',
   code: '',
-  source: '',
-  category: '',
-  alias: '',
-  sort: '',
-  remark: '',
+  dictValue: '',
   parentId: '',
-  parentName: ''
+  dictKey: '',
+  sort: '',
+  remark: ''
 }
 
 export default {
@@ -160,10 +103,7 @@ export default {
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
       SHOW_PARENT: TreeSelect.SHOW_PARENT,
       isDisable: false,
-      /** *菜单图标选择的弹框 */
-      menuVisible: false,
-      menuIconList: menuIconList,
-      MenuParentData: []
+      DictParentData: []
     }
   },
   created() {
@@ -188,7 +128,7 @@ export default {
 
       if (id) {
         this.id = id
-        getMenu(id).then(res => {
+        getDict(id).then(res => {
           const requestData = res.data.data
 
           if (requestData.deptId) {
@@ -212,8 +152,8 @@ export default {
       this.menuVisible = true
     },
     loadParentData() {
-      getRoutes().then(res => {
-        this.MenuParentData = this.handlerTreeData(res.data.data)
+      getDictTree().then(res => {
+        this.DictParentData = res.data.data
       })
     },
     onSubmit() {
@@ -267,26 +207,9 @@ export default {
         })
         .catch(error => { this.$message.error(error) })
     },
-    /** 菜单图标的点击事件 */
-    onChangeMenu(v) {
-      this.form.setFieldsValue({ source: v })
-      this.menuVisible = false
-    },
     /** 下拉弹层渲染节点固定在触发器的父元素中 */
     getPopupContainer(triggerNode) {
       return triggerNode.parentNode
-    },
-    /** Tree 下拉选的数据格式 */
-    handlerTreeData(data) {
-      for (let i = 0; i < data.length; i++) {
-        data[i].title = data[i].name
-        data[i].key = data[i].id
-        data[i].value = data[i].id
-        if (data[i].children && data[i].children.length > 0) {
-          this.handlerTreeData(data[i].children)
-        }
-      }
-      return data
     }
   }
 }
@@ -300,18 +223,5 @@ export default {
     .ant-form-item {
       width: 50%;
     }
-  }
-  .menu-icon{
-    width: 20px;
-    height: 20px;
-    margin: 10px;
-    font-size: 14px;
-    text-align: center;
-    line-height: 25px;
-  }
-
-  .menu-icon:hover{
-    background-color: aqua;
-    color: white;
   }
 </style>
