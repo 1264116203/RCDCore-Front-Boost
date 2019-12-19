@@ -61,7 +61,7 @@ import {
   add,
   update,
   getRole,
-  grantTree
+  getRoleTree
 } from '@/api/system/role'
 import { TreeSelect } from 'ant-design-vue'
 
@@ -88,6 +88,7 @@ export default {
     }
   },
   created() {
+    this.loadParentData()
   },
   methods: {
     open(type, id) {
@@ -129,7 +130,7 @@ export default {
       this.menuVisible = true
     },
     loadParentData() {
-      grantTree().then(res => {
+      getRoleTree().then(res => {
         console.log(res)
         this.RoleParentData = res.data.data
       })

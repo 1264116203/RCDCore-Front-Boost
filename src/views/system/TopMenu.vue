@@ -26,6 +26,9 @@
       <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
         批量删除
       </a-button>
+      <a-button class="editable-add-btn" type="primary" @click="handleGrantSet">
+        权限设置
+      </a-button>
     </div>
 
     <a-table
@@ -60,12 +63,29 @@
     </a-table>
 
     <top-menu-edit ref="modal" @ok="onModalOk" />
+
+    <a-modal
+      v-model="grantVisible"
+      title="下级菜单配置"
+      @ok="onOk"
+    >
+      <a-tree
+        v-model="menuIds"
+        checkable
+        :tree-data="grantMenuTreeDta"
+        :selected-keys="selectedKeys"
+        @check="(checkedKeys) => onSelectGrant(checkedKeys)"
+      />
+    </a-modal>
   </a-spin>
 </template>
 <script>
 import {
   getList,
-  remove
+  remove,
+  grantTree,
+  getTopTree,
+  grant
 } from '@/api/system/topmenu'
 import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
@@ -114,7 +134,12 @@ export default {
       formLabelWidth: '120px',
       /** 全选 */
       selectedRowKeys: [],
-      selectedRowIds: []
+      selectedRowIds: [],
+      /** 权限设置 */
+      grantVisible: false,
+      selectedKeys: [],
+      menuIds: [],
+      grantMenuTreeDta: []
     }
   },
   created () {
@@ -197,6 +222,31 @@ export default {
         onCancel: () => {
           console.log('Cancel')
         }
+      })
+    },
+    /** 设置权限 */
+    handleGrantSet() {
+      if (this.selectedRowIds && this.selectedRowIds.length === 1) {
+        this.grantVisible = true
+        grantTree().then(res => {
+          this.grantMenuTreeDta = res.data.data.menu
+        })
+        getTopTree(this.selectedRowIds.join(',')).then(res => {
+          this.menuIds = [...res.data.data.menu]
+        })
+      } else if (this.selectedRowIds && this.selectedRowIds.length < 1) {
+        this.$message.warning('请至少选择一条数据')
+      } else {
+        this.$message.warning('只能选择一条数据')
+      }
+    },
+    onSelectGrant(checkedKeys) {
+      this.menuIds = [...checkedKeys]
+    },
+    onOk() {
+      grant(this.selectedRowIds.join(','), this.menuIds.join(',')).then(() => {
+        this.$message.success('操作成功')
+        this.grantVisible = false
       })
     }
   }

@@ -26,6 +26,9 @@
       <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
         批量删除
       </a-button>
+      <a-button class="editable-add-btn" type="primary" @click="handleGrantSet">
+        权限设置
+      </a-button>
     </div>
 
     <a-table
@@ -52,12 +55,33 @@
     </a-table>
 
     <role-edit ref="modal" @ok="onModalOk" />
+
+    <a-modal
+      v-model="grantVisible"
+      title="角色权限配置"
+      @ok="onOk"
+    >
+      <a-tabs default-active-key="0">
+        <a-tab-pane v-for="(value, key, index) in grantTreeDta" :key="index" :tab="title[key]">
+          <a-tree
+            v-model="defaultSelected [ key ]"
+            checkable
+            :tree-data="value"
+            :selected-keys="selectedKeys"
+            @check="(checkedKeys) => onSelectGrant(checkedKeys,key)"
+          />
+        </a-tab-pane>
+      </a-tabs>
+    </a-modal>
   </a-spin>
 </template>
 <script>
 import {
   getList,
-  remove
+  remove,
+  grantTree,
+  grant,
+  getRoleTreeKeys
 } from '@/api/system/role'
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
@@ -101,7 +125,16 @@ export default {
       formLabelWidth: '120px',
       /** 全选 */
       selectedRowKeys: [],
-      selectedRowIds: []
+      selectedRowIds: [],
+      /** 权限设置 */
+      title: { 'menu': '菜单权限', 'dataScope': '数据权限', 'apiScope': '接口权限' },
+      defaultSelected: { 'menu': [], 'dataScope': [], 'apiScope': [] },
+      grantVisible: false,
+      grantTreeDta: {},
+      selectedKeys: [],
+      menuIds: [],
+      dataScopeIds: [],
+      apiScopeIds: []
     }
   },
   created () {
@@ -184,6 +217,44 @@ export default {
         onCancel: () => {
           console.log('Cancel')
         }
+      })
+    },
+    /** 设置权限 */
+    handleGrantSet() {
+      if (this.selectedRowIds && this.selectedRowIds.length === 1) {
+        this.grantVisible = true
+        grantTree().then(res => {
+          this.grantTreeDta = res.data.data
+        })
+        getRoleTreeKeys(this.selectedRowIds.join(',')).then(res => {
+          this.menuIds = [...res.data.data.menu]
+          this.dataScopeIds = [...res.data.data.dataScope]
+          this.apiScopeIds = [...res.data.data.apiScope]
+          this.defaultSelected = res.data.data
+        })
+      } else if (this.selectedRowIds && this.selectedRowIds.length < 1) {
+        this.$message.warning('请至少选择一条数据')
+      } else {
+        this.$message.warning('只能选择一条数据')
+      }
+    },
+    onSelectGrant(checkedKeys, key) {
+      switch (key) {
+        case 'menu':
+          this.menuIds = [...checkedKeys]
+          break
+        case 'dataScope':
+          this.dataScopeIds = [...checkedKeys]
+          break
+        case 'apiScope':
+          this.apiScopeIds = [...checkedKeys]
+          break
+      }
+    },
+    onOk() {
+      grant(this.selectedRowIds, this.menuIds, this.dataScopeIds, this.apiScopeIds).then(() => {
+        this.$message.success('操作成功')
+        this.grantVisible = false
       })
     }
   }
