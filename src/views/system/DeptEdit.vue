@@ -102,20 +102,7 @@ export default {
   },
   methods: {
     open(type, id) {
-      if (type === 'creation') {
-        this.title = '添加信息'
-        this.isDisable = false
-      } else if (type === 'detail') {
-        this.title = '查看信息'
-        this.isDisable = true
-      } else if (type === 'update') {
-        this.title = '修改信息'
-        this.isDisable = false
-      } else {
-        return
-      }
-      this.actionType = type
-      this.formVisible = true
+      this.modelTitle(type)
 
       if (id) {
         this.id = id

@@ -252,20 +252,7 @@ export default {
   },
   methods: {
     open(type, id) {
-      if (type === 'creation') {
-        this.title = '添加信息'
-        this.isDisable = false
-      } else if (type === 'detail') {
-        this.title = '查看信息'
-        this.isDisable = true
-      } else if (type === 'update') {
-        this.title = '修改信息'
-        this.isDisable = false
-      } else {
-        return
-      }
-      this.actionType = type
-      this.formVisible = true
+      this.modelTitle(type)
 
       if (id) {
         this.id = id
@@ -308,11 +295,7 @@ export default {
       })
     },
     doCreation() {
-      const formData = this.form.getFieldsValue()
-
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.valueOf()
+      const formData = this.formData()
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -322,12 +305,7 @@ export default {
         .catch(error => { this.$message.error(error) })
     },
     doUpdate() {
-      const formData = this.form.getFieldsValue()
-
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.valueOf()
-      formData.id = this.id
+      const formData = this.formData()
       update(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -335,6 +313,16 @@ export default {
           this.formVisible = false
         })
         .catch(error => { this.$message.error(error) })
+    },
+    formData() {
+      const formData = this.form.getFieldsValue()
+
+      formData.deptId = formData.currentDepts.join(',')
+      formData.roleId = formData.currentRoles.join(',')
+      formData.birthday = formData.birthdayObj.valueOf()
+      formData.id = this.id
+
+      return formData
     }
   }
 }
