@@ -26,9 +26,6 @@
       <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
         批量删除
       </a-button>
-      <a-button class="editable-add-btn" type="primary" @click="handleGrantSet">
-        权限设置
-      </a-button>
     </div>
 
     <a-table
@@ -53,6 +50,9 @@
           <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
             <a><a-icon type="delete" />删除</a>
           </a-popconfirm>
+          <a @click="handleGrantSet(record.id)">
+            <a-icon type="setting" />权限设置
+          </a>
         </div>
       </template>
       <template #MenuIcon="text, record">
@@ -140,7 +140,8 @@ export default {
       grantVisible: false,
       selectedKeys: [],
       menuIds: [],
-      grantMenuTreeDta: []
+      grantMenuTreeDta: [],
+      nowId: ''
     }
   },
   created () {
@@ -226,26 +227,21 @@ export default {
       })
     },
     /** 设置权限 */
-    handleGrantSet() {
-      if (this.selectedRowIds && this.selectedRowIds.length === 1) {
-        this.grantVisible = true
-        grantTree().then(res => {
-          this.grantMenuTreeDta = res.data
-        })
-        getTopTree(this.selectedRowIds.join(',')).then(res => {
-          this.menuIds = [...res.data.data.menu]
-        })
-      } else if (this.selectedRowIds && this.selectedRowIds.length < 1) {
-        this.$message.warning('请至少选择一条数据')
-      } else {
-        this.$message.warning('只能选择一条数据')
-      }
+    handleGrantSet(id) {
+      this.nowId = id
+      this.grantVisible = true
+      grantTree().then(res => {
+        this.grantMenuTreeDta = res.data
+      })
+      getTopTree(id).then(res => {
+        this.menuIds = [...res.data.data.menu]
+      })
     },
     onSelectGrant(checkedKeys) {
       this.menuIds = [...checkedKeys]
     },
     onOk() {
-      grant(this.selectedRowIds.join(','), this.menuIds.join(',')).then(() => {
+      grant(this.nowId, this.menuIds.join(',')).then(() => {
         this.$message.success('操作成功')
         this.grantVisible = false
       })

@@ -26,9 +26,6 @@
       <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
         批量删除
       </a-button>
-      <a-button class="editable-add-btn" type="primary" @click="handleGrantSet">
-        权限设置
-      </a-button>
     </div>
 
     <a-table
@@ -50,6 +47,9 @@
           <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
             <a><a-icon type="delete" />删除</a>
           </a-popconfirm>
+          <a @click="handleGrantSet(record.id)">
+            <a-icon type="setting" />权限设置
+          </a>
         </div>
       </template>
     </a-table>
@@ -135,7 +135,8 @@ export default {
       selectedKeys: [],
       menuIds: [],
       dataScopeIds: [],
-      apiScopeIds: []
+      apiScopeIds: [],
+      nowId: ''
     }
   },
   created () {
@@ -221,23 +222,18 @@ export default {
       })
     },
     /** 设置权限 */
-    handleGrantSet() {
-      if (this.selectedRowIds && this.selectedRowIds.length === 1) {
-        this.grantVisible = true
-        grantTree().then(res => {
-          this.grantTreeDta = res.data
-        })
-        getRoleTreeKeys(this.selectedRowIds.join(',')).then(res => {
-          this.menuIds = [...res.data.menu]
-          this.dataScopeIds = [...res.data.dataScope]
-          this.apiScopeIds = [...res.data.apiScope]
-          this.defaultSelected = res.data
-        })
-      } else if (this.selectedRowIds && this.selectedRowIds.length < 1) {
-        this.$message.warning('请至少选择一条数据')
-      } else {
-        this.$message.warning('只能选择一条数据')
-      }
+    handleGrantSet(id) {
+      this.nowId = id
+      this.grantVisible = true
+      grantTree().then(res => {
+        this.grantTreeDta = res.data
+      })
+      getRoleTreeKeys(id).then(res => {
+        this.menuIds = [...res.data.menu]
+        this.dataScopeIds = [...res.data.dataScope]
+        this.apiScopeIds = [...res.data.apiScope]
+        this.defaultSelected = res.data
+      })
     },
     onSelectGrant(checkedKeys, key) {
       switch (key) {
@@ -253,7 +249,7 @@ export default {
       }
     },
     onOk() {
-      grant(this.selectedRowIds, this.menuIds, this.dataScopeIds, this.apiScopeIds).then(() => {
+      grant(this.nowId, this.menuIds, this.dataScopeIds, this.apiScopeIds).then(() => {
         this.$message.success('操作成功')
         this.grantVisible = false
       })
