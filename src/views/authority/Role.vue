@@ -81,7 +81,8 @@ import {
   remove,
   grantTree,
   grant,
-  getRoleTreeKeys
+  getRoleTreeKeys,
+  singleRemove
 } from '@/api/system/role'
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
@@ -146,7 +147,7 @@ export default {
       this.isLoading = true
       getList(this.current, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data
+          this.tableDataList = res.data
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -191,7 +192,7 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      remove(id).then(() => {
+      singleRemove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })
@@ -224,13 +225,13 @@ export default {
       if (this.selectedRowIds && this.selectedRowIds.length === 1) {
         this.grantVisible = true
         grantTree().then(res => {
-          this.grantTreeDta = res.data.data
+          this.grantTreeDta = res.data
         })
         getRoleTreeKeys(this.selectedRowIds.join(',')).then(res => {
-          this.menuIds = [...res.data.data.menu]
-          this.dataScopeIds = [...res.data.data.dataScope]
-          this.apiScopeIds = [...res.data.data.apiScope]
-          this.defaultSelected = res.data.data
+          this.menuIds = [...res.data.menu]
+          this.dataScopeIds = [...res.data.dataScope]
+          this.apiScopeIds = [...res.data.apiScope]
+          this.defaultSelected = res.data
         })
       } else if (this.selectedRowIds && this.selectedRowIds.length < 1) {
         this.$message.warning('请至少选择一条数据')

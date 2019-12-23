@@ -1,29 +1,33 @@
 import request from '@/rcore-axios'
 
-export const getList = (current, size, params) => {
+export const getList = (page, size, params) => {
   return request({
-    url: '/api/blade-system/dept/list',
+    url: '/api/dept/query',
     method: 'get',
     params: {
-      ...params,
-      current,
-      size
+      page,
+      size,
+      ...params
     }
   })
 }
 export const remove = (ids) => {
   return request({
-    url: '/api/blade-system/dept/remove',
-    method: 'post',
+    url: '/api/dept/batch',
+    method: 'DELETE',
     params: {
       ids
     }
   })
 }
 
+export const singleRemove = (id) => {
+  return request.delete('/api/dept/' + id)
+}
+
 export const add = (row) => {
   return request({
-    url: '/api/blade-system/dept/submit',
+    url: '/api/dept',
     method: 'post',
     data: row
   })
@@ -31,7 +35,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/blade-system/dept/submit',
+    url: '/api/dept',
     method: 'post',
     data: row
   })
@@ -39,7 +43,7 @@ export const update = (row) => {
 
 export const getDept = (id) => {
   return request({
-    url: '/api/blade-system/dept/detail',
+    url: '/api/dept/' + id,
     method: 'get',
     params: {
       id
@@ -48,7 +52,7 @@ export const getDept = (id) => {
 }
 export const getDeptTree = (tenantId) => {
   return request({
-    url: '/api/blade-system/dept/tree',
+    url: '/api/dept/tree',
     method: 'get',
     params: {
       tenantId

@@ -85,7 +85,8 @@ import {
   remove,
   grantTree,
   getTopTree,
-  grant
+  grant,
+  singleRemove
 } from '@/api/system/topmenu'
 import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
@@ -151,7 +152,7 @@ export default {
       this.isLoading = true
       getList(this.current, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data.records
+          this.tableDataList = res.data.content
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -196,7 +197,7 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      remove(id).then(() => {
+      singleRemove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })
@@ -229,7 +230,7 @@ export default {
       if (this.selectedRowIds && this.selectedRowIds.length === 1) {
         this.grantVisible = true
         grantTree().then(res => {
-          this.grantMenuTreeDta = res.data.data.menu
+          this.grantMenuTreeDta = res.data
         })
         getTopTree(this.selectedRowIds.join(',')).then(res => {
           this.menuIds = [...res.data.data.menu]

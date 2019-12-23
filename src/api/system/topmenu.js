@@ -1,12 +1,12 @@
 import request from '@/rcore-axios'
 
-export const getList = (current, size, params) => {
+export const getList = (page, size, params) => {
   return request({
-    url: '/api/blade-system/topmenu/list',
+    url: '/api/topmenu/pagination',
     method: 'get',
     params: {
       ...params,
-      current,
+      page,
       size
     }
   })
@@ -14,7 +14,7 @@ export const getList = (current, size, params) => {
 
 export const getDetail = (id) => {
   return request({
-    url: '/api/blade-system/topmenu/detail',
+    url: '/api/topmenu/' + id,
     method: 'get',
     params: {
       id
@@ -24,17 +24,21 @@ export const getDetail = (id) => {
 
 export const remove = (ids) => {
   return request({
-    url: '/api/blade-system/topmenu/remove',
-    method: 'post',
+    url: '/api/topmenu/batch',
+    method: 'DELETE',
     params: {
       ids
     }
   })
 }
 
+export const singleRemove = (id) => {
+  return request.delete('/api/topmenu/' + id)
+}
+
 export const add = (row) => {
   return request({
-    url: '/api/blade-system/topmenu/submit',
+    url: '/api/topmenu',
     method: 'post',
     data: row
   })
@@ -42,22 +46,22 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/blade-system/topmenu/submit',
-    method: 'post',
+    url: '/api/topmenu',
+    method: 'PUT',
     data: row
   })
 }
 
 export const grantTree = () => {
   return request({
-    url: '/api/blade-system/menu/grant-top-tree',
+    url: '/api/menu/grant-top-tree',
     method: 'get'
   })
 }
 
 export const getTopTree = (topMenuIds) => {
   return request({
-    url: '/api/blade-system/menu/top-tree-keys',
+    url: '/api/menu/top-tree-keys',
     method: 'get',
     params: {
       topMenuIds
@@ -67,7 +71,7 @@ export const getTopTree = (topMenuIds) => {
 
 export const grant = (topMenuIds, menuIds) => {
   return request({
-    url: '/api/blade-system/topmenu/grant',
+    url: '/api/topmenu/grant',
     method: 'post',
     params: {
       topMenuIds,

@@ -303,12 +303,12 @@ export default {
     },
     loadDeptTree() {
       getDeptTree().then(res => {
-        this.deptData = res.data.data
+        this.deptData = res.data
       })
     },
     loadRole() {
       getRoleTree().then(res => {
-        this.roleData = res.data.data
+        this.roleData = res.data
       })
     },
     onSubmit() {
@@ -346,7 +346,7 @@ export default {
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
+      formData.birthday = formData.birthdayObj.valueOf()
       add(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)

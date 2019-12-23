@@ -124,7 +124,7 @@ export default {
       if (id) {
         this.id = id
         getDept(id).then(res => {
-          const requestData = res.data.data
+          const requestData = res.data
           const formData = {}
 
           Object.keys(EmptyUserForm).forEach(key => {
@@ -141,7 +141,7 @@ export default {
     },
     loadDeptTree() {
       getDeptTree().then(res => {
-        this.deptData = res.data.data
+        this.deptData = res.data
       })
     },
     onSubmit() {

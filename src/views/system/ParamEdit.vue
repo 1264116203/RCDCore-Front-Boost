@@ -94,11 +94,7 @@ export default {
       if (id) {
         this.id = id
         getParam(id).then(res => {
-          const requestData = res.data.data
-
-          if (requestData.deptId) {
-            requestData.currentDepts = requestData.deptId.split(',')
-          }
+          const requestData = res.data
           const formData = {}
 
           Object.keys(EmptyUserForm).forEach(key => {

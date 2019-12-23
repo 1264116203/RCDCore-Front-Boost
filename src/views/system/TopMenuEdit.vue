@@ -130,7 +130,7 @@ export default {
       if (id) {
         this.id = id
         getDetail(id).then(res => {
-          const requestData = res.data.data
+          const requestData = res.data
 
           const formData = {}
 

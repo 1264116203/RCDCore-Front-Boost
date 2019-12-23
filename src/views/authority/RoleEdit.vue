@@ -10,7 +10,7 @@
       @ok="onOk"
     >
       <a-form ref="form" :form="form" class="d2-col-form"
-              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+              :label-col="{ span: 6 }" :wrapper-col="{ span: 14 }"
               @submit="onSubmit"
       >
         <a-form-item label="角色名称">
@@ -131,8 +131,7 @@ export default {
     },
     loadParentData() {
       getRoleTree().then(res => {
-        console.log(res)
-        this.RoleParentData = res.data.data
+        this.RoleParentData = res.data
       })
     },
     onSubmit() {

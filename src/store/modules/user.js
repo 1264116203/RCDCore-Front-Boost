@@ -43,15 +43,16 @@ const user = {
   actions: {
     // 根据用户名登录
     loginByUsername({ commit }, userInfo) {
-      return login(userInfo.tenantId, userInfo.username, userInfo.password, userInfo.type)
+      return login(userInfo.username, userInfo.password, userInfo.rememberMe)
         .then(res => {
           const data = res.data
           if (data.error_description) {
             return Promise.reject(data.error_description)
           } else {
-            commit('SET_TOKEN', data.access_token)
-            commit('SET_REFRESH_TOKEN', data.refresh_token)
-            commit('SET_TENANT_ID', data.tenant_id)
+            // commit('SET_TOKEN', data.access_token)
+            commit('SET_TOKEN', data.token)
+            // commit('SET_REFRESH_TOKEN', data.refresh_token)
+            // commit('SET_TENANT_ID', data.tenant_id)
             commit('SET_USER_INFO', data)
             commit('tabs/CLOSE_ALL', null, { root: true })
             commit('common/UNLOCK', null, { root: true })
@@ -60,7 +61,7 @@ const user = {
     },
     getButtons({ commit }) {
       return getButtons().then(res => {
-        const data = res.data.data
+        const data = res.data
         commit('SET_PERMISSION', data)
       })
     },
@@ -115,7 +116,7 @@ const user = {
     // 获取系统菜单
     getMenu({ commit, dispatch }, topMenuId) {
       return getRoutes(topMenuId).then((res) => {
-        const data = res.data.data
+        const data = res.data
         let menu = deepClone(data)
         menu.forEach(ele => {
           addPath(ele, true)

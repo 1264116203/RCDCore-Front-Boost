@@ -53,8 +53,8 @@
         </div>
       </template>
       <template #MenuIcon="text, record">
-        <a-icon :type="record.source">
-          {{ record.source }}
+        <a-icon :type="record.icon">
+          {{ record.icon }}
         </a-icon>
       </template>
     </a-table>
@@ -65,7 +65,8 @@
 <script>
 import {
   getList,
-  remove
+  remove,
+  singleRemove
 } from '@/api/system/menu'
 import { ACTION_TYPE } from '@/config/env'
 import MenuEdit from './MenuEdit.vue'
@@ -115,7 +116,7 @@ export default {
         code: ''
       },
       columns,
-      current: 1,
+      page: 1,
       pageSize: 10,
       /** 页面是否加载 */
       isLoading: false,
@@ -132,9 +133,9 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getList(this.current, this.pageSize, this.searchInfo)
+      getList(this.page, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data
+          this.tableDataList = res.data
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -179,7 +180,7 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      remove(id).then(() => {
+      singleRemove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })

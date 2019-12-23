@@ -1,19 +1,18 @@
 import request from '@/rcore-axios'
 import { baseUrl } from '@/config/env'
+export const login = (username, password, rememberMe) => (
+  request.post('/api/authenticate', { username, password, rememberMe })
+)
 
-export const login = (tenantId, username, password, type) => request({
-  url: '/api/blade-auth/oauth/token',
+export const login1 = (rememberMe, username, password) => request({
+  url: '/api/authenticate',
   method: 'post',
-  headers: {
-    'Tenant-Id': tenantId
-  },
   params: {
-    tenantId,
     username,
     password,
-    grant_type: 'password',
-    scope: 'all',
-    type
+    // grant_type: 'password',
+    // scope: 'all',
+    rememberMe
   }
 })
 
@@ -32,7 +31,7 @@ export const refreshToken = (refreshToken, tenantId) => request({
 })
 
 export const getButtons = () => request({
-  url: '/api/blade-system/menu/buttons',
+  url: '/api/menu/buttons',
   method: 'get'
 })
 

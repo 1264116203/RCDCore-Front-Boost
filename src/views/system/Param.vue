@@ -57,7 +57,8 @@
 <script>
 import {
   getList,
-  remove
+  remove,
+  singleRemove
 } from '@/api/system/param'
 import { ACTION_TYPE } from '@/config/env'
 import ParamEdit from './ParamEdit.vue'
@@ -113,7 +114,7 @@ export default {
       this.isLoading = true
       getList(this.current, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data.records
+          this.tableDataList = res.data.content
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -158,7 +159,7 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      remove(id).then(() => {
+      singleRemove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })

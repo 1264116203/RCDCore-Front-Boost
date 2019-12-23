@@ -1,29 +1,33 @@
 import request from '@/rcore-axios'
 
-export const getList = (current, size, params) => {
+export const getList = (page, size, params) => {
   return request({
-    url: '/api/blade-system/dict/list',
+    url: '/api/dict/query',
     method: 'get',
     params: {
       ...params,
-      current,
+      page,
       size
     }
   })
 }
 export const remove = (ids) => {
   return request({
-    url: '/api/blade-system/dict/remove',
-    method: 'post',
+    url: '/api/dict/batch',
+    method: 'DELETE',
     params: {
       ids
     }
   })
 }
 
+export const singleRemove = (id) => {
+  return request.delete('/api/dict/' + id)
+}
+
 export const add = (row) => {
   return request({
-    url: '/api/blade-system/dict/submit',
+    url: '/api/dict',
     method: 'post',
     data: row
   })
@@ -31,7 +35,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/blade-system/dict/submit',
+    url: '/api/dict',
     method: 'post',
     data: row
   })
@@ -39,7 +43,7 @@ export const update = (row) => {
 
 export const getDict = (id) => {
   return request({
-    url: '/api/blade-system/dict/detail',
+    url: '/api/dict/' + id,
     method: 'get',
     params: {
       id
@@ -48,14 +52,14 @@ export const getDict = (id) => {
 }
 export const getDictTree = () => {
   return request({
-    url: '/api/blade-system/dict/tree?code=DICT',
+    url: '/api/dict/tree',
     method: 'get'
   })
 }
 
 export const getDictionary = (params) => {
   return request({
-    url: '/api/blade-system/dict/dictionary',
+    url: '/api/dict/dictionary',
     method: 'get',
     params
   })

@@ -129,7 +129,7 @@ export default {
       if (id) {
         this.id = id
         getDict(id).then(res => {
-          const requestData = res.data.data
+          const requestData = res.data
 
           if (requestData.deptId) {
             requestData.currentDepts = requestData.deptId.split(',')
@@ -153,7 +153,7 @@ export default {
     },
     loadParentData() {
       getDictTree().then(res => {
-        this.DictParentData = res.data.data
+        this.DictParentData = res.data
       })
     },
     onSubmit() {

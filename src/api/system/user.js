@@ -2,7 +2,7 @@ import request from '@/rcore-axios'
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/blade-user/list',
+    url: '/api/user/pagination',
     method: 'get',
     params: {
       ...params,
@@ -13,17 +13,21 @@ export const getList = (current, size, params) => {
 }
 export const remove = (ids) => {
   return request({
-    url: '/api/blade-user/remove',
-    method: 'post',
+    url: '/api/user/batch',
+    method: 'DELETE',
     params: {
       ids
     }
   })
 }
 
+export const singleRemove = (id) => {
+  return request.delete('/api/user/' + id)
+}
+
 export const add = (row) => {
   return request({
-    url: '/api/blade-user/submit',
+    url: '/api/user',
     method: 'post',
     data: row
   })
@@ -31,7 +35,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/blade-user/update',
+    url: '/api/user',
     method: 'post',
     data: row
   })
@@ -39,7 +43,7 @@ export const update = (row) => {
 
 export const getUser = (id) => {
   return request({
-    url: '/api/blade-user/detail',
+    url: '/api/user/' + id,
     method: 'get',
     params: {
       id

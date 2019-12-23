@@ -46,7 +46,7 @@
         <a-form-item label="菜单图标">
           <a-input
             v-decorator="[
-              'source',
+              'icon',
               { rules: [{
                 required: true,
                 message: '请输入菜单图标'
@@ -139,7 +139,7 @@ const EmptyUserForm = {
   path: '',
   name: '',
   code: '',
-  source: '',
+  icon: '',
   category: '',
   alias: '',
   sort: '',
@@ -189,7 +189,7 @@ export default {
       if (id) {
         this.id = id
         getMenu(id).then(res => {
-          const requestData = res.data.data
+          const requestData = res.data
 
           if (requestData.deptId) {
             requestData.currentDepts = requestData.deptId.split(',')
@@ -213,7 +213,7 @@ export default {
     },
     loadParentData() {
       getRoutes().then(res => {
-        this.MenuParentData = this.handlerTreeData(res.data.data)
+        this.MenuParentData = this.handlerTreeData(res.data)
       })
     },
     onSubmit() {
@@ -269,7 +269,7 @@ export default {
     },
     /** 菜单图标的点击事件 */
     onChangeMenu(v) {
-      this.form.setFieldsValue({ source: v })
+      this.form.setFieldsValue({ icon: v })
       this.menuVisible = false
     },
     /** 下拉弹层渲染节点固定在触发器的父元素中 */

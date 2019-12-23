@@ -52,11 +52,6 @@
           </a-popconfirm>
         </div>
       </template>
-      <template #deptCategory="text, record">
-        <a-tag v-if="record.deptCategory!=-1" color="blue">
-          {{ record.deptCategoryName }}
-        </a-tag>
-      </template>
     </a-table>
 
     <dept-edit ref="modal" @ok="onModalOk" />
@@ -65,7 +60,8 @@
 <script>
 import {
   getList,
-  remove
+  remove,
+  singleRemove
 } from '@/api/system/dept'
 import { ACTION_TYPE } from '@/config/env'
 import DeptEdit from './DeptEdit.vue'
@@ -78,11 +74,6 @@ const columns = [
   {
     title: '机构全称',
     dataIndex: 'fullName'
-  },
-  {
-    title: '机构类型',
-    dataIndex: 'deptCategory',
-    scopedSlots: { customRender: 'deptCategory' }
   },
   {
     title: '排序',
@@ -126,7 +117,7 @@ export default {
       this.isLoading = true
       getList(this.current, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data
+          this.tableDataList = res.data
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -171,7 +162,7 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      remove(id).then(() => {
+      singleRemove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })

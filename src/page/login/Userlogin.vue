@@ -47,10 +47,9 @@ export default {
       spinning: false,
       tenantMode: website.tenantMode,
       loginForm: {
-        tenantId: '000000',
+        rememberMe: true,
         username: devUsername,
-        password: devPassword,
-        type: 'account'
+        password: devPassword
       },
       loginRules: {
         tenantId: [

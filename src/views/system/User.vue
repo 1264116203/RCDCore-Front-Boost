@@ -71,7 +71,8 @@
 <script>
 import {
   getList,
-  remove
+  remove,
+  singleRemove
 } from '@/api/system/user'
 import UserEdit from './UserEdit.vue'
 import { ACTION_TYPE } from '@/config/env'
@@ -146,8 +147,8 @@ export default {
       this.isLoading = true
       getList(this.pagination.current, this.pagination.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.data.records
-          this.pagination.total = res.data.data.total
+          this.tableDataList = res.data.content
+          this.pagination.total = res.data.totalElements
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -196,7 +197,7 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      remove(id).then(() => {
+      singleRemove(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })

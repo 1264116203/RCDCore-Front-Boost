@@ -35,7 +35,8 @@ axios.interceptors.request.use(config => {
 
   config.headers['Authorization'] = `Basic ${Base64.encode(`${website.clientId}:${website.clientSecret}`)}`
   if (getToken() && !isToken) {
-    config.headers['Blade-Auth'] = 'bearer ' + getToken() // 让每个请求携带token--['Authorization']为自定义key 请根据实际情况自行修改
+    // config.headers['Blade-Auth'] = 'bearer ' + getToken() // 让每个请求携带token--['Authorization']为自定义key 请根据实际情况自行修改
+    config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带token--['Authorization']为自定义key 请根据实际情况自行修改
   }
 
   // headers中配置serialize为true开启序列化
@@ -50,7 +51,7 @@ axios.interceptors.request.use(config => {
 // HTTP response拦截
 axios.interceptors.response.use(res => {
   NProgress.done()
-  const status = res.data.code || 200
+  const status = res.status || 200
   const statusWhiteList = website.statusWhiteList || []
   const message = res.data.msg || '未知错误'
 
@@ -63,7 +64,6 @@ axios.interceptors.response.use(res => {
     store.dispatch('user/clearAllAuthInfos')
       .then(() => router.push({ path: '/login' }))
   }
-
   // 如果请求为非200否者默认统一处理
   if (status !== 200) {
     Antd.message.error({ content: message })
