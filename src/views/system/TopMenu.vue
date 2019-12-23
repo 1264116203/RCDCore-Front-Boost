@@ -90,6 +90,7 @@ import {
 } from '@/api/system/topmenu'
 import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
+import { myMixin } from '@/components/mixins/mainMixin'
 
 const columns = [
   {
@@ -119,9 +120,9 @@ export default {
   components: {
     TopMenuEdit
   },
+  mixins: [myMixin],
   data () {
     return {
-      tableDataList: [],
       /** 搜索的条件  菜单名称 菜单编号 */
       searchInfo: {
         name: '',
@@ -130,12 +131,6 @@ export default {
       columns,
       current: 1,
       pageSize: 10,
-      /** 页面是否加载 */
-      isLoading: false,
-      formLabelWidth: '120px',
-      /** 全选 */
-      selectedRowKeys: [],
-      selectedRowIds: [],
       /** 权限设置 */
       grantVisible: false,
       selectedKeys: [],
@@ -143,9 +138,6 @@ export default {
       grantMenuTreeDta: [],
       nowId: ''
     }
-  },
-  created () {
-    this.fetchTableData()
   },
   methods: {
     /** 表格数据 */
@@ -176,25 +168,6 @@ export default {
         code: ''
       }
       this.fetchTableData()
-    },
-    /** 添加按钮事件 */
-    handleAdd () {
-      this.openCreateModal()
-    },
-    /** 搜索按钮事件 */
-    onSearch () {
-      this.fetchTableData()
-    },
-    /** 弹框确定事件 */
-    onModalOk(type, payload) {
-      if (type !== 'detail') {
-        this.onSearch()
-      }
-    },
-    /** 全选按钮事件 */
-    onSelectChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRowIds = selectedRows.map(item => item.id)
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {

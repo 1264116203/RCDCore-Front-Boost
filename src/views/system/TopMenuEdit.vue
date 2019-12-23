@@ -83,6 +83,7 @@ import {
 } from '@/api/system/topmenu'
 import { TreeSelect } from 'ant-design-vue'
 import menuIconList from '@/config/menuIcon'
+import { modelMixin } from '@/components/mixins/modelMixin'
 
 const EmptyUserForm = {
   name: '',
@@ -92,17 +93,11 @@ const EmptyUserForm = {
 }
 
 export default {
+  mixins: [modelMixin],
   data() {
     return {
-      form: this.$form.createForm(this),
-      title: '',
-      actionType: 'creation',
-      id: '',
-      /** *信息展示的弹框 */
-      formVisible: false,
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
       SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      isDisable: false,
       /** *菜单图标选择的弹框 */
       menuVisible: false,
       menuIconList: menuIconList
@@ -149,36 +144,6 @@ export default {
     openMenuModal() {
       this.menuVisible = true
     },
-    onSubmit() {
-      switch (this.actionType) {
-        case 'creation':
-          this.doCreation()
-          break
-        case 'update':
-          this.doUpdate()
-          break
-        case 'detail':
-        default:
-          this.doDetail()
-      }
-    },
-    onOk() {
-      this.form.validateFields((errors, values) => {
-        if (!errors) {
-          this.onSubmit()
-        } else {
-          this.$message.error('校验失败！')
-          console.error(errors, values)
-        }
-      })
-    },
-    onCancel() {
-      this.$emit('cancel')
-    },
-    doDetail() {
-      this.$emit('ok', this.actionType)
-      this.formVisible = false
-    },
     doCreation() {
       const formData = this.form.getFieldsValue()
       add(formData)
@@ -204,10 +169,6 @@ export default {
     onChangeMenu(v) {
       this.form.setFieldsValue({ source: v })
       this.menuVisible = false
-    },
-    /** 下拉弹层渲染节点固定在触发器的父元素中 */
-    getPopupContainer(triggerNode) {
-      return triggerNode.parentNode
     }
   }
 }

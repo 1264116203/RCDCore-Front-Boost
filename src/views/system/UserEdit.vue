@@ -200,6 +200,7 @@ import {
 import { getDeptTree } from '@/api/system/dept'
 import { getRoleTree } from '@/api/system/role'
 import { TreeSelect } from 'ant-design-vue'
+import { modelMixin } from '@/components/mixins/modelMixin'
 
 const EmptyUserForm = {
   account: '',
@@ -216,6 +217,7 @@ const EmptyUserForm = {
 }
 
 export default {
+  mixins: [modelMixin],
   data() {
     const validatePass = (rule, value, callback) => {
       if (!value) {
@@ -235,19 +237,13 @@ export default {
       }
     }
     return {
-      form: this.$form.createForm(this),
-      title: '',
-      actionType: 'creation',
-      id: '',
-      formVisible: false,
       deptData: [],
       roleData: [],
       /** *验证密码 */
       validatePass,
       validatePass2,
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      isDisable: false
+      SHOW_PARENT: TreeSelect.SHOW_PARENT
     }
   },
   created() {
@@ -274,8 +270,8 @@ export default {
       if (id) {
         this.id = id
         getUser(id).then(res => {
-          const requestData = res.data.data
-          requestData.sex = res.data.data.sex + ''
+          const requestData = res.data
+          requestData.sex = res.data.sexName
 
           if (requestData.deptId) {
             requestData.currentDepts = requestData.deptId.split(',')
@@ -283,8 +279,8 @@ export default {
           if (requestData.roleId) {
             requestData.currentRoles = requestData.roleId.split(',')
           }
-          if (res.data.data.birthday) {
-            requestData.birthdayObj = moment(res.data.data.birthday, 'YYYY-MM-DD HH:mm:ss')
+          if (res.data.birthday) {
+            requestData.birthdayObj = moment(res.data.birthday, 'YYYY-MM-DD HH:mm:ss')
           }
 
           const formData = {}
@@ -311,36 +307,6 @@ export default {
         this.roleData = res.data
       })
     },
-    onSubmit() {
-      switch (this.actionType) {
-        case 'creation':
-          this.doCreation()
-          break
-        case 'update':
-          this.doUpdate()
-          break
-        case 'detail':
-        default:
-          this.doDetail()
-      }
-    },
-    onOk() {
-      this.form.validateFields((errors, values) => {
-        if (!errors) {
-          this.onSubmit()
-        } else {
-          this.$message.error('校验失败！')
-          console.error(errors, values)
-        }
-      })
-    },
-    onCancel() {
-      this.$emit('cancel')
-    },
-    doDetail() {
-      this.$emit('ok', this.actionType)
-      this.formVisible = false
-    },
     doCreation() {
       const formData = this.form.getFieldsValue()
 
@@ -360,7 +326,7 @@ export default {
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.format('YYYY-MM-DD HH:mm:ss')
+      formData.birthday = formData.birthdayObj.valueOf()
       formData.id = this.id
       update(formData)
         .then(() => {
@@ -369,10 +335,6 @@ export default {
           this.formVisible = false
         })
         .catch(error => { this.$message.error(error) })
-    },
-    /** 下拉弹层渲染节点固定在触发器的父元素中 */
-    getPopupContainer(triggerNode) {
-      return triggerNode.parentNode
     }
   }
 }

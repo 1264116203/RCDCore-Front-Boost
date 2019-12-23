@@ -78,6 +78,7 @@ import {
   getDeptTree
 } from '@/api/system/dept'
 import { TreeSelect } from 'ant-design-vue'
+import { modelMixin } from '@/components/mixins/modelMixin'
 
 const EmptyUserForm = {
   deptName: '',
@@ -88,17 +89,12 @@ const EmptyUserForm = {
 }
 
 export default {
+  mixins: [modelMixin],
   data() {
     return {
-      form: this.$form.createForm(this),
-      title: '',
-      actionType: 'creation',
-      id: '',
-      formVisible: false,
       deptData: [],
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      isDisable: false
+      SHOW_PARENT: TreeSelect.SHOW_PARENT
     }
   },
   created() {
@@ -144,36 +140,6 @@ export default {
         this.deptData = res.data
       })
     },
-    onSubmit() {
-      switch (this.actionType) {
-        case 'creation':
-          this.doCreation()
-          break
-        case 'update':
-          this.doUpdate()
-          break
-        case 'detail':
-        default:
-          this.doDetail()
-      }
-    },
-    onOk() {
-      this.form.validateFields((errors, values) => {
-        if (!errors) {
-          this.onSubmit()
-        } else {
-          this.$message.error('校验失败！')
-          console.error(errors, values)
-        }
-      })
-    },
-    onCancel() {
-      this.$emit('cancel')
-    },
-    doDetail() {
-      this.$emit('ok', this.actionType)
-      this.formVisible = false
-    },
     doCreation() {
       const formData = this.form.getFieldsValue()
       formData.parentId = formData.parentId.join(',')
@@ -196,10 +162,6 @@ export default {
           this.formVisible = false
         })
         .catch(error => { this.$message.error(error) })
-    },
-    /** 下拉弹层渲染节点固定在触发器的父元素中 */
-    getPopupContainer(triggerNode) {
-      return triggerNode.parentNode
     }
   }
 }
