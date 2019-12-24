@@ -166,21 +166,6 @@ export default {
   },
   methods: {
     open(type, id) {
-      // if (type === 'creation') {
-      //   this.title = '添加信息'
-      //   this.isDisable = false
-      // } else if (type === 'detail') {
-      //   this.title = '查看信息'
-      //   this.isDisable = true
-      // } else if (type === 'update') {
-      //   this.title = '修改信息'
-      //   this.isDisable = false
-      // } else {
-      //   return
-      // }
-      // this.actionType = type
-      // this.formVisible = true
-
       this.modelTitle(type)
 
       if (id) {
@@ -205,31 +190,21 @@ export default {
         })
       }
     },
+    openMenuModal() {
+      this.menuVisible = true
+    },
     loadParentData() {
       getRoutes().then(res => {
         this.MenuParentData = this.handlerTreeData(res.data)
       })
     },
+    /** *添加信息 */
     doCreation() {
-      const formData = this.form.getFieldsValue()
-      add(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.addHandle(add)
     },
+    /** *修改信息 */
     doUpdate() {
-      const formData = this.form.getFieldsValue()
-      formData.id = this.id
-      update(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.updataHandle(update)
     },
     /** 菜单图标的点击事件 */
     onChangeMenu(v) {

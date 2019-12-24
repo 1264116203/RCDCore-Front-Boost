@@ -127,28 +127,13 @@ export default {
         this.deptData = res.data
       })
     },
+    /** *添加信息 */
     doCreation() {
-      const formData = this.form.getFieldsValue()
-      formData.parentId = formData.parentId.join(',')
-      add(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.addHandle(add)
     },
+    /** *修改信息 */
     doUpdate() {
-      const formData = this.form.getFieldsValue()
-      formData.parentId = formData.parentId.join(',')
-      formData.id = this.id
-      update(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.updataHandle(update)
     }
   }
 }

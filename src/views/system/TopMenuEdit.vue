@@ -131,26 +131,13 @@ export default {
     openMenuModal() {
       this.menuVisible = true
     },
+    /** *添加信息 */
     doCreation() {
-      const formData = this.form.getFieldsValue()
-      add(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.addHandle(add)
     },
+    /** *修改信息 */
     doUpdate() {
-      const formData = this.form.getFieldsValue()
-      formData.id = this.id
-      update(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.updataHandle(update)
     },
     /** 菜单图标的点击事件 */
     onChangeMenu(v) {

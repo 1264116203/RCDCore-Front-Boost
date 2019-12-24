@@ -166,33 +166,11 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      singleRemove(id).then(() => {
-        this.fetchTableData()
-        this.$message.success('操作成功!')
-      })
+      this.commonDeleteRecord(singleRemove, id)
     },
     /** 批量删除 */
     handleBatchDelete () {
-      if (this.selectedRowIds.length === 0) {
-        this.$message.warning('请选择至少一条数据')
-        return
-      }
-      this.$confirm({
-        title: '系统提示',
-        content: '确定将选择数据删除?',
-        okText: '是',
-        okType: 'danger',
-        cancelText: '否',
-        onOk: () => {
-          remove(this.selectedRowIds.join(',')).then(() => {
-            this.fetchTableData()
-            this.$message.success('操作成功!')
-          })
-        },
-        onCancel: () => {
-          console.log('Cancel')
-        }
-      })
+      this.commonBatcherDelete(remove)
     },
     /** 设置权限 */
     handleGrantSet(id) {

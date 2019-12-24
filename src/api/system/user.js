@@ -36,7 +36,7 @@ export const add = (row) => {
 export const update = (row) => {
   return request({
     url: '/api/user',
-    method: 'post',
+    method: 'put',
     data: row
   })
 }

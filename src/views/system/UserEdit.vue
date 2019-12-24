@@ -243,7 +243,8 @@ export default {
       validatePass,
       validatePass2,
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT
+      SHOW_PARENT: TreeSelect.SHOW_PARENT,
+      id: ''
     }
   },
   created() {
@@ -258,7 +259,7 @@ export default {
         this.id = id
         getUser(id).then(res => {
           const requestData = res.data
-          requestData.sex = res.data.sexName
+          requestData.sex = (res.data.sex === 1 ? '男' : '女')
 
           if (requestData.deptId) {
             requestData.currentDepts = requestData.deptId.split(',')
@@ -294,32 +295,31 @@ export default {
         this.roleData = res.data
       })
     },
+    /** *添加信息 */
     doCreation() {
-      const formData = this.formData()
-      add(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.addHandle(add)
     },
+    /** *修改信息 */
     doUpdate() {
-      const formData = this.formData()
-      update(formData)
-        .then(() => {
-          this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
-          this.formVisible = false
-        })
-        .catch(error => { this.$message.error(error) })
+      this.updataHandle(update)
     },
-    formData() {
+    addFormData() {
       const formData = this.form.getFieldsValue()
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
       formData.birthday = formData.birthdayObj.valueOf()
+      formData.sex = (formData.sex === '男' ? 1 : 2)
+
+      return formData
+    },
+    updataFormData() {
+      const formData = this.form.getFieldsValue()
+
+      formData.deptId = formData.currentDepts.join(',')
+      formData.roleId = formData.currentRoles.join(',')
+      formData.birthday = formData.birthdayObj.valueOf()
+      formData.sex = (formData.sex === '男' ? 1 : 2)
       formData.id = this.id
 
       return formData

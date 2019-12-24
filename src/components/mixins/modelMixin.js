@@ -28,6 +28,42 @@ export const modelMixin = {
       this.actionType = type
       this.formVisible = true
     },
+    /** *添加 表单内容 */
+    addFormData() {
+      const formData = this.form.getFieldsValue()
+
+      return formData
+    },
+    /** *修改 表单内容 */
+    updataFormData() {
+      const formData = this.form.getFieldsValue()
+      formData.id = this.id
+
+      return formData
+    },
+    /** *添加信息 */
+    addHandle(api) {
+      const formData = this.addFormData()
+      api(formData)
+        .then(() => {
+          this.$emit('ok', this.actionType, formData)
+          this.$message.success('操作成功!')
+          this.formVisible = false
+        })
+        .catch(error => { this.$message.error(error) })
+    },
+    /** *修改信息 */
+    updataHandle(api) {
+      const formData = this.updataFormData()
+      formData.id = this.id
+      api(formData)
+        .then(() => {
+          this.$emit('ok', this.actionType, formData)
+          this.$message.success('操作成功!')
+          this.formVisible = false
+        })
+        .catch(error => { this.$message.error(error) })
+    },
     onSubmit() {
       switch (this.actionType) {
         case 'creation':
