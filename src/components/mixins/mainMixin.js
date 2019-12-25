@@ -1,3 +1,5 @@
+import { defaultsDeep } from 'lodash'
+
 export const myMixin = {
   data() {
     return {
@@ -17,7 +19,8 @@ export const myMixin = {
     /** 表格数据 */
     fetchTableData () {},
     handleTableChange(pagination) {
-      this.pagination = { ...this.pagination, ...pagination }
+      // this.pagination = { ...this.pagination, ...pagination }
+      this.pagination = defaultsDeep(this.pagination, pagination)
       this.fetchTableData()
     },
     /** 添加按钮事件 */
