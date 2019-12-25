@@ -1,9 +1,7 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request({
-    url: '/api/topmenu/pagination',
-    method: 'get',
+  return request.get('/api/topmenu/pagination', {
     params: {
       ...params,
       page,
@@ -13,23 +11,11 @@ export const getList = (page, size, params) => {
 }
 
 export const getDetail = (id) => {
-  return request({
-    url: '/api/topmenu/' + id,
-    method: 'get',
-    params: {
-      id
-    }
-  })
+  return request.get('/api/topmenu/' + id)
 }
 
 export const remove = (ids) => {
-  return request({
-    url: '/api/topmenu/batch',
-    method: 'DELETE',
-    params: {
-      ids
-    }
-  })
+  return request.delete('/api/topmenu/batch', { params: { ids } })
 }
 
 export const singleRemove = (id) => {
@@ -37,45 +23,21 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request({
-    url: '/api/topmenu',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/topmenu', { data: row })
 }
 
 export const update = (row) => {
-  return request({
-    url: '/api/topmenu',
-    method: 'PUT',
-    data: row
-  })
+  return request.put('/api/topmenu', { data: row })
 }
 
 export const grantTree = () => {
-  return request({
-    url: '/api/menu/grant-top-tree',
-    method: 'get'
-  })
+  return request.get('/api/menu/grant-top-tree')
 }
 
 export const getTopTree = (topMenuIds) => {
-  return request({
-    url: '/api/menu/top-tree-keys',
-    method: 'get',
-    params: {
-      topMenuIds
-    }
-  })
+  return request.get('/api/menu/top-tree-keys', { params: { topMenuIds } })
 }
 
 export const grant = (topMenuIds, menuIds) => {
-  return request({
-    url: '/api/topmenu/grant',
-    method: 'post',
-    params: {
-      topMenuIds,
-      menuIds
-    }
-  })
+  return request.post('/api/topmenu/grant', { params: { topMenuIds, menuIds } })
 }

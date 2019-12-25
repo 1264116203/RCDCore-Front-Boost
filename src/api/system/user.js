@@ -1,24 +1,16 @@
 import request from '@/rcore-axios'
 
 export const getList = (current, size, params) => {
-  return request({
-    url: '/api/user/pagination',
-    method: 'get',
+  return request.get('/api/user/pagination', {
     params: {
       ...params,
       current,
       size
-    }
-  })
+    } })
 }
+
 export const remove = (ids) => {
-  return request({
-    url: '/api/user/batch',
-    method: 'DELETE',
-    params: {
-      ids
-    }
-  })
+  return request.delete('/api/user/batch', { params: { ids } })
 }
 
 export const singleRemove = (id) => {
@@ -26,29 +18,15 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request({
-    url: '/api/user',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/user/', { data: row })
 }
 
 export const update = (row) => {
-  return request({
-    url: '/api/user',
-    method: 'put',
-    data: row
-  })
+  return request.put('/api/user/', { data: row })
 }
 
 export const getUser = (id) => {
-  return request({
-    url: '/api/user/' + id,
-    method: 'get',
-    params: {
-      id
-    }
-  })
+  return request.get('/api/user/' + id)
 }
 
 export const getUserInfo = () => {

@@ -1,9 +1,7 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request({
-    url: '/api/dict/query',
-    method: 'get',
+  return request.get('/api/dict/query', {
     params: {
       ...params,
       page,
@@ -11,10 +9,9 @@ export const getList = (page, size, params) => {
     }
   })
 }
+
 export const remove = (ids) => {
-  return request({
-    url: '/api/dict/batch',
-    method: 'DELETE',
+  return request.delete('/api/dict/batch', {
     params: {
       ids
     }
@@ -26,41 +23,20 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request({
-    url: '/api/dict',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/dict', { data: row })
 }
 
 export const update = (row) => {
-  return request({
-    url: '/api/dict',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/dict', { data: row })
 }
 
 export const getDict = (id) => {
-  return request({
-    url: '/api/dict/' + id,
-    method: 'get',
-    params: {
-      id
-    }
-  })
+  return request.get('/api/dict/' + id)
 }
 export const getDictTree = () => {
-  return request({
-    url: '/api/dict/tree',
-    method: 'get'
-  })
+  return request.get('/api/dict/tree')
 }
 
 export const getDictionary = (params) => {
-  return request({
-    url: '/api/dict/dictionary',
-    method: 'get',
-    params
-  })
+  return request.get('/api/dict/dictionary')
 }

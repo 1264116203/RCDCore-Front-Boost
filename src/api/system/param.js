@@ -1,9 +1,7 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request({
-    url: '/api/param/pagination',
-    method: 'get',
+  return request.get('/api/param/pagination', {
     params: {
       ...params,
       page,
@@ -13,19 +11,11 @@ export const getList = (page, size, params) => {
 }
 
 export const getParam = (id) => {
-  return request({
-    url: '/api/param/' + id,
-    method: 'get',
-    params: {
-      id
-    }
-  })
+  return request.get('/api/param/' + id)
 }
 
 export const remove = (ids) => {
-  return request({
-    url: '/api/param/batch',
-    method: 'DELETE',
+  return request.delete('/api/param/batch', {
     params: {
       ids
     }
@@ -37,17 +27,9 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request({
-    url: '/api/param',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/param', { data: row })
 }
 
 export const update = (row) => {
-  return request({
-    url: '/api/param',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/param', { data: row })
 }

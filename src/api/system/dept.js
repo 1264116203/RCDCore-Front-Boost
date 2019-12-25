@@ -1,20 +1,17 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request({
-    url: '/api/dept/query',
-    method: 'get',
+  return request.get('/api/dept/query', {
     params: {
+      ...params,
       page,
-      size,
-      ...params
+      size
     }
   })
 }
+
 export const remove = (ids) => {
-  return request({
-    url: '/api/dept/batch',
-    method: 'DELETE',
+  return request.delete('/api/dept/batch', {
     params: {
       ids
     }
@@ -26,34 +23,18 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request({
-    url: '/api/dept',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/dept', { data: row })
 }
 
 export const update = (row) => {
-  return request({
-    url: '/api/dept',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/dept', { data: row })
 }
 
 export const getDept = (id) => {
-  return request({
-    url: '/api/dept/' + id,
-    method: 'get',
-    params: {
-      id
-    }
-  })
+  return request.get('/api/dept/' + id)
 }
 export const getDeptTree = (tenantId) => {
-  return request({
-    url: '/api/dept/tree',
-    method: 'get',
+  return request.get('/api/dept/tree', {
     params: {
       tenantId
     }

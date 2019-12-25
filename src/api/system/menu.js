@@ -1,21 +1,17 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request({
-    url: '/api/menu/query',
-    method: 'get',
+  return request.get('/api/menu/query', {
     params: {
+      ...params,
       page,
-      size,
-      ...params
+      size
     }
   })
 }
 
 export const remove = (ids) => {
-  return request({
-    url: '/api/menu/batch',
-    method: 'DELETE',
+  return request.delete('/api/menu/batch', {
     params: {
       ids
     }
@@ -27,37 +23,25 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request({
-    url: '/api/menu',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/menu', { data: row })
 }
 
 export const update = (row) => {
-  return request({
-    url: '/api/menu',
-    method: 'post',
-    data: row
-  })
+  return request.post('/api/menu', { data: row })
 }
 
 export const getMenu = (id) => {
-  return request({
-    url: '/api/menu/' + id,
-    method: 'get'
-  })
+  return request.get('/api/menu/' + id)
 }
 
-export const getTopMenu = () => request({
-  url: '/api/menu/top-menu',
-  method: 'get'
-})
+export const getTopMenu = () => {
+  return request.get('/api/menu/top-menu')
+}
 
-export const getRoutes = (topMenuId) => request({
-  url: '/api/menu/routes',
-  method: 'get',
-  params: {
-    topMenuId
-  }
-})
+export const getRoutes = (topMenuId) => {
+  return request.get('/api/menu/routes', {
+    params: {
+      topMenuId
+    }
+  })
+}
