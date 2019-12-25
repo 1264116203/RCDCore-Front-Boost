@@ -23,11 +23,11 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/menu', { data: row })
+  return request.post('/api/menu', row)
 }
 
 export const update = (row) => {
-  return request.post('/api/menu', { data: row })
+  return request.post('/api/menu', row)
 }
 
 export const getMenu = (id) => {

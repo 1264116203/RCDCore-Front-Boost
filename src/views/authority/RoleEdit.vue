@@ -44,10 +44,9 @@
         </a-form-item>
 
         <a-form-item label="角色排序">
-          <a-input
+          <a-input-number
             v-decorator="['sort', { rules: [{ required: true, message: '请输入角色排序' }] }]"
             placeholder="请输入角色排序"
-            type="number"
             :disabled="isDisable"
           />
         </a-form-item>

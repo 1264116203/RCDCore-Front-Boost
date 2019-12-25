@@ -27,9 +27,9 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/param', { data: row })
+  return request.post('/api/param', row)
 }
 
 export const update = (row) => {
-  return request.post('/api/param', { data: row })
+  return request.post('/api/param', row)
 }

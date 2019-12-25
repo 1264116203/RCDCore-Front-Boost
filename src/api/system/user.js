@@ -18,11 +18,11 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/user/', { data: row })
+  return request.post('/api/user/', row)
 }
 
 export const update = (row) => {
-  return request.put('/api/user/', { data: row })
+  return request.put('/api/user/', row)
 }
 
 export const getUser = (id) => {

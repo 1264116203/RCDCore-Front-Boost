@@ -23,11 +23,11 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/dict', { data: row })
+  return request.post('/api/dict', row)
 }
 
 export const update = (row) => {
-  return request.post('/api/dict', { data: row })
+  return request.post('/api/dict', row)
 }
 
 export const getDict = (id) => {
@@ -38,5 +38,5 @@ export const getDictTree = () => {
 }
 
 export const getDictionary = (params) => {
-  return request.get('/api/dict/dictionary')
+  return request.get('/api/dict/dictionary', { params })
 }

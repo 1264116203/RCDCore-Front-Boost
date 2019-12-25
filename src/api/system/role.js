@@ -42,11 +42,11 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/role', { data: row })
+  return request.post('/api/role', row)
 }
 
 export const update = (row) => {
-  return request.post('/api/role', { data: row })
+  return request.post('/api/role', row)
 }
 
 export const getRoleTreeKeys = (roleIds) => {

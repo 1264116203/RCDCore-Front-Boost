@@ -23,11 +23,11 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/dept', { data: row })
+  return request.post('/api/dept', row)
 }
 
 export const update = (row) => {
-  return request.post('/api/dept', { data: row })
+  return request.post('/api/dept', row)
 }
 
 export const getDept = (id) => {

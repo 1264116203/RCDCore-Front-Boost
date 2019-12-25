@@ -23,11 +23,11 @@ export const singleRemove = (id) => {
 }
 
 export const add = (row) => {
-  return request.post('/api/topmenu', { data: row })
+  return request.post('/api/topmenu', row)
 }
 
 export const update = (row) => {
-  return request.put('/api/topmenu', { data: row })
+  return request.put('/api/topmenu', row)
 }
 
 export const grantTree = () => {
