@@ -36,10 +36,7 @@
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       :pagination="false"
     >
-      <template
-        slot="operation"
-        slot-scope="text, record"
-      >
+      <template #operation="text, record">
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
             <a-icon type="eye" />查看
