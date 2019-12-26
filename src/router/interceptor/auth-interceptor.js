@@ -1,5 +1,3 @@
-// 全站权限配置
-
 import router from '@/router'
 import store from '@/store'
 import { validateNull } from '@/util/validate'
@@ -14,8 +12,10 @@ const lockPage = store.getters.website.lockPage
 router.beforeEach((to, from, next) => {
   const meta = Object.assign({ isAuth: false, isTab: false }, (to.meta || {}))
 
+  const cookieToken = getToken()
+
   // 未登录时
-  if (!getToken()) {
+  if (!cookieToken) {
     // 判断是否需要认证，没有登录访问去登录页
     if (!meta.isAuth) {
       next()
@@ -23,6 +23,10 @@ router.beforeEach((to, from, next) => {
       next('/login')
     }
     return
+  }
+
+  if (store.getters.token !== cookieToken) {
+    store.commit('user/SET_TOKEN', cookieToken)
   }
 
   // 如果登录成功访问登录页跳转到主页

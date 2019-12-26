@@ -1,8 +1,7 @@
 import Cookies from 'js-cookie'
 
-// TODO 来日改掉saber字眼
-const TokenKey = 'saber-access-token'
-const RefreshTokenKey = 'saber-refresh-token'
+const TokenKey = 'access-token'
+const RefreshTokenKey = 'refresh-token'
 
 export function getToken () {
   return Cookies.get(TokenKey)
