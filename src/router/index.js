@@ -81,7 +81,7 @@ router.addRoutes([{
   },
   {
     path: '/system/dept',
-    name: '机构管理',
+    name: '部门管理',
     meta: {
       isTab: true,
       isAuth: true
