@@ -1,11 +1,8 @@
 <template>
   <a-spin class="warp" :spinning="isLoading">
     <a-form layout="inline">
-      <a-form-item label="机构名称">
-        <a-input v-model="searchInfo.deptName" placeholder="机构名称" />
-      </a-form-item>
-      <a-form-item label="机构全称">
-        <a-input v-model="searchInfo.fullName" placeholder="机构全称" />
+      <a-form-item label="部门名称">
+        <a-input v-model="searchInfo.deptName" placeholder="部门名称" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="onSearch">
@@ -35,6 +32,7 @@
       :data-source="tableDataList"
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       :pagination="false"
+      :default-expand-all-rows="true"
     >
       <template
         slot="operation"
@@ -59,7 +57,7 @@
 </template>
 <script>
 import {
-  getList,
+  getDeptTree,
   remove,
   singleRemove
 } from '@/api/system/dept'
@@ -69,16 +67,8 @@ import { myMixin } from '@/components/mixins/mainMixin'
 
 const columns = [
   {
-    title: '机构名称',
-    dataIndex: 'deptName'
-  },
-  {
-    title: '机构全称',
-    dataIndex: 'fullName'
-  },
-  {
-    title: '排序',
-    dataIndex: 'sort'
+    title: '部门名称',
+    dataIndex: 'title'
   },
   {
     title: '操作',
@@ -93,10 +83,9 @@ export default {
   mixins: [myMixin],
   data () {
     return {
-      /** 搜索的条件  机构名称 机构全称 */
+      /** 搜索的条件  部门名称 部门全称 */
       searchInfo: {
-        deptName: '',
-        fullName: ''
+        deptName: ''
       },
       columns,
       current: 1,
@@ -107,7 +96,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getList(this.current, this.pageSize, this.searchInfo)
+      getDeptTree(this.searchInfo)
         .then(res => {
           this.tableDataList = res.data
         })
@@ -128,8 +117,7 @@ export default {
     /** 清空按钮事件 */
     clearSearch () {
       this.searchInfo = {
-        deptName: '',
-        fullName: ''
+        deptName: ''
       }
       this.fetchTableData()
     },

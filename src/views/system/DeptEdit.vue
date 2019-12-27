@@ -10,31 +10,30 @@
       @ok="onOk"
     >
       <a-form ref="form" :form="form" class="d2-col-form" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" @submit="onSubmit">
-        <a-form-item label="机构名称">
+        <a-form-item label="部门名称">
           <a-input
-            v-decorator="['deptName',{ rules: [{required: true,message: '请输入机构名称'}] }]"
-            placeholder="请输入机构名称"
+            v-decorator="['deptName',{ rules: [{required: true,message: '请输入部门名称'}] }]"
+            placeholder="请输入部门名称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="机构全称">
+        <a-form-item label="部门全称">
           <a-input
-            v-decorator="['fullName', { rules: [{ required: true, message: '请输入机构全称' },{whitespace:true,message:'用户昵称不能为空'}] }]"
-            placeholder="请输入机构全称"
+            v-decorator="['fullName', { rules: [{ required: true, message: '请输入部门全称' },{whitespace:true,message:'用户昵称不能为空'}] }]"
+            placeholder="请输入部门全称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item ref="role" label="上级机构">
+        <a-form-item ref="role" label="上级部门">
           <a-tree-select
-            v-decorator="['parentId',{ rules: [{ required: true, message: '请选择上级机构' }] }]"
-            placeholder="请选择上级机构"
-            :tree-data="deptData"
+            v-decorator="['parentId']"
+            placeholder="请选择上级部门，不选默认顶级父节点"
+            :tree-data="deptTreeData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
             tree-default-expand-all
-            tree-checkable
             :disabled="isDisable"
           />
         </a-form-item>
@@ -59,7 +58,7 @@
 
         <a-form-item label="备注">
           <a-input
-            v-decorator="['remark', { rules: [{ required: true, message: '请输入备注'}] }]"
+            v-decorator="['remark']"
             placeholder="请输入备注"
             type="email"
             :disabled="isDisable"
@@ -77,8 +76,8 @@ import {
   update,
   getDeptTree
 } from '@/api/system/dept'
-import { TreeSelect } from 'ant-design-vue'
 import { modelMixin } from '@/components/mixins/modelMixin'
+import { cloneDeep } from 'lodash'
 
 const EmptyUserForm = {
   deptName: '',
@@ -92,9 +91,11 @@ export default {
   mixins: [modelMixin],
   data() {
     return {
+      /**  上级部门数据 */
       deptData: [],
-      /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT
+      nowDta: [],
+      /**  上级部门选择时设置当前节点 */
+      deptTreeData: []
     }
   },
   created() {
@@ -102,20 +103,24 @@ export default {
   },
   methods: {
     open(type, id) {
+      this.deptTreeData = cloneDeep(this.deptData)
       this.modelTitle(type)
 
       if (id) {
         this.id = id
         getDept(id).then(res => {
-          const requestData = res.data
+          this.nowDta = res.data
           const formData = {}
 
           Object.keys(EmptyUserForm).forEach(key => {
-            formData[key] = requestData[key]
+            formData[key] = this.nowDta[key]
           })
 
           this.form.setFieldsValue(formData)
         })
+
+        /**  上级部门选择时设置当前节点是不可选 */
+        this.disabledNode(this.id, this.deptTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -134,6 +139,26 @@ export default {
     /** *修改信息 */
     doUpdate() {
       this.updataHandle(update)
+    },
+    /** *设置Tree当前节点和自己子节点不可选 */
+    disabledNode(currentId, treeData) {
+      for (let i = 0; i < treeData.length; i++) {
+        if (treeData[i].id === currentId) {
+          treeData[i].disabled = true
+          if (treeData[i].children && treeData[i].children.length > 0) {
+            treeData[i].children.forEach((item) => {
+              this.disabledNode(item.id, treeData[i].children)
+            })
+          }
+        } else {
+          // 没找的时候你继续找currentId
+          if (treeData[i].children && treeData[i].children.length > 0) {
+            treeData[i].children.forEach((item) => {
+              this.disabledNode(currentId, treeData[i].children)
+            })
+          }
+        }
+      }
     }
   }
 }

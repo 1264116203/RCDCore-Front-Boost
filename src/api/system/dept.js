@@ -1,15 +1,5 @@
 import request from '@/rcore-axios'
 
-export const getList = (page, size, params) => {
-  return request.get('/api/dept/query', {
-    params: {
-      ...params,
-      page,
-      size
-    }
-  })
-}
-
 export const remove = (ids) => {
   return request.delete('/api/dept/batch', {
     params: {
@@ -33,10 +23,10 @@ export const update = (row) => {
 export const getDept = (id) => {
   return request.get('/api/dept/' + id)
 }
-export const getDeptTree = (tenantId) => {
+export const getDeptTree = (searchInfo) => {
   return request.get('/api/dept/tree', {
     params: {
-      tenantId
+      searchInfo
     }
   })
 }
