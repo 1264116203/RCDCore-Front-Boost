@@ -28,8 +28,7 @@
 
         <a-form-item label="上级部门">
           <a-tree-select
-            v-decorator="['parentId']"
-            allow-clear
+            v-decorator="['parentId', {rules: [{required: true, message: '请选择上级部门节点'}]}]"
             tree-default-expand-all
             placeholder="请选择上级部门，留空则为顶级父节点"
             :tree-data="deptTreeData"
@@ -85,7 +84,7 @@ const EmptyUserForm = {
   fullName: '',
   sort: '',
   remark: '',
-  parentId: null
+  parentId: '0'
 }
 
 export default {
@@ -112,15 +111,14 @@ export default {
           const nowDta = res.data
           const formData = {}
 
-          if (nowDta.parentId === '0') {
-            nowDta.parentId = null
-          }
+          // if (nowDta.parentId === '0') {
+          //   nowDta.parentId = null
+          // }
 
           Object.keys(EmptyUserForm).forEach(key => {
             formData[key] = nowDta[key]
           })
 
-          console.log(formData)
           this.form.setFieldsValue(formData)
         })
 
@@ -134,7 +132,12 @@ export default {
     },
     loadDeptTree() {
       getDeptTree().then(res => {
-        this.deptData = res.data
+        this.deptData = [{
+          value: '0',
+          key: '0',
+          title: '顶级部门',
+          children: res.data
+        }]
       })
     },
     /** *添加信息 */
