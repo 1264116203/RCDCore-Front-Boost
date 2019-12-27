@@ -32,7 +32,7 @@
       :data-source="tableDataList"
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       :pagination="false"
-      :default-expand-all-rows="true"
+      default-expand-all-rows
     >
       <template
         slot="operation"

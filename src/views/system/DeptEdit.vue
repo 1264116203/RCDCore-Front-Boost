@@ -26,15 +26,16 @@
           />
         </a-form-item>
 
-        <a-form-item ref="role" label="上级部门">
+        <a-form-item label="上级部门">
           <a-tree-select
             v-decorator="['parentId']"
-            placeholder="请选择上级部门，不选默认顶级父节点"
-            :tree-data="deptTreeData"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :get-popup-container="getPopupContainer"
+            allow-clear
             tree-default-expand-all
+            placeholder="请选择上级部门，留空则为顶级父节点"
+            :tree-data="deptTreeData"
             :disabled="isDisable"
+            :get-popup-container="getPopupContainer"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
           />
         </a-form-item>
 
@@ -82,9 +83,9 @@ import { cloneDeep } from 'lodash'
 const EmptyUserForm = {
   deptName: '',
   fullName: '',
-  select: '',
   sort: '',
-  remark: ''
+  remark: '',
+  parentId: null
 }
 
 export default {
@@ -93,7 +94,6 @@ export default {
     return {
       /**  上级部门数据 */
       deptData: [],
-      nowDta: [],
       /**  上级部门选择时设置当前节点 */
       deptTreeData: []
     }
@@ -109,13 +109,18 @@ export default {
       if (id) {
         this.id = id
         getDept(id).then(res => {
-          this.nowDta = res.data
+          const nowDta = res.data
           const formData = {}
 
+          if (nowDta.parentId === '0') {
+            nowDta.parentId = null
+          }
+
           Object.keys(EmptyUserForm).forEach(key => {
-            formData[key] = this.nowDta[key]
+            formData[key] = nowDta[key]
           })
 
+          console.log(formData)
           this.form.setFieldsValue(formData)
         })
 
@@ -143,21 +148,33 @@ export default {
     /** *设置Tree当前节点和自己子节点不可选 */
     disabledNode(currentId, treeData) {
       for (let i = 0; i < treeData.length; i++) {
-        if (treeData[i].id === currentId) {
-          treeData[i].disabled = true
-          if (treeData[i].children && treeData[i].children.length > 0) {
-            treeData[i].children.forEach((item) => {
-              this.disabledNode(item.id, treeData[i].children)
-            })
-          }
-        } else {
-          // 没找的时候你继续找currentId
-          if (treeData[i].children && treeData[i].children.length > 0) {
-            treeData[i].children.forEach((item) => {
-              this.disabledNode(currentId, treeData[i].children)
-            })
+        const found = this._findNode(currentId, treeData[i])
+        if (found) {
+          this._disableNode(found)
+          break
+        }
+      }
+    },
+    _findNode(id, node) {
+      if (node.id === id) {
+        return node
+      }
+
+      if (node.children) {
+        let found
+        for (let i = 0; i < node.children.length; i++) {
+          found = this._findNode(id, node.children[i])
+          if (found) {
+            return found
           }
         }
+        return undefined
+      }
+    },
+    _disableNode(node) {
+      node.disabled = true
+      if (node.children) {
+        node.children.forEach(this._disableNode)
       }
     }
   }

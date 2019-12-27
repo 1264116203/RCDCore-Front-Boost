@@ -17,7 +17,7 @@ export const add = (row) => {
 }
 
 export const update = (row) => {
-  return request.post('/api/dept', row)
+  return request.put('/api/dept', row)
 }
 
 export const getDept = (id) => {
