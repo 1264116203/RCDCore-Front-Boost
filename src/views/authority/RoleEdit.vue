@@ -37,7 +37,6 @@
             :get-popup-container="getPopupContainer"
             placeholder="请选择上级角色"
             tree-default-expand-all
-            :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
             :multiple="false"
           />
@@ -61,10 +60,10 @@ import {
   update,
   getRole
 } from '@/api/system/role'
-import { TreeSelect } from 'ant-design-vue'
 import { modelMixin } from '@/components/mixins/modelMixin'
 import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
+import { disabledNode } from '@/util/tree'
 
 const EmptyUserForm = {
   roleName: '',
@@ -77,8 +76,6 @@ export default {
   mixins: [modelMixin],
   data() {
     return {
-      /** Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
       /** 原始数据的深拷贝，上级角色选择时设置当前节点的disable状态 */
       clonedRoleTreeData: []
     }
@@ -108,7 +105,7 @@ export default {
           this.form.setFieldsValue(formData)
         })
         /** 上级部门选择时设置当前节点是不可选 */
-        this.disabledNode(this.id, this.clonedRoleTreeData)
+        disabledNode(this.id, this.clonedRoleTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -116,18 +113,18 @@ export default {
       }
     },
     loadParentData() {
-      this.$store.dispatch('role/getRoleParentData')
+      this.$store.dispatch('role/getTree')
     },
     /** 添加信息 */
     doCreation() {
       this.addHandle(add).then(() => {
-        this.$store.dispatch('role/getRoleParentData')
+        this.$store.dispatch('role/getTree')
       })
     },
     /** 修改信息 */
     doUpdate() {
-      this.updataHandle(update).then(() => {
-        this.$store.dispatch('role/getRoleParentData')
+      this.updateHandle(update).then(() => {
+        this.$store.dispatch('role/getTree')
       })
     }
   }

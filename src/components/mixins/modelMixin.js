@@ -28,20 +28,20 @@ export const modelMixin = {
       this.actionType = type
       this.formVisible = true
     },
-    /** *添加 表单内容 */
+    /** 添加 表单内容 */
     addFormData() {
       const formData = this.form.getFieldsValue()
 
       return formData
     },
-    /** *修改 表单内容 */
+    /** 修改 表单内容 */
     updateFormData() {
       const formData = this.form.getFieldsValue()
       formData.id = this.id
 
       return formData
     },
-    /** *添加信息 */
+    /** 添加信息 */
     addHandle(api) {
       const formData = this.addFormData()
       return api(formData)
@@ -52,8 +52,8 @@ export const modelMixin = {
         })
         .catch(error => { this.$message.error(error) })
     },
-    /** *修改信息 */
-    updataHandle(api) {
+    /** 修改信息 */
+    updateHandle(api) {
       const formData = this.updateFormData()
       formData.id = this.id
       return api(formData)
@@ -97,40 +97,6 @@ export const modelMixin = {
     /** 下拉弹层渲染节点固定在触发器的父元素中 */
     getPopupContainer(triggerNode) {
       return triggerNode.parentNode
-    },
-    /** *设置Tree当前节点和自己子节点不可选 */
-    disabledNode(currentId, treeData) {
-      for (let i = 0; i < treeData.length; i++) {
-        const found = this._findNode(currentId, treeData[i])
-        if (found) {
-          this._disableNode(found)
-          break
-        }
-      }
-    },
-    /** *找当前节点 */
-    _findNode(id, node) {
-      if (node.id === id) {
-        return node
-      }
-
-      if (node.children) {
-        let found
-        for (let i = 0; i < node.children.length; i++) {
-          found = this._findNode(id, node.children[i])
-          if (found) {
-            return found
-          }
-        }
-        return undefined
-      }
-    },
-    /** *节点不可选 */
-    _disableNode(node) {
-      node.disabled = true
-      if (node.children) {
-        node.children.forEach(this._disableNode)
-      }
     }
   }
 }

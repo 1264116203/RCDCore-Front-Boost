@@ -30,7 +30,7 @@ const getters = {
   flowRoutes: state => state.dict.flowRoutes,
 
   deptList: state => state.dept.deptData,
-  roleList: state => state.role.RoleParentData
+  roleList: state => state.role.roleTreeData
 }
 
 export default getters

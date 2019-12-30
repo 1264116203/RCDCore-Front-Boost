@@ -78,6 +78,7 @@ import {
 import { modelMixin } from '@/components/mixins/modelMixin'
 import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
+import { disabledNode } from '@/util/tree'
 
 const EmptyUserForm = {
   deptName: '',
@@ -91,9 +92,9 @@ export default {
   mixins: [modelMixin],
   data() {
     return {
-      /**  上级部门数据 */
+      /** 上级部门数据 */
       // deptData: [],
-      /**  上级部门选择时设置当前节点 */
+      /** 上级部门选择时设置当前节点 */
       deptTreeData: []
     }
   },
@@ -120,8 +121,8 @@ export default {
           this.form.setFieldsValue(formData)
         })
 
-        /**  上级部门选择时设置当前节点是不可选 */
-        this.disabledNode(this.id, this.deptTreeData)
+        /** 上级部门选择时设置当前节点是不可选 */
+        disabledNode(this.id, this.deptTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -131,13 +132,13 @@ export default {
     loadDeptTree() {
       this.$store.dispatch('dept/getDeptData')
     },
-    /** *添加信息 */
+    /** 添加信息 */
     doCreation() {
       this.addHandle(add).then(() => {
         this.$store.dispatch('dept/getDeptData')
       })
     },
-    /** *修改信息 */
+    /** 修改信息 */
     doUpdate() {
       this.updataHandle(update).then(() => {
         this.$store.dispatch('dept/getDeptData')

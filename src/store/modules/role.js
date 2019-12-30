@@ -3,25 +3,25 @@ import { getRoleTree } from '@/api/system/role'
 const role = {
   namespaced: true,
   state: {
-    RoleParentData: getStore('RoleParentData') || []
+    roleTreeData: getStore('roleTreeData') || []
   },
   actions: {
-    getRoleParentData({ commit }) {
+    getTree({ commit }) {
       return getRoleTree().then(res => {
-        const RoleParentData = [{
+        const roleTreeData = [{
           value: '0',
           key: '0',
           title: '顶级角色',
           children: res.data
         }]
-        commit('SET_ROLE_DATA', RoleParentData)
+        commit('SET_ROLE_DATA', roleTreeData)
       })
     }
   },
   mutations: {
-    SET_ROLE_DATA: (state, RoleParentData) => {
-      state.RoleParentData = RoleParentData
-      setStore('RoleParentData', state.RoleParentData)
+    SET_ROLE_DATA: (state, roleTreeData) => {
+      state.roleTreeData = roleTreeData
+      setStore('roleTreeData', state.roleTreeData)
     }
   }
 }
