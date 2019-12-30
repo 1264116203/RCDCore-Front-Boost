@@ -29,7 +29,8 @@ const getters = {
 
   flowRoutes: state => state.dict.flowRoutes,
 
-  deptData: state => state.dept.deptData
+  deptList: state => state.dept.deptData,
+  RoleParentList: state => state.role.RoleParentData
 }
 
 export default getters

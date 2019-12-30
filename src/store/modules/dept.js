@@ -6,10 +6,8 @@ const dept = {
     deptData: getStore('deptData') || []
   },
   actions: {
-    // 根据用户名登录
     getDeptData({ commit }) {
       return getDeptTree().then(res => {
-        // const deptData = res.data
         const deptData = [{
           value: '0',
           key: '0',

@@ -74,7 +74,6 @@ import {
   add,
   getDept,
   update
-  // getDeptTree
 } from '@/api/system/dept'
 import { modelMixin } from '@/components/mixins/modelMixin'
 import { mapGetters } from 'vuex'
@@ -99,14 +98,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['deptData'])
+    ...mapGetters(['deptList'])
   },
   created() {
     this.loadDeptTree()
   },
   methods: {
     open(type, id) {
-      this.deptTreeData = cloneDeep(this.deptData)
+      this.deptTreeData = cloneDeep(this.deptList)
       this.modelTitle(type)
 
       if (id) {
@@ -114,11 +113,6 @@ export default {
         getDept(id).then(res => {
           const nowDta = res.data
           const formData = {}
-
-          // if (nowDta.parentId === '0') {
-          //   nowDta.parentId = null
-          // }
-
           Object.keys(EmptyUserForm).forEach(key => {
             formData[key] = nowDta[key]
           })
@@ -136,14 +130,6 @@ export default {
     },
     loadDeptTree() {
       this.$store.dispatch('dept/getDeptData')
-      // getDeptTree().then(res => {
-      //   this.deptData = [{
-      //     value: '0',
-      //     key: '0',
-      //     title: '顶级部门',
-      //     children: res.data
-      //   }]
-      // })
     },
     /** *添加信息 */
     doCreation() {
@@ -156,38 +142,6 @@ export default {
       this.updataHandle(update).then(() => {
         this.$store.dispatch('dept/getDeptData')
       })
-    },
-    /** *设置Tree当前节点和自己子节点不可选 */
-    disabledNode(currentId, treeData) {
-      for (let i = 0; i < treeData.length; i++) {
-        const found = this._findNode(currentId, treeData[i])
-        if (found) {
-          this._disableNode(found)
-          break
-        }
-      }
-    },
-    _findNode(id, node) {
-      if (node.id === id) {
-        return node
-      }
-
-      if (node.children) {
-        let found
-        for (let i = 0; i < node.children.length; i++) {
-          found = this._findNode(id, node.children[i])
-          if (found) {
-            return found
-          }
-        }
-        return undefined
-      }
-    },
-    _disableNode(node) {
-      node.disabled = true
-      if (node.children) {
-        node.children.forEach(this._disableNode)
-      }
     }
   }
 }

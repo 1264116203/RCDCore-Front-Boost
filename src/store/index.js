@@ -7,6 +7,7 @@ import sidemenu from './modules/sidemenu'
 import tabs from './modules/tabs'
 import user from './modules/user'
 import dept from './modules/dept'
+import role from './modules/role'
 import getters from '../store/getters'
 
 Vue.use(Vuex)
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
     sidemenu,
     tabs,
     user,
-    dept
+    dept,
+    role
   },
   getters
 })

@@ -97,6 +97,40 @@ export const modelMixin = {
     /** 下拉弹层渲染节点固定在触发器的父元素中 */
     getPopupContainer(triggerNode) {
       return triggerNode.parentNode
+    },
+    /** *设置Tree当前节点和自己子节点不可选 */
+    disabledNode(currentId, treeData) {
+      for (let i = 0; i < treeData.length; i++) {
+        const found = this._findNode(currentId, treeData[i])
+        if (found) {
+          this._disableNode(found)
+          break
+        }
+      }
+    },
+    /** *找当前节点 */
+    _findNode(id, node) {
+      if (node.id === id) {
+        return node
+      }
+
+      if (node.children) {
+        let found
+        for (let i = 0; i < node.children.length; i++) {
+          found = this._findNode(id, node.children[i])
+          if (found) {
+            return found
+          }
+        }
+        return undefined
+      }
+    },
+    /** *节点不可选 */
+    _disableNode(node) {
+      node.disabled = true
+      if (node.children) {
+        node.children.forEach(this._disableNode)
+      }
     }
   }
 }

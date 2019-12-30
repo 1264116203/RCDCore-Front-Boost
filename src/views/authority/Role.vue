@@ -166,11 +166,15 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      this.commonDeleteRecord(singleRemove, id)
+      this.commonDeleteRecord(singleRemove, id).then(() => {
+        this.$store.dispatch('role/getRoleParentData')
+      })
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatchDelete(remove)
+      this.commonBatchDelete(remove).then(() => {
+        this.$store.dispatch('role/getRoleParentData')
+      })
     },
     /** 设置权限 */
     handleGrantSet(id) {

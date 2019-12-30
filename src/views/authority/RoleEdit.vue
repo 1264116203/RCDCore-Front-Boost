@@ -59,11 +59,12 @@
 import {
   add,
   update,
-  getRole,
-  getRoleTree
+  getRole
 } from '@/api/system/role'
 import { TreeSelect } from 'ant-design-vue'
 import { modelMixin } from '@/components/mixins/modelMixin'
+import { mapGetters } from 'vuex'
+import { cloneDeep } from 'lodash'
 
 const EmptyUserForm = {
   roleName: '',
@@ -76,16 +77,21 @@ export default {
   mixins: [modelMixin],
   data() {
     return {
-      RoleParentData: [],
-      /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT
+      /** Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
+      SHOW_PARENT: TreeSelect.SHOW_PARENT,
+      /** 上级角色选择时设置当前节点 */
+      RoleParentData: []
     }
+  },
+  computed: {
+    ...mapGetters(['RoleParentList'])
   },
   created() {
     this.loadParentData()
   },
   methods: {
     open(type, id) {
+      this.RoleParentData = cloneDeep(this.RoleParentList)
       this.modelTitle(type)
 
       if (id) {
@@ -101,6 +107,8 @@ export default {
 
           this.form.setFieldsValue(formData)
         })
+        /** 上级部门选择时设置当前节点是不可选 */
+        this.disabledNode(this.id, this.RoleParentData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -108,17 +116,19 @@ export default {
       }
     },
     loadParentData() {
-      getRoleTree().then(res => {
-        this.RoleParentData = res.data
+      this.$store.dispatch('role/getRoleParentData')
+    },
+    /** 添加信息 */
+    doCreation() {
+      this.addHandle(add).then(() => {
+        this.$store.dispatch('role/getRoleParentData')
       })
     },
-    /** *添加信息 */
-    doCreation() {
-      this.addHandle(add)
-    },
-    /** *修改信息 */
+    /** 修改信息 */
     doUpdate() {
-      this.updataHandle(update)
+      this.updataHandle(update).then(() => {
+        this.$store.dispatch('role/getRoleParentData')
+      })
     }
   }
 }
