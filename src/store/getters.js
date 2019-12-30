@@ -27,7 +27,9 @@ const getters = {
   logListLength: state => state.logs.logList.length || 0,
   logFlag: (state, getters) => getters.logListLength === 0,
 
-  flowRoutes: state => state.dict.flowRoutes
+  flowRoutes: state => state.dict.flowRoutes,
+
+  deptData: state => state.dept.deptData
 }
 
 export default getters

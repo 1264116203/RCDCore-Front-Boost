@@ -73,10 +73,11 @@
 import {
   add,
   getDept,
-  update,
-  getDeptTree
+  update
+  // getDeptTree
 } from '@/api/system/dept'
 import { modelMixin } from '@/components/mixins/modelMixin'
+import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
 
 const EmptyUserForm = {
@@ -92,10 +93,13 @@ export default {
   data() {
     return {
       /**  上级部门数据 */
-      deptData: [],
+      // deptData: [],
       /**  上级部门选择时设置当前节点 */
       deptTreeData: []
     }
+  },
+  computed: {
+    ...mapGetters(['deptData'])
   },
   created() {
     this.loadDeptTree()
@@ -131,18 +135,20 @@ export default {
       }
     },
     loadDeptTree() {
-      getDeptTree().then(res => {
-        this.deptData = [{
-          value: '0',
-          key: '0',
-          title: '顶级部门',
-          children: res.data
-        }]
-      })
+      this.$store.dispatch('dept/getDeptData')
+      // getDeptTree().then(res => {
+      //   this.deptData = [{
+      //     value: '0',
+      //     key: '0',
+      //     title: '顶级部门',
+      //     children: res.data
+      //   }]
+      // })
     },
     /** *添加信息 */
     doCreation() {
       this.addHandle(add)
+      this.$store.dispatch('dept/getDeptData')
     },
     /** *修改信息 */
     doUpdate() {

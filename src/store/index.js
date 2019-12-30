@@ -6,6 +6,7 @@ import logs from './modules/logs'
 import sidemenu from './modules/sidemenu'
 import tabs from './modules/tabs'
 import user from './modules/user'
+import dept from './modules/dept'
 import getters from '../store/getters'
 
 Vue.use(Vuex)
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
     logs,
     sidemenu,
     tabs,
-    user
+    user,
+    dept
   },
   getters
 })
