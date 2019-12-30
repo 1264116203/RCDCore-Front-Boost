@@ -32,7 +32,7 @@
         <a-form-item ref="role" label="上级角色">
           <a-tree-select
             v-decorator="[ 'parentId' ]"
-            :tree-data="RoleParentData"
+            :tree-data="clonedRoleTreeData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
             placeholder="请选择上级角色"
@@ -79,19 +79,19 @@ export default {
     return {
       /** Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
       SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      /** 上级角色选择时设置当前节点 */
-      RoleParentData: []
+      /** 原始数据的深拷贝，上级角色选择时设置当前节点的disable状态 */
+      clonedRoleTreeData: []
     }
   },
   computed: {
-    ...mapGetters(['RoleParentList'])
+    ...mapGetters(['roleList'])
   },
   created() {
     this.loadParentData()
   },
   methods: {
     open(type, id) {
-      this.RoleParentData = cloneDeep(this.RoleParentList)
+      this.clonedRoleTreeData = cloneDeep(this.roleList)
       this.modelTitle(type)
 
       if (id) {
@@ -108,7 +108,7 @@ export default {
           this.form.setFieldsValue(formData)
         })
         /** 上级部门选择时设置当前节点是不可选 */
-        this.disabledNode(this.id, this.RoleParentData)
+        this.disabledNode(this.id, this.clonedRoleTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })

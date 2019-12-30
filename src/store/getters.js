@@ -19,7 +19,7 @@ const getters = {
 
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
-  roleList: state => state.user.roleList,
+  // TODO 菜单列表后续也要改名或移除
   menuList: state => state.user.menuList,
   permission: state => state.user.permission,
 
@@ -30,7 +30,7 @@ const getters = {
   flowRoutes: state => state.dict.flowRoutes,
 
   deptList: state => state.dept.deptData,
-  RoleParentList: state => state.role.RoleParentData
+  roleList: state => state.role.RoleParentData
 }
 
 export default getters

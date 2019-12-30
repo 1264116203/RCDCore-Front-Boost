@@ -313,7 +313,7 @@ export default {
 
       return formData
     },
-    updataFormData() {
+    updateFormData() {
       const formData = this.form.getFieldsValue()
 
       formData.deptId = formData.currentDepts.join(',')

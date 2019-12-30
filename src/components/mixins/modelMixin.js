@@ -5,13 +5,13 @@ export const modelMixin = {
       title: '',
       actionType: 'creation',
       id: '',
-      /** *信息展示的弹框 */
+      /** 信息展示的弹框 */
       formVisible: false,
       isDisable: false
     }
   },
   methods: {
-    /** *增删改弹框的title */
+    /** 增删改弹框的title */
     modelTitle(type) {
       if (type === 'creation') {
         this.title = '添加信息'
@@ -35,7 +35,7 @@ export const modelMixin = {
       return formData
     },
     /** *修改 表单内容 */
-    updataFormData() {
+    updateFormData() {
       const formData = this.form.getFieldsValue()
       formData.id = this.id
 
@@ -54,7 +54,7 @@ export const modelMixin = {
     },
     /** *修改信息 */
     updataHandle(api) {
-      const formData = this.updataFormData()
+      const formData = this.updateFormData()
       formData.id = this.id
       return api(formData)
         .then(() => {
