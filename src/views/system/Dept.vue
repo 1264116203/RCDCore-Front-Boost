@@ -123,11 +123,15 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      this.commonDeleteRecord(singleRemove, id)
+      this.commonDeleteRecord(singleRemove, id).then(() => {
+        this.$store.dispatch('dept/getDeptData')
+      })
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatcherDelete(remove)
+      this.commonBatchDelete(remove).then(() => {
+        this.$store.dispatch('dept/getDeptData')
+      })
     }
   }
 }

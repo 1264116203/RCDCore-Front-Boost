@@ -44,7 +44,7 @@ export const modelMixin = {
     /** *添加信息 */
     addHandle(api) {
       const formData = this.addFormData()
-      api(formData)
+      return api(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
           this.$message.success('操作成功!')
@@ -56,7 +56,7 @@ export const modelMixin = {
     updataHandle(api) {
       const formData = this.updataFormData()
       formData.id = this.id
-      api(formData)
+      return api(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
           this.$message.success('操作成功!')

@@ -43,31 +43,38 @@ export const myMixin = {
       this.selectedRowIds = selectedRows.map(item => item.id)
     },
     /** 批量删除 */
-    commonBatcherDelete(api) {
-      if (this.selectedRowIds.length === 0) {
-        this.$message.warning('请选择至少一条数据')
-        return
-      }
-      this.$confirm({
-        title: '系统提示',
-        content: '确定将选择数据删除?',
-        okText: '是',
-        okType: 'danger',
-        cancelText: '否',
-        onOk: () => {
-          api(this.selectedRowIds.join(',')).then(() => {
-            this.fetchTableData()
-            this.$message.success('操作成功!')
-          })
-        },
-        onCancel: () => {
-          console.log('Cancel')
+    commonBatchDelete(api) {
+      return new Promise((resolve, reject) => {
+        if (this.selectedRowIds.length === 0) {
+          this.$message.warning('请选择至少一条数据')
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject('请选择至少一条数据')
         }
+
+        this.$confirm({
+          title: '系统提示',
+          content: '确定将选择数据删除?',
+          okText: '是',
+          okType: 'danger',
+          cancelText: '否',
+          onOk: () => {
+            api(this.selectedRowIds.join(',')).then(() => {
+              resolve()
+              this.fetchTableData()
+              this.$message.success('操作成功!')
+            })
+          },
+          onCancel: () => {
+            // eslint-disable-next-line prefer-promise-reject-errors
+            reject('cancel')
+            console.log('Cancel')
+          }
+        })
       })
     },
     /** 单行删除按钮事件 */
     commonDeleteRecord (api, id) {
-      api(id).then(() => {
+      return api(id).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
       })

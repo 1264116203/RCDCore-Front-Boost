@@ -175,7 +175,7 @@ export default {
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatcherDelete(remove)
+      this.commonBatchDelete(remove)
     },
     /** 设置权限 */
     handleGrantSet(id) {

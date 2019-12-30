@@ -153,7 +153,7 @@ export default {
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatcherDelete(remove)
+      this.commonBatchDelete(remove)
     }
   }
 }

@@ -147,12 +147,15 @@ export default {
     },
     /** *添加信息 */
     doCreation() {
-      this.addHandle(add)
-      this.$store.dispatch('dept/getDeptData')
+      this.addHandle(add).then(() => {
+        this.$store.dispatch('dept/getDeptData')
+      })
     },
     /** *修改信息 */
     doUpdate() {
-      this.updataHandle(update)
+      this.updataHandle(update).then(() => {
+        this.$store.dispatch('dept/getDeptData')
+      })
     },
     /** *设置Tree当前节点和自己子节点不可选 */
     disabledNode(currentId, treeData) {
