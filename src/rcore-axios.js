@@ -5,9 +5,9 @@
  * isSerialize是否开启form表单提交
  * needToken是否需要token
  */
-import { Base64 } from 'js-base64'
+
 import NProgress from 'nprogress' // progress bar
-import Antd from 'ant-design-vue'
+import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
@@ -18,7 +18,7 @@ import website from '@/config/website'
 axios.defaults.timeout = 10000
 // 返回其他状态码
 axios.defaults.validateStatus = function (status) {
-  return status >= 200 && status < 300
+  return status >= 200 && status < 400
 }
 // 跨域请求，允许保存cookie
 axios.defaults.withCredentials = true
@@ -33,9 +33,7 @@ axios.interceptors.request.use(config => {
   const meta = (config.meta || {})
   const isToken = meta.isToken === false
 
-  config.headers['Authorization'] = `Basic ${Base64.encode(`${website.clientId}:${website.clientSecret}`)}`
   if (getToken() && !isToken) {
-    // config.headers['Blade-Auth'] = 'bearer ' + getToken() // 让每个请求携带token--['Authorization']为自定义key 请根据实际情况自行修改
     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带token--['Authorization']为自定义key 请根据实际情况自行修改
   }
 
@@ -51,9 +49,12 @@ axios.interceptors.request.use(config => {
 // HTTP response拦截
 axios.interceptors.response.use(res => {
   NProgress.done()
-  const status = res.status || 200
+  return res
+}, error => {
+  const res = error.response
+  NProgress.done()
   const statusWhiteList = website.statusWhiteList || []
-  const message = res.data.msg || '未知错误'
+  const message = decodeURIComponent(res.headers['x-error-message']) || '未知错误'
 
   // 如果在白名单里则自行catch逻辑处理
   if (statusWhiteList.includes(status)) {
@@ -66,12 +67,9 @@ axios.interceptors.response.use(res => {
   }
   // 如果请求为非200否者默认统一处理
   if (status !== 200) {
-    Antd.message.error({ content: message })
+    Vue.prototype.$message.error(message)
     return Promise.reject(new Error(message))
   }
-  return res
-}, error => {
-  NProgress.done()
   return Promise.reject(new Error(error))
 })
 

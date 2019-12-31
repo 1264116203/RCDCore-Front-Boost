@@ -32,12 +32,11 @@
         <a-form-item ref="dict" label="上级字典">
           <a-tree-select
             v-decorator="[ 'parentId' ]"
-            :tree-data="DictParentData"
+            :tree-data="clonedDictTreeData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
             placeholder="请选择上级字典"
             tree-default-expand-all
-            :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
             :multiple="false"
           />
@@ -52,10 +51,9 @@
         </a-form-item>
 
         <a-form-item label="字典排序">
-          <a-input
+          <a-input-number
             v-decorator="['sort', { rules: [{ required: true, message: '请输入字典排序' }] }]"
             placeholder="请输入字典排序"
-            type="number"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -77,11 +75,12 @@
 import {
   add,
   getDict,
-  update,
-  getDictTree
+  update
 } from '@/api/system/dict'
-import { TreeSelect } from 'ant-design-vue'
 import { modelMixin } from '@/components/mixins/modelMixin'
+import { mapGetters } from 'vuex'
+import { disabledNode } from '@/util/tree'
+import { cloneDeep } from 'lodash'
 
 const EmptyUserForm = {
   code: '',
@@ -96,16 +95,19 @@ export default {
   mixins: [modelMixin],
   data() {
     return {
-      /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      DictParentData: []
+      /** 原始数据的深拷贝，上级字典选择时设置当前节点的disable状态 */
+      clonedDictTreeData: []
     }
+  },
+  computed: {
+    ...mapGetters(['dictList'])
   },
   created() {
     this.loadParentData()
   },
   methods: {
     open(type, id) {
+      this.clonedDictTreeData = cloneDeep(this.dictList)
       this.modelTitle(type)
 
       if (id) {
@@ -124,6 +126,8 @@ export default {
 
           this.form.setFieldsValue(formData)
         })
+        /** 上级部门选择时设置当前节点是不可选 */
+        disabledNode(this.id, this.clonedDictTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -131,17 +135,19 @@ export default {
       }
     },
     loadParentData() {
-      getDictTree().then(res => {
-        this.DictParentData = res.data
+      this.$store.dispatch('dict/getTree')
+    },
+    /** 添加信息 */
+    doCreation() {
+      this.addHandle(add).then(() => {
+        this.$store.dispatch('dict/getTree')
       })
     },
-    /** *添加信息 */
-    doCreation() {
-      this.addHandle(add)
-    },
-    /** *修改信息 */
+    /** 修改信息 */
     doUpdate() {
-      this.updateHandle(update)
+      this.updateHandle(update).then(() => {
+        this.$store.dispatch('dict/getTree')
+      })
     }
   }
 }

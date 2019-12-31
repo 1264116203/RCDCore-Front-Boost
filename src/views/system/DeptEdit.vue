@@ -31,7 +31,7 @@
             v-decorator="['parentId', {rules: [{required: true, message: '请选择上级部门节点'}]}]"
             tree-default-expand-all
             placeholder="请选择上级部门，留空则为顶级父节点"
-            :tree-data="deptTreeData"
+            :tree-data="clonedDeptTreeData"
             :disabled="isDisable"
             :get-popup-container="getPopupContainer"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
@@ -92,10 +92,8 @@ export default {
   mixins: [modelMixin],
   data() {
     return {
-      /** 上级部门数据 */
-      // deptData: [],
-      /** 上级部门选择时设置当前节点 */
-      deptTreeData: []
+      /** 原始数据的深拷贝，上级部门选择时设置当前节点的disable状态 */
+      clonedDeptTreeData: []
     }
   },
   computed: {
@@ -106,7 +104,7 @@ export default {
   },
   methods: {
     open(type, id) {
-      this.deptTreeData = cloneDeep(this.deptList)
+      this.clonedDeptTreeData = cloneDeep(this.deptList)
       this.modelTitle(type)
 
       if (id) {
@@ -122,7 +120,7 @@ export default {
         })
 
         /** 上级部门选择时设置当前节点是不可选 */
-        disabledNode(this.id, this.deptTreeData)
+        disabledNode(this.id, this.clonedDeptTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })

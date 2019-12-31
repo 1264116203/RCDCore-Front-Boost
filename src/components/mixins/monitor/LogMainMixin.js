@@ -1,4 +1,5 @@
 import { defaultsDeep } from 'lodash'
+import moment from 'moment'
 
 export const LogMainMixin = {
   data() {
@@ -31,6 +32,10 @@ export const LogMainMixin = {
         .then(res => {
           this.tableDataList = res.data.content
           this.pagination.total = res.data.totalElements
+          /** 转换为时间格式 */
+          this.tableDataList.map(item => {
+            item.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+          })
         })
         .catch(err => console.error(err))
         .finally(() => {

@@ -85,6 +85,7 @@ import {
   getErrorLogs
 } from '@/api/logs'
 import { LogModelMixin } from '@/components/mixins/monitor/LogModelMixin'
+import moment from 'moment'
 const EmptyUserForm = {
   serviceId: '',
   serverHost: '',
@@ -105,6 +106,7 @@ export default {
       this.formVisible = true
       getErrorLogs(id).then(res => {
         const requestData = res.data
+        requestData.createTime = moment(requestData.createTime).format('YYYY-MM-DD HH:mm:ss')
         const formData = {}
 
         Object.keys(EmptyUserForm).forEach(key => {

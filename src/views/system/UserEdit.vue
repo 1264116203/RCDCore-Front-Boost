@@ -13,7 +13,7 @@
               :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
               @submit="onSubmit"
       >
-        <a-form-item label="登录账号" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="登录账号">
           <a-input
             v-decorator="[
               'account',
@@ -173,25 +173,12 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-
-        <a-form-item label="用户生日">
-          <a-date-picker
-            v-decorator="[
-              'birthdayObj',
-              { rules: [{ required: true, message: '请输入用户生日' }] },
-            ]"
-            placeholder="请输入用户生日"
-            style="width: 100%;"
-            :disabled="isDisable"
-          />
-        </a-form-item>
       </a-form>
     </a-modal>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
 import {
   add,
   getUser,
@@ -204,16 +191,13 @@ import { modelMixin } from '@/components/mixins/modelMixin'
 
 const EmptyUserForm = {
   account: '',
-  password: '',
-  passwordAgain: '',
   name: '',
   realName: '',
   currentRoles: [],
   currentDepts: [],
   phone: '',
   email: '',
-  sex: '',
-  birthdayObj: moment('2018-01-01', 'YYYY-MM-DD')
+  sex: ''
 }
 
 export default {
@@ -267,9 +251,6 @@ export default {
           if (requestData.roleId) {
             requestData.currentRoles = requestData.roleId.split(',')
           }
-          if (res.data.birthday) {
-            requestData.birthdayObj = moment(res.data.birthday, 'YYYY-MM-DD HH:mm:ss')
-          }
 
           const formData = {}
 
@@ -308,7 +289,6 @@ export default {
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.valueOf()
       formData.sex = (formData.sex === '男' ? 1 : 2)
 
       return formData
@@ -318,7 +298,6 @@ export default {
 
       formData.deptId = formData.currentDepts.join(',')
       formData.roleId = formData.currentRoles.join(',')
-      formData.birthday = formData.birthdayObj.valueOf()
       formData.sex = (formData.sex === '男' ? 1 : 2)
       formData.id = this.id
 
