@@ -10,7 +10,7 @@ export function disabledNode(currentId, treeData) {
 }
 
 /** 找当前节点 */
-export function _findNode(id, node) {
+function _findNode(id, node) {
   if (node.id === id) {
     return node
   }
@@ -28,7 +28,7 @@ export function _findNode(id, node) {
 }
 
 /** 节点不可选 */
-export function _disableNode(node) {
+function _disableNode(node) {
   node.disabled = true
   if (node.children) {
     node.children.forEach(_disableNode)

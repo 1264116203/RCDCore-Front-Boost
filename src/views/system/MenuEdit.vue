@@ -204,7 +204,7 @@ export default {
     },
     /** *修改信息 */
     doUpdate() {
-      this.updataHandle(update)
+      this.updateHandle(update)
     },
     /** 菜单图标的点击事件 */
     onChangeMenu(v) {

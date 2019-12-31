@@ -140,7 +140,7 @@ export default {
     },
     /** 修改信息 */
     doUpdate() {
-      this.updataHandle(update).then(() => {
+      this.updateHandle(update).then(() => {
         this.$store.dispatch('dept/getDeptData')
       })
     }

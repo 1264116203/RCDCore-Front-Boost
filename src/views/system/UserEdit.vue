@@ -301,7 +301,7 @@ export default {
     },
     /** *修改信息 */
     doUpdate() {
-      this.updataHandle(update)
+      this.updateHandle(update)
     },
     addFormData() {
       const formData = this.form.getFieldsValue()
