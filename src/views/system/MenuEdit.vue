@@ -167,7 +167,7 @@ export default {
   },
   methods: {
     open(type, id) {
-      this.clonedMenuTreeData = this.handlerTreeData(cloneDeep(this.resourceList))
+      this.clonedMenuTreeData = this.transformTreeData(cloneDeep(this.resourceList))
       this.modelTitle(type)
 
       if (id) {
@@ -219,16 +219,19 @@ export default {
       this.menuVisible = false
     },
     /** Tree 下拉选的数据格式 */
-    handlerTreeData(data) {
-      for (let i = 0; i < data.length; i++) {
-        data[i].title = data[i].name
-        data[i].key = data[i].id
-        data[i].value = data[i].id
-        if (data[i].children && data[i].children.length > 0) {
-          this.handlerTreeData(data[i].children)
+    transformTreeData(data) {
+      function transform(data) {
+        if (data.children) {
+          data.children = data.children.map(transform)
+        }
+        return {
+          children: data.children,
+          title: data.name,
+          key: data.id,
+          value: data.id
         }
       }
-      return data
+      return data.map(transform)
     }
   }
 }
