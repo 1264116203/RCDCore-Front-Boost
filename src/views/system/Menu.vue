@@ -125,6 +125,10 @@ export default {
       getList(this.page, this.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data
+          /** 表格数据从小到大排序 */
+          this.tableDataList.sort(function(a, b) {
+            return a.sort - b.sort
+          })
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -150,11 +154,15 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      this.commonDeleteRecord(singleRemove, id)
+      this.commonDeleteRecord(singleRemove, id).then(() => {
+        this.$store.dispatch('resource/getTree')
+      })
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatchDelete(remove)
+      this.commonBatchDelete(remove).then(() => {
+        this.$store.dispatch('resource/getTree')
+      })
     }
   }
 }

@@ -31,7 +31,8 @@ const getters = {
 
   deptList: state => state.dept.deptData,
   roleList: state => state.role.roleTreeData,
-  dictList: state => state.dict.dictTreeData
+  dictList: state => state.dict.dictTreeData,
+  resourceList: state => state.resource.resourceTreeData
 }
 
 export default getters

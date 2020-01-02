@@ -50,7 +50,7 @@ export const modelMixin = {
           this.$message.success('操作成功!')
           this.formVisible = false
         })
-        .catch(error => { this.$message.error(error) })
+        .catch(error => { console.log(error) })
     },
     /** 修改信息 */
     updateHandle(api) {
@@ -62,7 +62,7 @@ export const modelMixin = {
           this.$message.success('操作成功!')
           this.formVisible = false
         })
-        .catch(error => { this.$message.error(error) })
+        .catch(error => { console.log(error) })
     },
     onSubmit() {
       switch (this.actionType) {

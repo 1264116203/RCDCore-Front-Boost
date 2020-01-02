@@ -8,6 +8,7 @@ import tabs from './modules/tabs'
 import user from './modules/user'
 import dept from './modules/dept'
 import role from './modules/role'
+import resource from './modules/resource'
 import getters from '../store/getters'
 
 Vue.use(Vuex)
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
     tabs,
     user,
     dept,
-    role
+    role,
+    resource
   },
   getters
 })

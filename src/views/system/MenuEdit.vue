@@ -32,12 +32,11 @@
         <a-form-item ref="menu" label="上级菜单">
           <a-tree-select
             v-decorator="[ 'parentId' ]"
-            :tree-data="MenuParentData"
+            :tree-data="clonedMenuTreeData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
             placeholder="请选择上级菜单"
             tree-default-expand-all
-            :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
             :multiple="false"
           />
@@ -92,10 +91,9 @@
         </a-form-item>
 
         <a-form-item label="菜单排序">
-          <a-input
+          <a-input-number
             v-decorator="['sort', { rules: [{ required: true, message: '请输入菜单排序' }] }]"
             placeholder="请输入菜单排序"
-            type="number"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -129,12 +127,13 @@
 import {
   add,
   getMenu,
-  update,
-  getRoutes
+  update
 } from '@/api/system/menu'
-import { TreeSelect } from 'ant-design-vue'
 import menuIconList from '@/config/menuIcon'
+import { mapGetters } from 'vuex'
 import { modelMixin } from '@/components/mixins/modelMixin'
+import { cloneDeep } from 'lodash'
+import { disabledNode } from '@/util/tree'
 
 const EmptyUserForm = {
   path: '',
@@ -145,27 +144,30 @@ const EmptyUserForm = {
   alias: '',
   sort: '',
   remark: '',
-  parentId: '',
-  parentName: ''
+  parentId: ''
 }
 
 export default {
   mixins: [modelMixin],
   data() {
     return {
-      /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
       /** *菜单图标选择的弹框 */
       menuVisible: false,
       menuIconList: menuIconList,
-      MenuParentData: []
+      MenuParentData: [],
+      /** 原始数据的深拷贝，上级部门选择时设置当前节点的disable状态 */
+      clonedMenuTreeData: []
     }
+  },
+  computed: {
+    ...mapGetters(['resourceList'])
   },
   created() {
     this.loadParentData()
   },
   methods: {
     open(type, id) {
+      this.clonedMenuTreeData = this.handlerTreeData(cloneDeep(this.resourceList))
       this.modelTitle(type)
 
       if (id) {
@@ -184,6 +186,9 @@ export default {
 
           this.form.setFieldsValue(formData)
         })
+
+        /** 上级部门选择时设置当前节点是不可选 */
+        disabledNode(this.id, this.clonedMenuTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -194,17 +199,19 @@ export default {
       this.menuVisible = true
     },
     loadParentData() {
-      getRoutes().then(res => {
-        this.MenuParentData = this.handlerTreeData(res.data)
-      })
+      this.$store.dispatch('resource/getTree')
     },
     /** *添加信息 */
     doCreation() {
-      this.addHandle(add)
+      this.addHandle(add).then(() => {
+        this.$store.dispatch('resource/getTree')
+      })
     },
     /** *修改信息 */
     doUpdate() {
-      this.updateHandle(update)
+      this.updateHandle(update).then(() => {
+        this.$store.dispatch('resource/getTree')
+      })
     },
     /** 菜单图标的点击事件 */
     onChangeMenu(v) {
