@@ -1,4 +1,5 @@
 import { defaultsDeep } from 'lodash'
+import { _getArrDifference, _findChildren, _findParent, _includes, _deleteSame, _parentsChecked } from '@/util/tree'
 
 export const myMixin = {
   data() {
@@ -8,8 +9,7 @@ export const myMixin = {
       isLoading: false,
       formLabelWidth: '120px',
       /** 全选 */
-      selectedRowKeys: [],
-      selectedRowIds: []
+      selectedRowKeys: []
     }
   },
   created () {
@@ -39,13 +39,40 @@ export const myMixin = {
     },
     /** 全选按钮事件 */
     onSelectChange (selectedRowKeys, selectedRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectedRowIds = selectedRows.map(item => item.id)
+      /** 全部取消选中 */
+      if (selectedRowKeys && selectedRowKeys.length === 0) {
+        this.selectedRowKeys = []
+        return
+      }
+      /** 当前点击的ID */
+      let id = _getArrDifference(selectedRowKeys, this.selectedRowKeys)[0]
+      /** 所有子集包括自己的ID */
+      let childrenId = _findChildren(id, this.tableDataList).map(item => item.id)
+      /** 所有父级的ID */
+      let parentIds = _findParent(id, this.tableDataList).map(item => item.parentId)
+      /** 判断当前点击的是否在以选中的数组 */
+      if (_includes(this.selectedRowKeys, childrenId)) {
+        /** 取消选中，自己，子集，父级 */
+        this.selectedRowKeys = _deleteSame(this.selectedRowKeys, parentIds.concat(childrenId))
+      } else {
+        /** 选中，自己，子集，父级 */
+        /** 保存已选中的 */
+        let allSelectedIds = [...selectedRowKeys]
+        /** 选中自己的子集 */
+        if (childrenId && childrenId.length > 0) {
+          allSelectedIds.push(...childrenId)
+        }
+        /** 当前节点 */
+        let currentNode = selectedRows[0]
+        /** 选中自己的父级 */
+        _parentsChecked(currentNode, allSelectedIds, this.tableDataList)
+        this.selectedRowKeys = [...new Set(allSelectedIds)]
+      }
     },
     /** 批量删除 */
     commonBatchDelete(api) {
       return new Promise((resolve, reject) => {
-        if (this.selectedRowIds.length === 0) {
+        if (this.selectedRowKeys.length === 0) {
           this.$message.warning('请选择至少一条数据')
           // eslint-disable-next-line prefer-promise-reject-errors
           reject('请选择至少一条数据')
@@ -58,7 +85,7 @@ export const myMixin = {
           okType: 'danger',
           cancelText: '否',
           onOk: () => {
-            api(this.selectedRowIds.join(',')).then(() => {
+            api(this.selectedRowKeys.join(',')).then(() => {
               resolve()
               this.fetchTableData()
               this.$message.success('操作成功!')
