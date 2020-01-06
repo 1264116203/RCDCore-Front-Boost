@@ -95,6 +95,7 @@
             :get-popup-container="getPopupContainer"
             tree-default-expand-all
             tree-checkable
+            tree-check-strictly
             :disabled="isDisable"
           />
         </a-form-item>
@@ -110,7 +111,6 @@
             :get-popup-container="getPopupContainer"
             placeholder="请选择所属部门"
             tree-default-expand-all
-            tree-checkable
             :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
           />
@@ -246,7 +246,7 @@ export default {
           requestData.sex = (res.data.sex === 1 ? '男' : '女')
 
           if (requestData.deptId) {
-            requestData.currentDepts = requestData.deptId.split(',')
+            requestData.currentDepts = requestData.deptId
           }
           if (requestData.roleId) {
             requestData.currentRoles = requestData.roleId.split(',')
@@ -287,8 +287,8 @@ export default {
     addFormData() {
       const formData = this.form.getFieldsValue()
 
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
+      formData.deptId = formData.currentDepts
+      formData.roleId = formData.currentRoles.map(item => item.value).join(',')
       formData.sex = (formData.sex === '男' ? 1 : 2)
 
       return formData
@@ -296,8 +296,8 @@ export default {
     updateFormData() {
       const formData = this.form.getFieldsValue()
 
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
+      formData.deptId = formData.currentDepts
+      formData.roleId = formData.currentRoles.map(item => item.value).join(',')
       formData.sex = (formData.sex === '男' ? 1 : 2)
       formData.id = this.id
 
