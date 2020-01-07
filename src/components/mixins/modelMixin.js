@@ -62,6 +62,7 @@ export const modelMixin = {
     },
     /** 修改信息 */
     doUpdate(api) {
+      this.spinning = true
       const formData = this.getFormDataForUpdate()
       formData.id = this.id
       return api(formData)
