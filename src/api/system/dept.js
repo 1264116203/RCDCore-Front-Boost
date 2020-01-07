@@ -26,7 +26,7 @@ export const getDept = (id) => {
 export const getDeptTree = (searchInfo) => {
   return request.get('/api/dept/tree', {
     params: {
-      searchInfo
+      ...searchInfo
     }
   })
 }

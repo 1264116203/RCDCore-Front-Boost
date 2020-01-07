@@ -202,14 +202,14 @@ export default {
       this.$store.dispatch('resource/getTree')
     },
     /** *添加信息 */
-    doCreation() {
-      this.addHandle(add).then(() => {
+    onInsert() {
+      this.doInsert(add).then(() => {
         this.$store.dispatch('resource/getTree')
       })
     },
     /** *修改信息 */
-    doUpdate() {
-      this.updateHandle(update).then(() => {
+    onUpdate() {
+      this.doUpdate(update).then(() => {
         this.$store.dispatch('resource/getTree')
       })
     },

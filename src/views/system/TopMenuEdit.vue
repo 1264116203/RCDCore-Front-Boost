@@ -132,12 +132,12 @@ export default {
       this.menuVisible = true
     },
     /** *添加信息 */
-    doCreation() {
-      this.addHandle(add)
+    onInsert() {
+      this.doInsert(add)
     },
     /** *修改信息 */
-    doUpdate() {
-      this.updateHandle(update)
+    onUpdate() {
+      this.doUpdate(update)
     },
     /** 菜单图标的点击事件 */
     onChangeMenu(v) {

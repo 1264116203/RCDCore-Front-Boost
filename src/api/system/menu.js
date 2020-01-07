@@ -1,11 +1,9 @@
 import request from '@/rcore-axios'
 
-export const getList = (page, size, params) => {
+export const getList = (params) => {
   return request.get('/api/menu/query', {
     params: {
-      ...params,
-      page,
-      size
+      ...params
     }
   })
 }

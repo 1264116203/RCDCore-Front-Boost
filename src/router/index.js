@@ -125,15 +125,6 @@ router.addRoutes([{
     component: () => import(/* webpackChunkName: "about" */ '@/views/system/Param.vue')
   },
   {
-    path: '/system/client',
-    name: '应用管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Client.vue')
-  },
-  {
     path: '/authority/role',
     name: '角色管理',
     meta: {

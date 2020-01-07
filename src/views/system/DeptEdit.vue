@@ -5,7 +5,6 @@
       width="600px"
       :title="title"
       :mask-closable="false"
-      :ok-button-props="{ props: {disabled: isDisable} }"
       @cancel="onCancel"
       @ok="onOk"
     >
@@ -131,14 +130,14 @@ export default {
       this.$store.dispatch('dept/getDeptData')
     },
     /** 添加信息 */
-    doCreation() {
-      this.addHandle(add).then(() => {
+    onInsert() {
+      this.doInsert(add).then(() => {
         this.$store.dispatch('dept/getDeptData')
       })
     },
     /** 修改信息 */
-    doUpdate() {
-      this.updateHandle(update).then(() => {
+    onUpdate() {
+      this.doUpdate(update).then(() => {
         this.$store.dispatch('dept/getDeptData')
       })
     }

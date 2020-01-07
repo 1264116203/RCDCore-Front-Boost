@@ -122,7 +122,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getList(this.page, this.pageSize, this.searchInfo)
+      getList(this.searchInfo)
         .then(res => {
           this.tableDataList = res.data
           /** 表格数据从小到大排序 */

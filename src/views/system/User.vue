@@ -55,15 +55,13 @@
       </template>
       <template #roleId="text, record">
         <template v-if="record.roleName">
-          <a-tag v-for="name in record.roleName.split(',')" :key="name" color="blue">
-            {{ name }}
-          </a-tag>
+          <limited-tags :raw-name="record.roleName" />
         </template>
       </template>
       <template #deptId="text, record">
-        <a-tag v-if="record.deptName" color="blue">
-          {{ record.deptName }}
-        </a-tag>
+        <template v-if="record.deptName">
+          <limited-tags :raw-name="record.deptName" />
+        </template>
       </template>
     </a-table>
 
@@ -79,6 +77,7 @@ import {
 import UserEdit from './UserEdit.vue'
 import { ACTION_TYPE } from '@/config/env'
 import { myMixin } from '@/components/mixins/mainMixin'
+import LimitedTags from '@/components/scraps/LimitedTags'
 
 const columns = [
   {
@@ -96,11 +95,13 @@ const columns = [
   {
     title: '所属角色',
     dataIndex: 'roleId',
+    width: '15%',
     scopedSlots: { customRender: 'roleId' }
   },
   {
     title: '所属部门',
     dataIndex: 'deptId',
+    width: '15%',
     scopedSlots: { customRender: 'deptId' }
   },
   {
@@ -115,6 +116,7 @@ const columns = [
 ]
 export default {
   components: {
+    LimitedTags,
     UserEdit
   },
   mixins: [myMixin],

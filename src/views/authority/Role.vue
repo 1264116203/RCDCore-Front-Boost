@@ -138,7 +138,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getList(this.current, this.pageSize, this.searchInfo)
+      getList(this.searchInfo)
         .then(res => {
           this.tableDataList = res.data
         })

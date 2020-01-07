@@ -67,19 +67,31 @@
           />
         </a-form-item>
 
-        <!--<a-form-item ref="role" label="所属角色">
+        <a-form-item label="手机号">
+          <a-input
+            v-decorator="['phone', { rules: [
+              { required: true, message: '请输入手机号' },
+              { pattern:/^1[0-9]{10}$/, message: '请输入以1开头的11位手机号码'}
+            ]}]"
+            placeholder="请输入手机号"
+            type="phone"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+
+        <a-form-item ref="role" label="所属角色">
           <a-tree-select
             v-decorator="[
               'currentRoles',
               { rules: [{ required: true, message: '请选择所属角色' }] },
             ]"
             placeholder="请选择所属角色"
-            :tree-data="roleData"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :get-popup-container="getPopupContainer"
             tree-default-expand-all
             tree-checkable
             tree-check-strictly
+            :tree-data="roleData"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :get-popup-container="getPopupContainer"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -90,24 +102,13 @@
               'currentDepts',
               { rules: [{ required: true, message: '请选择所属部门' }] },
             ]"
+            placeholder="请选择所属部门"
+            tree-default-expand-all
+            tree-checkable
+            tree-check-strictly
             :tree-data="deptData"
             :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :get-popup-container="getPopupContainer"
-            placeholder="请选择所属部门"
-            tree-default-expand-all
-            :show-checked-strategy="SHOW_PARENT"
-            :disabled="isDisable"
-          />
-        </a-form-item>-->
-
-        <a-form-item label="手机号">
-          <a-input
-            v-decorator="['phone', { rules: [
-              { required: true, message: '请输入手机号' },
-              { pattern:/^1[0-9]{10}$/, message: '请输入以1开头的11位手机号码'}
-            ]}]"
-            placeholder="请输入手机号"
-            type="phone"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -132,14 +133,9 @@
 </template>
 
 <script>
-import {
-  add,
-  getUser,
-  update
-} from '@/api/system/user'
+import { add, getUser, update } from '@/api/system/user'
 import { getDeptTree } from '@/api/system/dept'
 import { getRoleTree } from '@/api/system/role'
-import { TreeSelect } from 'ant-design-vue'
 import { modelMixin } from '@/components/mixins/modelMixin'
 
 const EmptyUserForm = {
@@ -147,6 +143,8 @@ const EmptyUserForm = {
   name: '',
   realName: '',
   phone: '',
+  currentRoles: [],
+  currentDepts: [],
   email: ''
 }
 
@@ -174,14 +172,9 @@ export default {
       deptData: [],
       roleData: [],
 
-      /** 角色选择器 */
-      roleSelection: [],
-
       /** 验证密码 */
       validatePass,
-      validatePass2,
-      /** Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT
+      validatePass2
     }
   },
   created() {
@@ -197,11 +190,17 @@ export default {
         getUser(id).then(res => {
           const requestData = res.data
 
-          if (requestData.deptId) {
-            requestData.currentDepts = requestData.deptId
+          if (requestData.deptList && requestData.deptList.length > 0) {
+            requestData.currentDepts = requestData.deptList.map(dept => ({
+              label: dept.name,
+              value: dept.id
+            }))
           }
           if (requestData.roleList && requestData.roleList.length > 0) {
-            requestData.roles = requestData.roleList.map(role => role.id).join(',')
+            requestData.currentRoles = requestData.roleList.map(role => ({
+              label: role.name,
+              value: role.id
+            }))
           }
 
           const formData = {}
@@ -239,19 +238,17 @@ export default {
     getFormDataForInsert() {
       const formData = this.form.getFieldsValue()
 
-      formData.deptId = formData.currentDepts
-      formData.roleId = formData.currentRoles.map(item => item.value).join(',')
-      formData.sex = (formData.sex === '男' ? 1 : 2)
+      formData.deptIdList = formData.currentDepts.map(item => item.value)
+      formData.roleIdList = formData.currentRoles.map(item => item.value)
 
       return formData
     },
     getFormDataForUpdate() {
       const formData = this.form.getFieldsValue()
-
-      formData.deptId = formData.currentDepts
-      formData.roleId = formData.currentRoles.map(item => item.value).join(',')
-      formData.sex = (formData.sex === '男' ? 1 : 2)
       formData.id = this.id
+
+      formData.deptIdList = formData.currentDepts.map(item => item.value)
+      formData.roleIdList = formData.currentRoles.map(item => item.value)
 
       return formData
     }
