@@ -1,11 +1,11 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request.get('/api/dict/query', {
+  return request.get('/api/dict/pagination', {
     params: {
-      ...params,
       page,
-      size
+      size,
+      ...params
     }
   })
 }
@@ -32,9 +32,6 @@ export const update = (row) => {
 
 export const getDict = (id) => {
   return request.get('/api/dict/' + id)
-}
-export const getDictTree = () => {
-  return request.get('/api/dict/tree')
 }
 
 export const getDictionary = (params) => {

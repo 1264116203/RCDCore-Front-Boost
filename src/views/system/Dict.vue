@@ -5,7 +5,7 @@
         <a-input v-model="searchInfo.code" placeholder="字典编号" />
       </a-form-item>
       <a-form-item label="字典名称">
-        <a-input v-model="searchInfo.dictValue" placeholder="字典名称" />
+        <a-input v-model="searchInfo.name" placeholder="字典名称" />
       </a-form-item>
       <a-form-item label="字典备注">
         <a-input v-model="searchInfo.remark" placeholder="字典备注" />
@@ -36,30 +36,37 @@
       row-key="id"
       :columns="columns"
       :data-source="tableDataList"
-      :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       :pagination="false"
+      @expand="onExpand"
     >
-      <template
-        slot="operation"
-        slot-scope="text, record"
+      <a-table
+        slot="expandedRowRender"
+        :columns="innerColumns"
+        :data-source="innerData"
+        :pagination="false"
       >
-        <div class="editable-row-operations">
-          <a @click="openDetailModal(record.id)">
-            <a-icon type="eye" />查看
-          </a>
-          <a @click="openUpdateModal(record.id)">
-            <a-icon type="edit" />修改
-          </a>
-          <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
-            <a><a-icon type="delete" />删除</a>
-          </a-popconfirm>
-        </div>
-      </template>
-      <template #MenuIcon="text, record">
-        <a-icon :type="record.source">
-          {{ record.source }}
-        </a-icon>
-      </template>
+        <template
+          slot="operation"
+          slot-scope="text, record"
+        >
+          <div class="editable-row-operations">
+            <a @click="openDetailModal(record.id)">
+              <a-icon type="eye" />查看
+            </a>
+            <a @click="openUpdateModal(record.id)">
+              <a-icon type="edit" />修改
+            </a>
+            <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
+              <a><a-icon type="delete" />删除</a>
+            </a-popconfirm>
+          </div>
+        </template>
+        <template #MenuIcon="text, record">
+          <a-icon :type="record.source">
+            {{ record.source }}
+          </a-icon>
+        </template>
+      </a-table>
     </a-table>
 
     <dict-edit ref="modal" @ok="onModalOk" />
@@ -69,7 +76,8 @@
 import {
   getList,
   remove,
-  singleRemove
+  singleRemove,
+  getDict
 } from '@/api/system/dict'
 import { ACTION_TYPE } from '@/config/env'
 import DictEdit from './DictEdit.vue'
@@ -82,11 +90,30 @@ const columns = [
   },
   {
     title: '字典名称',
-    dataIndex: 'dictValue'
+    dataIndex: 'name'
   },
   {
-    title: '字典键值',
-    dataIndex: 'dictKey'
+    title: '字典排序',
+    dataIndex: 'sort'
+  }
+]
+
+const innerColumns = [
+  {
+    title: '字典项的键',
+    dataIndex: 'key'
+  },
+  {
+    title: '字典项的值',
+    dataIndex: 'value'
+  },
+  {
+    title: '字典项的类型',
+    dataIndex: 'type'
+  },
+  {
+    title: '备注',
+    dataIndex: 'remark'
   },
   {
     title: '字典排序',
@@ -108,12 +135,14 @@ export default {
       /** 搜索的条件  字典编号 字典名称 字典备注 */
       searchInfo: {
         code: '',
-        dictValue: '',
+        name: '',
         remark: ''
       },
       columns,
-      current: 1,
-      pageSize: 10
+      innerColumns,
+      current: 0,
+      pageSize: 10,
+      innerData: []
     }
   },
   methods: {
@@ -122,7 +151,11 @@ export default {
       this.isLoading = true
       getList(this.current, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data
+          this.tableDataList = res.data.content
+          /** 表格数据从小到大排序 */
+          this.tableDataList.sort(function(a, b) {
+            return a.sort - b.sort
+          })
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -142,22 +175,35 @@ export default {
     clearSearch () {
       this.searchInfo = {
         code: '',
-        dictValue: '',
+        name: '',
         remark: ''
       }
       this.fetchTableData()
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      this.commonDeleteRecord(singleRemove, id).then(() => {
-        this.$store.dispatch('dict/getTree')
-      })
+      this.commonDeleteRecord(singleRemove, id)
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatchDelete(remove).then(() => {
-        this.$store.dispatch('dict/getTree')
-      })
+      this.commonBatchDelete(remove)
+    },
+    /** 点击展开图标事件 */
+    onExpand(expanded, record) {
+      let id = record.id
+      getDict(id)
+        .then(res => {
+          this.spinning = true
+          if (res.data.itemList && res.data.itemList.length > 0) {
+            this.innerData = res.data.itemList
+            /** 表格数据从小到大排序 */
+            this.innerData.sort(function(a, b) {
+              return a.sort - b.sort
+            })
+          }
+        })
+        .catch(error => { console.log(error) })
+        .finally(() => { this.spinning = false })
     }
   }
 }

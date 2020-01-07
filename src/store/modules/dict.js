@@ -1,11 +1,10 @@
 import { getStore, setStore } from '@/util/browser-storage'
-import { getDictionary, getDictTree } from '@/api/system/dict'
+import { getDictionary } from '@/api/system/dict'
 
 const dict = {
   namespaced: true,
   state: {
-    flowRoutes: getStore('flowRoutes') || {},
-    dictTreeData: getStore('dictTreeData') || []
+    flowRoutes: getStore('flowRoutes') || {}
   },
   actions: {
     // 发送错误日志
@@ -18,17 +17,6 @@ const dict = {
           reject(error)
         })
       })
-    },
-    getTree({ commit }) {
-      return getDictTree().then(res => {
-        const dictTreeData = [{
-          value: '0',
-          key: '0',
-          title: '顶级字典',
-          children: res.data
-        }]
-        commit('SET_DICT_DATA', dictTreeData)
-      })
     }
   },
   mutations: {
@@ -40,10 +28,6 @@ const dict = {
         }
       })
       setStore('flowRoutes', state.flowRoutes)
-    },
-    SET_DICT_DATA: (state, dictTreeData) => {
-      state.dictTreeData = dictTreeData
-      setStore('dictTreeData', state.dictTreeData)
     }
   }
 }

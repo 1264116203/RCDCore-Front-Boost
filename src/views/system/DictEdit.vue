@@ -13,7 +13,7 @@
               :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
               @submit="onSubmit"
       >
-        <a-form-item label="字典编号" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="字典编号">
           <a-input
             v-decorator="['code',{ rules: [{required: true,message: '请输入字典编号'}] }]"
             placeholder="请输入字典编号"
@@ -23,28 +23,15 @@
 
         <a-form-item label="字典名称">
           <a-input
-            v-decorator="['dictValue', { rules: [{ required: true, message: '请输入字典名称' }] }]"
+            v-decorator="['name', { rules: [{ required: true, message: '请输入字典名称' }] }]"
             placeholder="请输入字典名称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item ref="dict" label="上级字典">
-          <a-tree-select
-            v-decorator="[ 'parentId' ]"
-            :tree-data="clonedDictTreeData"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :get-popup-container="getPopupContainer"
-            placeholder="请选择上级字典"
-            tree-default-expand-all
-            :disabled="isDisable"
-            :multiple="false"
-          />
-        </a-form-item>
-
         <a-form-item label="字典键值">
           <a-input
-            v-decorator="['dictKey', { rules: [{ required: true, message: '请输入字典键值' }] }]"
+            v-decorator="['key', { rules: [{ required: true, message: '请输入字典键值' }] }]"
             placeholder="请输入字典键值"
             :disabled="isDisable"
           />
@@ -78,36 +65,19 @@ import {
   update
 } from '@/api/system/dict'
 import { modelMixin } from '@/components/mixins/modelMixin'
-import { mapGetters } from 'vuex'
-import { disabledNode } from '@/util/tree'
-import { cloneDeep } from 'lodash'
 
 const EmptyUserForm = {
   code: '',
-  dictValue: '',
-  parentId: '',
-  dictKey: '',
+  name: '',
+  key: '',
   sort: '',
   remark: ''
 }
 
 export default {
   mixins: [modelMixin],
-  data() {
-    return {
-      /** 原始数据的深拷贝，上级字典选择时设置当前节点的disable状态 */
-      clonedDictTreeData: []
-    }
-  },
-  computed: {
-    ...mapGetters(['dictList'])
-  },
-  created() {
-    this.loadParentData()
-  },
   methods: {
     open(type, id) {
-      this.clonedDictTreeData = cloneDeep(this.dictList)
       this.modelTitle(type)
 
       if (id) {
@@ -126,28 +96,19 @@ export default {
 
           this.form.setFieldsValue(formData)
         })
-        /** 上级部门选择时设置当前节点是不可选 */
-        disabledNode(this.id, this.clonedDictTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
         })
       }
     },
-    loadParentData() {
-      this.$store.dispatch('dict/getTree')
-    },
     /** 添加信息 */
     onInsert() {
-      this.doInsert(add).then(() => {
-        this.$store.dispatch('dict/getTree')
-      })
+      this.doInsert(add)
     },
     /** 修改信息 */
     onUpdate() {
-      this.doUpdate(update).then(() => {
-        this.$store.dispatch('dict/getTree')
-      })
+      this.doUpdate(update)
     }
   }
 }
