@@ -39,34 +39,35 @@
       :pagination="false"
       @expand="onExpand"
     >
+      <template
+        slot="operation"
+        slot-scope="text, record"
+      >
+        <div class="editable-row-operations">
+          <a @click="openDetailModal(record.id)">
+            <a-icon type="eye" />查看
+          </a>
+          <a @click="openUpdateModal(record.id)">
+            <a-icon type="edit" />修改
+          </a>
+          <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
+            <a><a-icon type="delete" />删除</a>
+          </a-popconfirm>
+        </div>
+      </template>
+
+      <template #MenuIcon="text, record">
+        <a-icon :type="record.source">
+          {{ record.source }}
+        </a-icon>
+      </template>
       <a-table
         slot="expandedRowRender"
+        slot-scope="row"
         :columns="innerColumns"
-        :data-source="innerData"
+        :data-source="getInnerData(row)"
         :pagination="false"
-      >
-        <template
-          slot="operation"
-          slot-scope="text, record"
-        >
-          <div class="editable-row-operations">
-            <a @click="openDetailModal(record.id)">
-              <a-icon type="eye" />查看
-            </a>
-            <a @click="openUpdateModal(record.id)">
-              <a-icon type="edit" />修改
-            </a>
-            <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
-              <a><a-icon type="delete" />删除</a>
-            </a-popconfirm>
-          </div>
-        </template>
-        <template #MenuIcon="text, record">
-          <a-icon :type="record.source">
-            {{ record.source }}
-          </a-icon>
-        </template>
-      </a-table>
+      />
     </a-table>
 
     <dict-edit ref="modal" @ok="onModalOk" />
@@ -95,6 +96,11 @@ const columns = [
   {
     title: '字典排序',
     dataIndex: 'sort'
+  },
+  {
+    title: '操作',
+    dataIndex: 'operation',
+    scopedSlots: { customRender: 'operation' }
   }
 ]
 
@@ -114,15 +120,6 @@ const innerColumns = [
   {
     title: '备注',
     dataIndex: 'remark'
-  },
-  {
-    title: '字典排序',
-    dataIndex: 'sort'
-  },
-  {
-    title: '操作',
-    dataIndex: 'operation',
-    scopedSlots: { customRender: 'operation' }
   }
 ]
 export default {
@@ -142,7 +139,7 @@ export default {
       innerColumns,
       current: 0,
       pageSize: 10,
-      innerData: []
+      innerData: {}
     }
   },
   methods: {
@@ -156,6 +153,7 @@ export default {
           this.tableDataList.sort(function(a, b) {
             return a.sort - b.sort
           })
+          this.innerData = {}
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -188,6 +186,11 @@ export default {
     handleBatchDelete () {
       this.commonBatchDelete(remove)
     },
+    getInnerData(record) {
+      console.log(record)
+      console.log(this.innerData[record.id])
+      return this.innerData[record.id]
+    },
     /** 点击展开图标事件 */
     onExpand(expanded, record) {
       let id = record.id
@@ -195,11 +198,12 @@ export default {
         .then(res => {
           this.spinning = true
           if (res.data.itemList && res.data.itemList.length > 0) {
-            this.innerData = res.data.itemList
+            let innerData = res.data.itemList
             /** 表格数据从小到大排序 */
-            this.innerData.sort(function(a, b) {
+            innerData.sort(function(a, b) {
               return a.sort - b.sort
             })
+            this.$set(this.innerData, id, innerData)
           }
         })
         .catch(error => { console.log(error) })
