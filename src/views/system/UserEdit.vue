@@ -125,9 +125,6 @@
               :disabled="isDisable"
             />
           </a-form-item>
-          <a-form-item v-show="false">
-            <a-input v-decorator="['roles']" />
-          </a-form-item>
         </a-form>
       </a-spin>
     </a-modal>
