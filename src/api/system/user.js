@@ -1,12 +1,7 @@
 import request from '@/rcore-axios'
 
 export const getList = (current, size, params) => {
-  return request.get('/api/user/pagination', {
-    params: {
-      ...params,
-      current,
-      size
-    } })
+  return request.get('/api/user/pagination', { params: { page: current, size, ...params } })
 }
 
 export const remove = (ids) => {

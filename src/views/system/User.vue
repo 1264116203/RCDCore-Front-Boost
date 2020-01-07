@@ -139,7 +139,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getList(this.pagination.current, this.pagination.pageSize, this.searchInfo)
+      getList(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
           this.pagination.total = res.data.totalElements

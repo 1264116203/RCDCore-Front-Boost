@@ -45,6 +45,7 @@ import {
 } from '@/api/logs'
 import ErrorEdit from './ErrorEdit.vue'
 import { LogMainMixin } from '@/components/mixins/monitor/LogMainMixin'
+import moment from 'moment'
 
 const columns = [
   {
@@ -88,11 +89,36 @@ export default {
   mixins: [LogMainMixin],
   data () {
     return {
-      columns
+      columns,
+      pagination: {
+        total: 200,
+        current: 1,
+        pageSize: 10,
+        showQuickJumper: true,
+        showSizeChanger: true
+      },
+      /** 页面是否加载 */
+      isLoading: false
     }
   },
-  created () {
-    this.fetchTableData(getErrorList)
+  methods: {
+    /** 表格数据 */
+    fetchTableData () {
+      this.isLoading = true
+      getErrorList(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
+        .then(res => {
+          this.tableDataList = res.data.content
+          this.pagination.total = res.data.totalElements
+          /** 转换为时间格式 */
+          this.tableDataList.map(item => {
+            item.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+          })
+        })
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.isLoading = false
+        })
+    }
   }
 }
 </script>

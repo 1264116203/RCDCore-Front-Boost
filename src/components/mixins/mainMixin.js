@@ -1,4 +1,4 @@
-import { defaultsDeep } from 'lodash'
+import { cloneDeep } from 'lodash'
 import { _getArrDifference, _findChildren, _findParent, _includes, _deleteSame, _parentsChecked } from '@/util/tree'
 
 export const myMixin = {
@@ -19,8 +19,7 @@ export const myMixin = {
     /** 表格数据 */
     fetchTableData () {},
     handleTableChange(pagination) {
-      // this.pagination = { ...this.pagination, ...pagination }
-      this.pagination = defaultsDeep(this.pagination, pagination)
+      this.pagination = cloneDeep(pagination)
       this.fetchTableData()
     },
     /** 添加按钮事件 */
