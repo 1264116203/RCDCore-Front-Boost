@@ -54,9 +54,11 @@
         </div>
       </template>
       <template #roleId="text, record">
-        <a-tag v-if="record.roleName" color="blue">
-          {{ record.roleName }}
-        </a-tag>
+        <template v-if="record.roleName">
+          <a-tag v-for="name in record.roleName.split(',')" :key="name" color="blue">
+            {{ name }}
+          </a-tag>
+        </template>
       </template>
       <template #deptId="text, record">
         <a-tag v-if="record.deptName" color="blue">

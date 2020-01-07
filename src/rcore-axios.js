@@ -54,7 +54,8 @@ axios.interceptors.response.use(res => {
   const res = error.response
   NProgress.done()
   const statusWhiteList = website.statusWhiteList || []
-  const message = decodeURIComponent(res.headers['x-error-message']) || '未知错误'
+  const message = res.headers['x-error-message']
+    ? decodeURIComponent(res.headers['x-error-message']) : '请求异常，但服务器未给出错误信息。'
 
   // 如果在白名单里则自行catch逻辑处理
   if (statusWhiteList.includes(status)) {
