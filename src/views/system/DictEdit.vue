@@ -152,14 +152,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-  .d2-col-form {
-    .ant-row {
-      display: inline-block;
-    }
-    .ant-form-item {
-      width: 50%;
-    }
-  }
-</style>

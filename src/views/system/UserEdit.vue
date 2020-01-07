@@ -5,7 +5,7 @@
       width="600px"
       :title="title"
       :mask-closable="false"
-      :ok-button-props="{ props: {disabled: isDisable} }"
+      :confirm-loading="spinning"
       @cancel="onCancel"
       @ok="onOk"
     >
@@ -15,75 +15,59 @@
       >
         <a-form-item label="登录账号">
           <a-input
-            v-decorator="[
-              'account',
-              { rules: [{ required: true, message: '请输入登录账号' },{whitespace:true,message:'登录账号不能为空'}] },
-            ]"
+            v-decorator="['account', { rules: [
+              { required: true, message: '请输入登录账号' },
+              { whitespace: true, message:'登录账号不能为空' }
+            ]}]"
             placeholder="登录账号"
             :disabled="isDisable"
           />
         </a-form-item>
-
-        <a-form-item v-if="actionType === 'creation'" label="密码">
-          <a-input
-            v-decorator="[
-              'password',
-              { rules: [{
-                required: true,
-                validator: validatePass
-              },{
-                pattern:/^[a-zA-Z]\w{5,17}$/,
-                message: '以字母开头，长度在6~18之间'
-              }] },
-            ]"
-            placeholder="请输入密码"
-            type="password"
-          />
-        </a-form-item>
-        <a-form-item v-if="actionType === 'creation'" label="确认密码">
-          <a-input
-            v-decorator="[
-              'passwordAgain',
-              { rules: [{
-                required: true,
-                validator: validatePass2
-              }] },
-            ]"
-            placeholder="请再次输入密码"
-            type="password"
-          />
-        </a-form-item>
-
         <a-form-item label="用户姓名">
           <a-input
-            v-decorator="[
-              'name',
-              { rules: [{
-                required: true,
-                message: '请输入用户姓名'
-              }, {
-                min: 2,
-                max: 5,
-                message: '姓名长度在2到5个字符'
-              }] },
-            ]"
+            v-decorator="['name', { rules: [
+              { required: true, message: '请输入用户姓名' },
+              { min: 2, max: 5, message: '姓名长度在2到5个字符' }
+            ]}]"
             placeholder="请输入用户姓名"
             :disabled="isDisable"
           />
         </a-form-item>
 
+        <template v-if="actionType === 'creation'">
+          <a-form-item label="密码">
+            <a-input
+              v-decorator="['password', { rules: [
+                { required: true, validator: validatePass },
+                { pattern:/^[a-zA-Z]\w{5,17}$/, message: '以字母开头，长度在6~18之间' }
+              ]}]"
+              placeholder="请输入密码"
+              type="password"
+            />
+          </a-form-item>
+          <a-form-item v-if="actionType === 'creation'" label="确认密码">
+            <a-input
+              v-decorator="['passwordAgain', { rules: [
+                { required: true, validator: validatePass2 }
+              ]}]"
+              placeholder="请再次输入密码"
+              type="password"
+            />
+          </a-form-item>
+        </template>
+
         <a-form-item label="用户昵称">
           <a-input
-            v-decorator="[
-              'realName',
-              { rules: [{ required: true, message: '请输入用户昵称' },{whitespace:true,message:'用户昵称不能为空'}] },
-            ]"
+            v-decorator="['realName', { rules: [
+              { required: true, message: '请输入用户昵称' },
+              { whitespace: true, message:'用户昵称不能为空' }
+            ]}]"
             placeholder="请输入用户昵称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item ref="role" label="所属角色">
+        <!--<a-form-item ref="role" label="所属角色">
           <a-tree-select
             v-decorator="[
               'currentRoles',
@@ -114,64 +98,33 @@
             :show-checked-strategy="SHOW_PARENT"
             :disabled="isDisable"
           />
-        </a-form-item>
+        </a-form-item>-->
 
         <a-form-item label="手机号">
           <a-input
-            v-decorator="[
-              'phone',
-              { rules: [{
-                required: true,
-                message: '请输入手机号'
-              },{
-                pattern:/^1[0-9]{10}$/,
-                message: '请输入以1开头的11位手机号码'
-              }] },
-            ]"
+            v-decorator="['phone', { rules: [
+              { required: true, message: '请输入手机号' },
+              { pattern:/^1[0-9]{10}$/, message: '请输入以1开头的11位手机号码'}
+            ]}]"
             placeholder="请输入手机号"
             type="phone"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="电子邮箱">
+        <a-form-item label="电子邮箱" style="width: 100%;" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
-            v-decorator="[
-              'email',
-              { rules: [{
-                required: true,
-                message: '请输入电子邮箱'
-              },{
-                pattern:/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-                message: '请输入正确的邮箱'
-              }] },
-            ]"
+            v-decorator="['email', { rules: [
+              { required: true, message: '请输入电子邮箱' },
+              { pattern:/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '请输入正确的邮箱' }
+            ]}]"
             placeholder="请输入电子邮箱"
             type="email"
             :disabled="isDisable"
           />
         </a-form-item>
-
-        <a-form-item label="用户性别">
-          <a-select
-            v-decorator="[
-              'sex',
-              { rules: [{ required: true, message: '请输入用户性别' },{whitespace:true,message:'用户性别不能为空'}] },
-            ]"
-            placeholder="请输入用户性别"
-            :get-popup-container="getPopupContainer"
-            :disabled="isDisable"
-          >
-            <a-select-option value="1">
-              男
-            </a-select-option>
-            <a-select-option value="2">
-              女
-            </a-select-option>
-            <a-select-option value="-1">
-              未知
-            </a-select-option>
-          </a-select>
+        <a-form-item v-show="false">
+          <a-input v-decorator="['roles']" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -193,11 +146,8 @@ const EmptyUserForm = {
   account: '',
   name: '',
   realName: '',
-  currentRoles: [],
-  currentDepts: [],
   phone: '',
-  email: '',
-  sex: ''
+  email: ''
 }
 
 export default {
@@ -223,12 +173,15 @@ export default {
     return {
       deptData: [],
       roleData: [],
-      /** *验证密码 */
+
+      /** 角色选择器 */
+      roleSelection: [],
+
+      /** 验证密码 */
       validatePass,
       validatePass2,
-      /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
-      SHOW_PARENT: TreeSelect.SHOW_PARENT,
-      id: ''
+      /** Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */
+      SHOW_PARENT: TreeSelect.SHOW_PARENT
     }
   },
   created() {
@@ -243,13 +196,12 @@ export default {
         this.id = id
         getUser(id).then(res => {
           const requestData = res.data
-          requestData.sex = (res.data.sex === 1 ? '男' : '女')
 
           if (requestData.deptId) {
             requestData.currentDepts = requestData.deptId.split(',')
           }
-          if (requestData.roleId) {
-            requestData.currentRoles = requestData.roleId.split(',')
+          if (requestData.roleList && requestData.roleList.length > 0) {
+            requestData.roles = requestData.roleList.map(role => role.id).join(',')
           }
 
           const formData = {}
@@ -276,24 +228,20 @@ export default {
         this.roleData = res.data
       })
     },
-    /** *添加信息 */
-    doCreation() {
-      this.addHandle(add)
+    /** 添加信息 */
+    onInsert() {
+      this.doInsert(add)
     },
-    /** *修改信息 */
-    doUpdate() {
-      this.updateHandle(update)
+    /** 修改信息 */
+    onUpdate() {
+      this.doUpdate(update)
     },
-    addFormData() {
+    getFormDataForInsert() {
       const formData = this.form.getFieldsValue()
-
-      formData.deptId = formData.currentDepts.join(',')
-      formData.roleId = formData.currentRoles.join(',')
-      formData.sex = (formData.sex === '男' ? 1 : 2)
 
       return formData
     },
-    updateFormData() {
+    getFormDataForUpdate() {
       const formData = this.form.getFieldsValue()
 
       formData.deptId = formData.currentDepts.join(',')
@@ -306,14 +254,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-  .d2-col-form {
-    .ant-row {
-      display: inline-block;
-    }
-    .ant-form-item {
-      width: 50%;
-    }
-  }
-</style>

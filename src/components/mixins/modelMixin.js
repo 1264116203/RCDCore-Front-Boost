@@ -1,13 +1,20 @@
 export const modelMixin = {
   data() {
     return {
-      form: this.$form.createForm(this),
-      title: '',
-      actionType: 'creation',
+      /** 当前数据项的id，新增时则为空 */
       id: '',
-      /** 信息展示的弹框 */
+      /** 对话框标题 */
+      title: '',
+      /** AntDesign form对象 */
+      form: this.$form.createForm(this),
+      /** 动作类型，可选值：creation/detail/update */
+      actionType: 'creation',
+      /** 表单项是否可编辑 */
+      isDisable: false,
+      /** 对话框的显隐状态 */
       formVisible: false,
-      isDisable: false
+      /** 加载状态 */
+      spinning: false
     }
   },
   methods: {
@@ -29,52 +36,59 @@ export const modelMixin = {
       this.formVisible = true
     },
     /** 添加 表单内容 */
-    addFormData() {
-      const formData = this.form.getFieldsValue()
-
-      return formData
+    getFormDataForInsert() {
+      return this.form.getFieldsValue()
     },
     /** 修改 表单内容 */
-    updateFormData() {
+    getFormDataForUpdate() {
       const formData = this.form.getFieldsValue()
       formData.id = this.id
 
       return formData
     },
     /** 添加信息 */
-    addHandle(api) {
-      const formData = this.addFormData()
+    doInsert(api) {
+      this.spinning = true
+      const formData = this.getFormDataForInsert()
       return api(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
+          this.$message.success('数据插入成功!')
           this.formVisible = false
+          this.reset()
         })
         .catch(error => { console.log(error) })
+        .finally(() => { this.spinning = false })
     },
     /** 修改信息 */
-    updateHandle(api) {
-      const formData = this.updateFormData()
+    doUpdate(api) {
+      const formData = this.getFormDataForUpdate()
       formData.id = this.id
       return api(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
-          this.$message.success('操作成功!')
+          this.$message.success('数据更新成功!')
           this.formVisible = false
+          this.reset()
         })
         .catch(error => { console.log(error) })
+        .finally(() => { this.spinning = false })
+    },
+    reset() {
+      this.id = null
+      this.form.resetFields()
     },
     onSubmit() {
       switch (this.actionType) {
         case 'creation':
-          this.doCreation()
+          this.onInsert()
           break
         case 'update':
-          this.doUpdate()
+          this.onUpdate()
           break
         case 'detail':
         default:
-          this.doDetail()
+          this.onDetail()
       }
     },
     onOk() {
@@ -89,9 +103,11 @@ export const modelMixin = {
     },
     onCancel() {
       this.$emit('cancel')
+      this.reset()
     },
-    doDetail() {
+    onDetail() {
       this.$emit('ok', this.actionType)
+      this.reset()
       this.formVisible = false
     },
     /** 下拉弹层渲染节点固定在触发器的父元素中 */

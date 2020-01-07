@@ -236,27 +236,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-  .d2-col-form {
-    .ant-row {
-      display: inline-block;
-    }
-    .ant-form-item {
-      width: 50%;
-    }
-  }
-  .menu-icon{
-    width: 20px;
-    height: 20px;
-    margin: 10px;
-    font-size: 14px;
-    text-align: center;
-    line-height: 25px;
-  }
-
-  .menu-icon:hover{
-    background-color: aqua;
-    color: white;
-  }
-</style>
