@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model="formVisible"
-      width="600px"
+      width="800px"
       :title="title"
       :mask-closable="false"
       :ok-button-props="{ props: {disabled: isDisable} }"
@@ -46,27 +46,7 @@
           />
         </a-form-item>
       </a-form>
-      <a-table :columns="innerColumns" :data-source="innerData" bordered>
-        <template
-          v-for="(col,index) in innerColumns"
-          :slot="col.dataIndex"
-          slot-scope="text"
-        >
-          <div :key="col.index">
-            <a-input
-              style="margin: -5px 0"
-              :value="text"
-              :disabled="isDisable"
-            />
-          </div>
-        </template>
-        <template #operation="text, record">
-          <a-popconfirm v-if="!isDisable" title="确定要删除吗?" @confirm="() => onDelete(record)">
-            <a>  删除</a>
-          </a-popconfirm>
-        </template>
-      </a-table>
-      <dict-table :inner-columns="innerColumns" :inner-data="innerData" :is-disable="isDisable" @onAdd="onAdd" @onDelete="onDelete($event)" />
+      <dict-table v-if="innerData" ref="dictTable" :columns="innerColumns" :table-data="innerData" :is-disable="isDisable" />
     </a-modal>
   </div>
 </template>
@@ -82,19 +62,19 @@ import DictTable from '@/components/dict-table/DictTable'
 
 const innerColumns = [
   {
-    title: '字典项的键',
-    dataIndex: 'key',
-    scopedSlots: { customRender: 'key' }
+    title: '字典项名*',
+    dataIndex: 'dictKey',
+    scopedSlots: { customRender: 'dictKey' }
   },
   {
-    title: '字典项的值',
-    dataIndex: 'value',
-    scopedSlots: { customRender: 'value' }
+    title: '字典项值*',
+    dataIndex: 'dictValue',
+    scopedSlots: { customRender: 'dictValue' }
   },
   {
-    title: '类型',
-    dataIndex: 'type',
-    scopedSlots: { customRender: 'type' }
+    title: '类型*',
+    dataIndex: 'dictType',
+    scopedSlots: { customRender: 'dictType' }
   },
   {
     title: '备注',
@@ -104,7 +84,7 @@ const innerColumns = [
   {
     title: '操作',
     dataIndex: 'operation',
-    scopedSlots: { customRender: 'operation' },
+    scopedSlots: { customRender: 'operations' },
     width: 100
   }
 ]
@@ -115,19 +95,14 @@ const EmptyUserForm = {
   sort: '',
   remark: ''
 }
-const EmptyData = {
-  key: '',
-  value: '',
-  type: '',
-  remark: ''
-}
+
 export default {
   components: { DictTable },
   mixins: [modelMixin],
-  data () {
+  data() {
     return {
       innerColumns,
-      innerData: []
+      innerData: null
     }
   },
   methods: {
@@ -166,18 +141,18 @@ export default {
     onUpdate() {
       this.doUpdate(update)
     },
-    onAdd() {
-      this.innerData.push(EmptyData)
-    },
     onDelete(index) {
       this.innerData.splice(index, 1)
+    },
+    getInnerData() {
+      return this.$refs.dictTable.form.getFieldsValue().tableData
     },
     /** 修改信息 */
     doUpdate(api) {
       this.spinning = true
       const formData = this.getFormDataForUpdate()
       formData.id = this.id
-      formData.itemList = this.innerData
+      formData.itemList = this.getInnerData()
       return api(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -185,14 +160,18 @@ export default {
           this.formVisible = false
           this.reset()
         })
-        .catch(error => { console.log(error) })
-        .finally(() => { this.spinning = false })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => {
+          this.spinning = false
+        })
     },
     /** 添加信息 */
     doInsert(api) {
       this.spinning = true
       const formData = this.getFormDataForInsert()
-      formData.itemList = this.innerData
+      formData.itemList = this.getInnerData()
       return api(formData)
         .then(() => {
           this.$emit('ok', this.actionType, formData)
@@ -200,14 +179,23 @@ export default {
           this.formVisible = false
           this.reset()
         })
-        .catch(error => { console.log(error) })
-        .finally(() => { this.spinning = false })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => {
+          this.spinning = false
+        })
     }
+  },
+  reset() {
+    this.id = null
+    this.form.resetFields()
+    this.$refs.dictTable.form.resetFields()
   }
 }
 </script>
 <style scoped>
-.ant-table-wrapper{
-  margin: 20px 0;
-}
+  .ant-table-wrapper {
+    margin: 20px 0;
+  }
 </style>

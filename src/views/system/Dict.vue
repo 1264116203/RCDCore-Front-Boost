@@ -34,6 +34,7 @@
       :columns="columns"
       :data-source="tableDataList"
       :pagination="false"
+      :expanded-row-keys="expandedRowKeys"
       @expand="onExpand"
     >
       <template #operation="text, record">
@@ -100,15 +101,15 @@ const columns = [
 const innerColumns = [
   {
     title: '字典项的键',
-    dataIndex: 'key'
+    dataIndex: 'dictKey'
   },
   {
     title: '字典项的值',
-    dataIndex: 'value'
+    dataIndex: 'dictValue'
   },
   {
     title: '字典项的类型',
-    dataIndex: 'type'
+    dataIndex: 'dictType'
   },
   {
     title: '备注',
@@ -132,7 +133,8 @@ export default {
       innerColumns,
       current: 0,
       pageSize: 10,
-      innerData: {}
+      innerData: {},
+      expandedRowKeys: []
     }
   },
   methods: {
@@ -147,6 +149,7 @@ export default {
             return a.sort - b.sort
           })
           this.innerData = {}
+          this.expandedRowKeys = []
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -180,6 +183,11 @@ export default {
     },
     /** 点击展开图标事件 */
     onExpand(expanded, record) {
+      if (!expanded) {
+        this.expandedRowKeys = []
+        return
+      }
+      this.expandedRowKeys.push(record.id)
       let id = record.id
       getDict(id)
         .then(res => {
