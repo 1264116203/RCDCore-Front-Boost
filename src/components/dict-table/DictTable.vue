@@ -15,7 +15,31 @@
         >
           <div :key="index">
             <a-form-item>
+              <a-input-group
+                v-if="col.dataIndex==='dictType'"
+                compact
+              >
+                <a-select
+                  v-decorator="[`tableData[${tableIndex}][${col.dataIndex}]`, {
+                    rules: [
+                      { required: true, message: `请输入必填项` },
+                    ],
+                    initialValue: text
+                  }]"
+                >
+                  <a-select-option value="string">
+                    string
+                  </a-select-option>
+                  <a-select-option value="boolean">
+                    boolean
+                  </a-select-option>
+                  <a-select-option value="number">
+                    number
+                  </a-select-option>
+                </a-select>
+              </a-input-group>
               <a-input
+                v-else
                 v-decorator="[`tableData[${tableIndex}][${col.dataIndex}]`, {
                   rules: [
                     { required: true, message: `请输入必填项` },
@@ -93,6 +117,7 @@ export default {
 
 <style lang="less">
   .inner-table {
+    margin-top: 20px;
     .ant-form-item {
       margin-bottom: 0;
     }

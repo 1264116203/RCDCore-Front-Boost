@@ -33,8 +33,8 @@
       row-key="id"
       :columns="columns"
       :data-source="tableDataList"
-      :pagination="false"
       :expanded-row-keys="expandedRowKeys"
+      @change="handleTableChange"
       @expand="onExpand"
     >
       <template #operation="text, record">
