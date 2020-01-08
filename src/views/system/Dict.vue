@@ -26,9 +26,6 @@
       <a-button class="editable-add-btn" type="primary" @click="handleAdd">
         添加
       </a-button>
-      <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
-        批量删除
-      </a-button>
     </div>
 
     <a-table
@@ -39,10 +36,7 @@
       :pagination="false"
       @expand="onExpand"
     >
-      <template
-        slot="operation"
-        slot-scope="text, record"
-      >
+      <template #operation="text, record">
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
             <a-icon type="eye" />查看
@@ -76,7 +70,6 @@
 <script>
 import {
   getList,
-  remove,
   singleRemove,
   getDict
 } from '@/api/system/dict'
@@ -182,13 +175,7 @@ export default {
     onDeleteRecord (id) {
       this.commonDeleteRecord(singleRemove, id)
     },
-    /** 批量删除 */
-    handleBatchDelete () {
-      this.commonBatchDelete(remove)
-    },
     getInnerData(record) {
-      console.log(record)
-      console.log(this.innerData[record.id])
       return this.innerData[record.id]
     },
     /** 点击展开图标事件 */

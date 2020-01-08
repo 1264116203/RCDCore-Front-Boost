@@ -27,7 +27,7 @@ export const add = (row) => {
 }
 
 export const update = (row) => {
-  return request.post('/api/dict', row)
+  return request.put('/api/dict', row)
 }
 
 export const getDict = (id) => {
