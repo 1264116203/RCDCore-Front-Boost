@@ -18,6 +18,7 @@
               <a-input-group
                 v-if="col.dataIndex==='dictType'"
                 compact
+                placeholder="请选择！"
               >
                 <a-select
                   v-decorator="[`tableData[${tableIndex}][${col.dataIndex}]`, {
@@ -26,6 +27,8 @@
                     ],
                     initialValue: text
                   }]"
+                  placeholder="请选择！"
+                  :disabled="isDisable"
                 >
                   <a-select-option value="string">
                     string
