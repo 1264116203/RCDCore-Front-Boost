@@ -167,7 +167,7 @@ export default {
   },
   methods: {
     open(type, id) {
-      this.clonedMenuTreeData = this.transformTreeData(cloneDeep(this.resourceList))
+      const clonedTreeData = cloneDeep(this.resourceList)
       this.modelTitle(type)
 
       if (id) {
@@ -188,7 +188,8 @@ export default {
         })
 
         /** 上级部门选择时设置当前节点是不可选 */
-        disabledNode(this.id, this.clonedMenuTreeData)
+        disabledNode(this.id, clonedTreeData)
+        this.clonedMenuTreeData = this.transformTreeData(clonedTreeData)
       } else {
         this.$nextTick(() => {
           this.form.setFieldsValue({ ...EmptyUserForm })
@@ -228,7 +229,8 @@ export default {
           children: data.children,
           title: data.name,
           key: data.id,
-          value: data.id
+          value: data.id,
+          disabled: data.disabled
         }
       }
       return data.map(transform)
