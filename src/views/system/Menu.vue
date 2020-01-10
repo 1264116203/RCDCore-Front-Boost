@@ -79,7 +79,7 @@ const columns = [
     dataIndex: 'path'
   },
   {
-    title: '菜单编号',
+    title: '菜单编码',
     dataIndex: 'code'
   },
   {
@@ -108,7 +108,7 @@ export default {
   mixins: [myMixin],
   data () {
     return {
-      /** 搜索的条件  菜单名称 菜单编号 */
+      /** 搜索的条件  菜单名称 菜单编码 */
       searchInfo: {
         name: '',
         code: ''

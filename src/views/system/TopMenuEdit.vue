@@ -21,6 +21,20 @@
           />
         </a-form-item>
 
+        <a-form-item label="菜单编码">
+          <a-input
+            v-decorator="[
+              'code',
+              { rules: [{
+                required: true,
+                message: '请输入菜单编码'
+              }] },
+            ]"
+            placeholder="请输入菜单编码"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+
         <a-form-item label="菜单图标">
           <a-input
             v-decorator="[
@@ -36,26 +50,12 @@
           />
         </a-form-item>
 
-        <a-form-item label="菜单编号">
-          <a-input
-            v-decorator="[
-              'code',
-              { rules: [{
-                required: true,
-                message: '请输入菜单编号'
-              }] },
-            ]"
-            placeholder="请输入菜单编号"
-            :disabled="isDisable"
-          />
-        </a-form-item>
-
         <a-form-item label="菜单排序">
-          <a-input
+          <a-input-number
             v-decorator="['sort', { rules: [{ required: true, message: '请输入菜单排序' }] }]"
             placeholder="请输入菜单排序"
-            type="number"
             :disabled="isDisable"
+            style="width: 100%"
           />
         </a-form-item>
       </a-form>
@@ -85,11 +85,11 @@ import { TreeSelect } from 'ant-design-vue'
 import menuIconList from '@/config/menuIcon'
 import { modelMixin } from '@/components/mixins/modelMixin'
 
-const EmptyUserForm = {
+const EmptyFormData = {
   name: '',
   code: '',
-  source: '',
-  sort: ''
+  source: 'check-circle',
+  sort: '100'
 }
 
 export default {
@@ -116,7 +116,7 @@ export default {
 
           const formData = {}
 
-          Object.keys(EmptyUserForm).forEach(key => {
+          Object.keys(EmptyFormData).forEach(key => {
             formData[key] = requestData[key]
           })
 
@@ -124,7 +124,7 @@ export default {
         })
       } else {
         this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyUserForm })
+          this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
     },

@@ -92,7 +92,7 @@ import {
   getUsualLogs
 } from '@/api/logs'
 import { LogModelMixin } from '@/components/mixins/monitor/LogModelMixin'
-const EmptyUserForm = {
+const EmptyFormData = {
   serviceId: '',
   serverHost: '',
   serverIp: '',
@@ -113,7 +113,7 @@ export default {
         const requestData = res.data
         const formData = {}
 
-        Object.keys(EmptyUserForm).forEach(key => {
+        Object.keys(EmptyFormData).forEach(key => {
           formData[key] = requestData[key]
         })
 

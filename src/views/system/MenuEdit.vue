@@ -30,6 +30,28 @@
             />
           </a-form-item>
 
+          <a-form-item label="菜单编码">
+            <a-input
+              v-decorator="[
+                'code',
+                { rules: [{
+                  required: true,
+                  message: '请输入菜单编码'
+                }] },
+              ]"
+              placeholder="请输入菜单编码"
+              :disabled="isDisable"
+            />
+          </a-form-item>
+
+          <a-form-item label="菜单别名">
+            <a-input
+              v-decorator="['alias',{ rules: [{required: true,message: '请输入菜单别名'}] }]"
+              placeholder="请输入菜单别名"
+              :disabled="isDisable"
+            />
+          </a-form-item>
+
           <a-form-item ref="menu" label="上级菜单">
             <a-tree-select
               v-decorator="[ 'parentId' ]"
@@ -58,17 +80,12 @@
             />
           </a-form-item>
 
-          <a-form-item label="菜单编号">
-            <a-input
-              v-decorator="[
-                'code',
-                { rules: [{
-                  required: true,
-                  message: '请输入菜单编号'
-                }] },
-              ]"
-              placeholder="请输入菜单编号"
+          <a-form-item label="菜单排序">
+            <a-input-number
+              v-decorator="['sort', { rules: [{ required: true, message: '请输入菜单排序' }] }]"
+              placeholder="请输入菜单排序"
               :disabled="isDisable"
+              style="width: 100%"
             />
           </a-form-item>
 
@@ -83,22 +100,6 @@
                 按钮
               </a-radio>
             </a-radio-group>
-          </a-form-item>
-
-          <a-form-item label="菜单别名">
-            <a-input
-              v-decorator="['alias',{ rules: [{required: true,message: '请输入菜单别名'}] }]"
-              placeholder="请输入菜单别名"
-              :disabled="isDisable"
-            />
-          </a-form-item>
-
-          <a-form-item label="菜单排序">
-            <a-input-number
-              v-decorator="['sort', { rules: [{ required: true, message: '请输入菜单排序' }] }]"
-              placeholder="请输入菜单排序"
-              :disabled="isDisable"
-            />
           </a-form-item>
 
           <a-form-item label="菜单备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
@@ -143,12 +144,12 @@ const EmptyFormData = {
   path: '',
   name: '',
   code: '',
-  icon: '',
-  category: '',
+  icon: 'check-circle',
+  category: 1,
   alias: '',
-  sort: '',
+  sort: '100',
   remark: '',
-  parentId: ''
+  parentId: '0'
 }
 
 export default {
@@ -159,7 +160,7 @@ export default {
       menuVisible: false,
       menuIconList: menuIconList,
       MenuParentData: [],
-      /** 原始数据的深拷贝，上级部门选择时设置当前节点的disable状态 */
+      /** 原始数据的深拷贝，上级菜单选择时设置当前节点的disable状态 */
       clonedMenuTreeData: []
     }
   },
@@ -177,7 +178,7 @@ export default {
         this.id = id
 
         const clonedTreeData = cloneDeep(this.resourceList)
-        /** 上级部门选择时设置当前节点是不可选 */
+        /** 上级菜单选择时设置当前节点是不可选 */
         disabledNode(this.id, clonedTreeData)
         this.clonedMenuTreeData = this.transformTreeData(clonedTreeData)
 
@@ -208,7 +209,7 @@ export default {
         .then(() => {
           const clonedTreeData = cloneDeep(this.resourceList)
           if (this.id) {
-            /** 上级部门选择时设置当前节点是不可选 */
+            /** 上级菜单选择时设置当前节点是不可选 */
             disabledNode(this.id, clonedTreeData)
           }
           this.clonedMenuTreeData = this.transformTreeData(clonedTreeData)

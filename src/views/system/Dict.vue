@@ -1,8 +1,8 @@
 <template>
   <a-spin class="warp" :spinning="isLoading">
     <a-form layout="inline">
-      <a-form-item label="字典编号">
-        <a-input v-model="searchInfo.code" placeholder="字典编号" />
+      <a-form-item label="字典编码">
+        <a-input v-model="searchInfo.code" placeholder="字典编码" />
       </a-form-item>
       <a-form-item label="字典名称">
         <a-input v-model="searchInfo.name" placeholder="字典名称" />
@@ -80,7 +80,7 @@ import { myMixin } from '@/components/mixins/mainMixin'
 
 const columns = [
   {
-    title: '字典编号',
+    title: '字典编码',
     dataIndex: 'code'
   },
   {
@@ -123,7 +123,7 @@ export default {
   mixins: [myMixin],
   data () {
     return {
-      /** 搜索的条件  字典编号 字典名称 字典备注 */
+      /** 搜索的条件  字典编码 字典名称 字典备注 */
       searchInfo: {
         code: '',
         name: '',

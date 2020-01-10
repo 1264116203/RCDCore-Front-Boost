@@ -86,7 +86,7 @@ import {
 } from '@/api/logs'
 import { LogModelMixin } from '@/components/mixins/monitor/LogModelMixin'
 import moment from 'moment'
-const EmptyUserForm = {
+const EmptyFormData = {
   serviceId: '',
   serverHost: '',
   serverIp: '',
@@ -109,7 +109,7 @@ export default {
         requestData.createTime = moment(requestData.createTime).format('YYYY-MM-DD HH:mm:ss')
         const formData = {}
 
-        Object.keys(EmptyUserForm).forEach(key => {
+        Object.keys(EmptyFormData).forEach(key => {
           formData[key] = requestData[key]
         })
 

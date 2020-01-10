@@ -13,18 +13,18 @@
               :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
               @submit="onSubmit"
       >
-        <a-form-item label="字典编号" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="字典名称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
-            v-decorator="['code',{ rules: [{required: true,message: '请输入字典编号'}] }]"
-            placeholder="请输入字典编号"
+            v-decorator="['name', { rules: [{ required: true, message: '请输入字典名称' }] }]"
+            placeholder="请输入字典名称"
             :disabled="isDisable"
           />
         </a-form-item>
 
-        <a-form-item label="字典名称">
+        <a-form-item label="字典编码">
           <a-input
-            v-decorator="['name', { rules: [{ required: true, message: '请输入字典名称' }] }]"
-            placeholder="请输入字典名称"
+            v-decorator="['code',{ rules: [{required: true,message: '请输入字典编码'}] }]"
+            placeholder="请输入字典编码"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -34,6 +34,7 @@
             v-decorator="['sort', { rules: [{ required: true, message: '请输入字典排序' }] }]"
             placeholder="请输入字典排序"
             :disabled="isDisable"
+            style="width: 100%"
           />
         </a-form-item>
 
@@ -89,10 +90,10 @@ const innerColumns = [
   }
 ]
 
-const EmptyUserForm = {
+const EmptyFormData = {
   code: '',
   name: '',
-  sort: '',
+  sort: '100',
   remark: ''
 }
 
@@ -121,7 +122,7 @@ export default {
           }
           const formData = {}
 
-          Object.keys(EmptyUserForm).forEach(key => {
+          Object.keys(EmptyFormData).forEach(key => {
             formData[key] = requestData[key]
           })
 
@@ -129,7 +130,7 @@ export default {
         })
       } else {
         this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyUserForm })
+          this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
     },

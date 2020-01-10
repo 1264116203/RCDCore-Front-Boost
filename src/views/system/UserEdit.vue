@@ -137,7 +137,7 @@ import { getDeptTree } from '@/api/system/dept'
 import { getRoleTree } from '@/api/system/role'
 import { modelMixin } from '@/components/mixins/modelMixin'
 
-const EmptyUserForm = {
+const EmptyFormData = {
   account: '',
   name: '',
   realName: '',
@@ -204,7 +204,7 @@ export default {
 
           const formData = {}
 
-          Object.keys(EmptyUserForm).forEach(key => {
+          Object.keys(EmptyFormData).forEach(key => {
             formData[key] = requestData[key]
           })
 
@@ -212,7 +212,7 @@ export default {
         })
       } else {
         this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyUserForm })
+          this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
     },

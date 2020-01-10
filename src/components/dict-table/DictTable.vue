@@ -18,7 +18,6 @@
               <a-input-group
                 v-if="col.dataIndex==='dictType'"
                 compact
-                placeholder="请选择！"
               >
                 <a-select
                   v-decorator="[`tableData[${tableIndex}][${col.dataIndex}]`, {
@@ -27,23 +26,23 @@
                     ],
                     initialValue: text
                   }]"
-                  placeholder="请选择！"
                   :disabled="isDisable"
+                  style="width: 100px"
                 >
                   <a-select-option value="string">
-                    string
+                    String
                   </a-select-option>
                   <a-select-option value="boolean">
-                    boolean
+                    Boolean
                   </a-select-option>
                   <a-select-option value="number">
-                    number
+                    Number
                   </a-select-option>
                 </a-select>
               </a-input-group>
               <a-input
                 v-else
-                v-decorator="[`tableData[${tableIndex}][${col.dataIndex}]`, {
+                v-decorator="[`tableData[${tableIndex}][${col.dataIndex}]`||dictType, {
                   rules: [
                     { required: true, message: `请输入必填项` },
                   ],
@@ -65,11 +64,11 @@
 </template>
 
 <script>
-const EmptyData = {
+const EmptyFormData = {
   id: '',
   dictKey: '',
   dictValue: '',
-  dictType: '',
+  dictType: 'String',
   remark: ''
 }
 export default {
@@ -102,7 +101,7 @@ export default {
   },
   methods: {
     onAdd() {
-      this.tableData.push({ ...EmptyData })
+      this.tableData.push({ ...EmptyFormData })
     },
     handleChange(value, dataIndex, index) {
       this.tableData[index][dataIndex] = value

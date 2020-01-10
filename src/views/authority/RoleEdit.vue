@@ -47,6 +47,7 @@
             v-decorator="['sort', { rules: [{ required: true, message: '请输入角色排序' }] }]"
             placeholder="请输入角色排序"
             :disabled="isDisable"
+            style="width: 100%"
           />
         </a-form-item>
       </a-form>
@@ -65,11 +66,11 @@ import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
 import { disabledNode } from '@/util/tree'
 
-const EmptyUserForm = {
+const EmptyFormData = {
   roleName: '',
   roleAlias: '',
-  parentId: '',
-  sort: ''
+  parentId: '0',
+  sort: '100'
 }
 
 export default {
@@ -98,17 +99,17 @@ export default {
 
           const formData = {}
 
-          Object.keys(EmptyUserForm).forEach(key => {
+          Object.keys(EmptyFormData).forEach(key => {
             formData[key] = requestData[key]
           })
 
           this.form.setFieldsValue(formData)
         })
-        /** 上级部门选择时设置当前节点是不可选 */
+        /** 上级角色选择时设置当前节点是不可选 */
         disabledNode(this.id, this.clonedRoleTreeData)
       } else {
         this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyUserForm })
+          this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
     },

@@ -8,8 +8,11 @@
       @cancel="onCancel"
       @ok="onOk"
     >
-      <a-form ref="form" :form="form" class="d2-col-form" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }" @submit="onSubmit">
-        <a-form-item label="部门名称">
+      <a-form ref="form" :form="form" class="d2-col-form"
+              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+              @submit="onSubmit"
+      >
+        <a-form-item label="部门名称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
             v-decorator="['deptName',{ rules: [{required: true,message: '请输入部门名称'}] }]"
             placeholder="请输入部门名称"
@@ -17,7 +20,7 @@
           />
         </a-form-item>
 
-        <a-form-item label="部门全称">
+        <a-form-item label="部门全称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
             v-decorator="['fullName', { rules: [{ required: true, message: '请输入部门全称' },{whitespace:true,message:'用户昵称不能为空'}] }]"
             placeholder="请输入部门全称"
@@ -38,7 +41,7 @@
         </a-form-item>
 
         <a-form-item label="排序">
-          <a-input
+          <a-input-number
             v-decorator="[
               'sort',
               { rules: [{
@@ -50,16 +53,16 @@
               }] },
             ]"
             placeholder="请输入数字"
-            type="number"
             :disabled="isDisable"
+            style="width: 100%"
           />
         </a-form-item>
 
-        <a-form-item label="备注">
-          <a-input
+        <a-form-item label="部门备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+          <a-textarea
             v-decorator="['remark']"
             placeholder="请输入备注"
-            type="email"
+            :autosize="{ minRows: 2, maxRows: 6 }"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -79,10 +82,10 @@ import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
 import { disabledNode } from '@/util/tree'
 
-const EmptyUserForm = {
+const EmptyFormData = {
   deptName: '',
   fullName: '',
-  sort: '',
+  sort: '100',
   remark: '',
   parentId: '0'
 }
@@ -111,7 +114,7 @@ export default {
         getDept(id).then(res => {
           const nowDta = res.data
           const formData = {}
-          Object.keys(EmptyUserForm).forEach(key => {
+          Object.keys(EmptyFormData).forEach(key => {
             formData[key] = nowDta[key]
           })
 
@@ -122,7 +125,7 @@ export default {
         disabledNode(this.id, this.clonedDeptTreeData)
       } else {
         this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyUserForm })
+          this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
     },

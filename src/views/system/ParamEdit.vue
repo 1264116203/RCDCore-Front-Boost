@@ -13,7 +13,7 @@
               :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
               @submit="onSubmit"
       >
-        <a-form-item label="参数名称">
+        <a-form-item label="参数名称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
             v-decorator="['paramName',{ rules: [{required: true,message: '请输入参数名称'}] }]"
             placeholder="请输入参数名称"
@@ -21,7 +21,7 @@
           />
         </a-form-item>
 
-        <a-form-item label="参数键名">
+        <a-form-item label="参数键名" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
             v-decorator="['paramKey', { rules: [{ required: true, message: '请输入参数键名' }] }]"
             placeholder="请输入参数键名"
@@ -29,7 +29,7 @@
           />
         </a-form-item>
 
-        <a-form-item label="参数键值">
+        <a-form-item label="参数键值" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
             v-decorator="[
               'paramValue',
@@ -55,7 +55,7 @@ import {
 } from '@/api/system/param'
 import { modelMixin } from '@/components/mixins/modelMixin'
 
-const EmptyUserForm = {
+const EmptyFormData = {
   paramName: '',
   paramKey: '',
   paramValue: ''
@@ -77,7 +77,7 @@ export default {
           const requestData = res.data
           const formData = {}
 
-          Object.keys(EmptyUserForm).forEach(key => {
+          Object.keys(EmptyFormData).forEach(key => {
             formData[key] = requestData[key]
           })
 
@@ -85,7 +85,7 @@ export default {
         })
       } else {
         this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyUserForm })
+          this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
     },
