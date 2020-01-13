@@ -71,6 +71,10 @@ const columns = [
     dataIndex: 'title'
   },
   {
+    title: '部门全称',
+    dataIndex: 'fullName'
+  },
+  {
     title: '操作',
     dataIndex: 'operation',
     scopedSlots: { customRender: 'operation' }

@@ -75,6 +75,13 @@
             :disabled="isDisable"
           />
         </a-form-item>
+        <a-form-item label="堆栈信息" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+          <a-textarea
+            v-decorator="['stackTrace']"
+            :autosize="{ minRows: 4, maxRows: 10 }"
+            :disabled="isDisable"
+          />
+        </a-form-item>
       </a-form>
     </a-modal>
   </div>
@@ -96,7 +103,8 @@ const EmptyFormData = {
   createTime: '',
   userAgent: '',
   params: '',
-  textarea: ''
+  textarea: '',
+  stackTrace: ''
 }
 
 export default {
