@@ -237,18 +237,8 @@ export default {
     getFormDataForInsert() {
       const formData = this.form.getFieldsValue()
 
-      formData.deptList = formData.currentDepts.map(item => ({
-        id: item.label,
-        deptName: item.value
-      }))
-
-      formData.roleList = formData.currentRoles.map(item => ({
-        id: item.label,
-        roleName: item.value
-      }))
-
-      // formData.deptIdList = formData.currentDepts.map(item => item.value)
-      // formData.roleIdList = formData.currentRoles.map(item => item.value)
+      formData.deptIdList = formData.currentDepts.map(item => item.value)
+      formData.roleIdList = formData.currentRoles.map(item => item.value)
 
       return formData
     },
