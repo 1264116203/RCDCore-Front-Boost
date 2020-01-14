@@ -52,20 +52,13 @@ export default {
       }
     },
     navToIframe(iframeElem) {
-      this.isIframeShow = true
-      const iframeComponentRef = this.$refs.iframeComponentRef
-
-      iframeComponentRef.open({
-        key: iframeElem.key,
-        url: iframeElem.url
+      this.SWITCH_TAB(iframeElem)
+      this.$router.push({
+        path: '/myiframe/urlPath',
+        params: iframeElem.params,
+        query: iframeElem.query,
+        meta: iframeElem.meta
       })
-
-      if (!this.tabList.find((val) => val.key === iframeElem.key)) {
-        const tabArr = this.tabList
-        tabArr.push(iframeElem)
-        this.tabList = tabArr
-      }
-      this.activeTabKey = iframeElem.key
     },
     onTabClick(key) {
       const found = this.tabList.find((val) => val.key === key)
@@ -82,12 +75,6 @@ export default {
     closeTab(key) {
       const index = this.tabList.findIndex((val) => val.key === key)
       if (index || index === 0) {
-        const tabArr = this.tabList
-
-        const item = tabArr[index]
-        if (isUrl(item.path)) {
-          this.$refs.iframeComponentRef.close(key)
-        }
         this.CLOSE_TAB(key)
       }
       if (this.tabList.length === 0) {

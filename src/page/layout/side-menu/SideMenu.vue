@@ -58,12 +58,24 @@ export default {
           }
         })
       } else {
-        this.navTo({
-          path: menuItem.path,
-          meta: menuItem.meta,
-          query: menuItem.query,
-          params: menuItem.params
-        })
+        if (menuItem.path.indexOf('http') === 0) {
+          this.navTo({
+            path: '/myiframe/urlPath',
+            meta: menuItem.meta,
+            query: {
+              name: menuItem.name,
+              src: menuItem.path
+            },
+            params: menuItem.params
+          })
+        } else {
+          this.navTo({
+            path: menuItem.path,
+            meta: menuItem.meta,
+            query: menuItem.query,
+            params: menuItem.params
+          })
+        }
       }
     }
   }
