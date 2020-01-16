@@ -63,7 +63,9 @@ const tabs = {
     activeTabKey: '1',
 
     // 首页标签
-    homepageTab: homepageTab
+    homepageTab: homepageTab,
+    // 当前显示的是否为iframe
+    isIframeShow: false
   },
   actions: {
     navTo({ commit, state }, tabElem) {
@@ -130,6 +132,10 @@ const tabs = {
 
     UPDATE_ACTIVE_TAB_KEY: (state, key) => {
       state.activeTabKey = key
+    },
+
+    UPDATE_IS_IFRAME_SHOW: (state, payload) => {
+      state.isIframeShow = payload
     }
   }
 }

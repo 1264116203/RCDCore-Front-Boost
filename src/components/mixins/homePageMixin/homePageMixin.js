@@ -1,6 +1,16 @@
 import { mapActions, mapMutations } from 'vuex'
 import { isUrl } from '@/util/validate'
 export const homePageMixin = {
+  computed: {
+    isIframeShow: {
+      get () {
+        return this.$store.state.tabs.isIframeShow
+      },
+      set (val) {
+        this.$store.commit('tabs/UPDATE_IS_IFRAME_SHOW', val)
+      }
+    }
+  },
   methods: {
     ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB']),
     ...mapActions('tabs', ['navTo']),

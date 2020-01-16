@@ -21,7 +21,14 @@
 
       <a-layout-content style="min-height: auto;">
         <div id="main-content" class="padding-content">
-          <router-view />
+          <div v-show="!isIframeShow">
+            <keep-alive>
+              <router-view class="router-view" />
+            </keep-alive>
+          </div>
+          <div v-show="isIframeShow">
+            <iframe-components ref="iframeComponentRef" />
+          </div>
         </div>
       </a-layout-content>
       <layout-footer v-if="showFooter" />
@@ -36,11 +43,21 @@ import TopBanner from '@/page/layout/top-banner/TopBanner'
 import TopLogo from '@/page/layout/side-menu/TopLogo'
 import Tabs from '@/page/layout/tabs/Tabs'
 import { mapState } from 'vuex'
+import IframeComponents from '@/components/iframe/Iframe'
+
 export default {
   name: 'LayoutIndex',
-  components: { TopLogo, TopBanner, SideMenu, LayoutFooter, Tabs },
+  components: { TopLogo, TopBanner, SideMenu, LayoutFooter, Tabs, IframeComponents },
   computed: {
     ...mapState('common', ['showFooter']),
+    isIframeShow: {
+      get () {
+        return this.$store.state.tabs.isIframeShow
+      },
+      set (val) {
+        this.$store.commit('tabs/UPDATE_IS_IFRAME_SHOW', val)
+      }
+    },
     collapsed: {
       get() {
         return this.$store.getters.isCollapse

@@ -15,31 +15,20 @@
     <v-contextmenu ref="contextmenu">
       <tab-contextmenu />
     </v-contextmenu>
-    <div v-show="!isIframeShow">
-      <keep-alive>
-        <router-view class="router-view" />
-      </keep-alive>
-    </div>
-    <div v-show="isIframeShow">
-      <iframe-components ref="iframeComponentRef" />
-    </div>
   </div>
 </template>
 
 <script>
 import TabContextmenu from '@/page/layout/tabs/TabContextmenu'
-import iframeComponents from '@/components/iframe/Iframe'
 import { mapState } from 'vuex'
 import { homePageMixin } from '@/components/mixins/homePageMixin/homePageMixin'
 
 export default {
   name: 'Tabs',
-  components: { TabContextmenu, iframeComponents },
+  components: { TabContextmenu },
   mixins: [homePageMixin],
   data() {
-    return {
-      isIframeShow: false
-    }
+    return {}
   },
   computed: {
     ...mapState('tabs', ['tabList', 'homepageTab']),
