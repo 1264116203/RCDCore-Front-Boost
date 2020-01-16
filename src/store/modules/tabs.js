@@ -108,10 +108,11 @@ const tabs = {
       state.activeTabKey = tab.key
     },
     CLOSE_TAB: (state, key) => {
-      state.tabList = state.tabList.filter(item => {
+      const tabList = state.tabList.filter(item => {
         return item.key !== key
       })
-      handleTabCloseable(state.tabList)
+      handleTabCloseable(tabList)
+      state.tabList = tabList
       setStore('tabList', state.tabList)
     },
     CLOSE_ALL: (state) => {

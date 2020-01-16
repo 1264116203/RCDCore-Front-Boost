@@ -50,9 +50,7 @@
         </div>
       </template>
       <template #MenuIcon="text, record">
-        <a-icon :type="record.icon">
-          {{ record.icon }}
-        </a-icon>
+        <a-icon v-if="record.icon" :type="record.icon" />
       </template>
     </a-table>
 
@@ -102,6 +100,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'MenuView',
   components: {
     MenuEdit
   },
@@ -124,11 +123,12 @@ export default {
       this.isLoading = true
       getList(this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data
+          const tableDataList = res.data
           /** 表格数据从小到大排序 */
-          this.tableDataList.sort(function(a, b) {
+          tableDataList.sort(function(a, b) {
             return a.sort - b.sort
           })
+          this.tableDataList = tableDataList
         })
         .catch(err => console.error(err))
         .finally(() => {

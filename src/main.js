@@ -6,6 +6,7 @@ import store from './store'
 import { baseUrl } from '@/config/env'
 
 import '@/router/interceptor/auth-interceptor'
+import '@/router/interceptor/keep-alive-destroyer'
 import './record-error'
 import BasicContainer from '@/components/basic-container/BasicContainer'
 import App from './App.vue'

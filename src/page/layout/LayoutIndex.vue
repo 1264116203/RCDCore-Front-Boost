@@ -20,15 +20,13 @@
       <tabs />
 
       <a-layout-content style="min-height: auto;">
-        <div id="main-content" class="padding-content">
+        <div id="main-content" class="main-content padding-content">
           <div v-show="!isIframeShow">
             <keep-alive>
-              <router-view class="router-view" />
+              <router-view :key="$route.fullPath" class="router-view" />
             </keep-alive>
           </div>
-          <div v-show="isIframeShow">
-            <iframe-components ref="iframeComponentRef" />
-          </div>
+          <iframe-components v-show="isIframeShow" ref="iframeComponentRef" />
         </div>
       </a-layout-content>
       <layout-footer v-if="showFooter" />
@@ -93,5 +91,8 @@ export default {
     margin: 0;
     background-color: @body-background;
     overflow: auto
+  }
+  .main-content {
+    height: 100%;
   }
 </style>

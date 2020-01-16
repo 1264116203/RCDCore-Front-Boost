@@ -66,15 +66,17 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.afterEach(() => {
+router.afterEach((to, from) => {
   NProgress.done()
-  if (store.getters.nowTab) {
-    let title = store.getters.nowTab.label
-    // 根据当前的标签也获取label的值动态设置浏览器标题
-    if (title) {
-      document.title = store.getters.website.title + ' - ' + title
-    } else {
-      document.title = store.getters.website.title
+  if (to.meta.isTab) {
+    if (store.getters.nowTab) {
+      let title = store.getters.nowTab.label
+      // 根据当前的标签也获取label的值动态设置浏览器标题
+      if (title) {
+        document.title = store.getters.website.title + ' - ' + title
+      } else {
+        document.title = store.getters.website.title
+      }
     }
   }
 })
