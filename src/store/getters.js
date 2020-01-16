@@ -15,6 +15,10 @@ const getters = {
     return tabList.find(elem => elem.key === activeTabKey)
   },
   tabList: state => state.tabs.tabList,
+  iframeTabList: state => {
+    const { tabList } = state.tabs
+    return tabList.filter(elem => elem.meta && elem.meta.isIframe)
+  },
   homepageTab: state => state.tabs.homepageTab,
 
   token: state => state.user.token,

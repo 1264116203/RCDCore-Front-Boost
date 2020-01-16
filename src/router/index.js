@@ -162,12 +162,12 @@ router.addRoutes([{
   },
   {
     path: '/myiframe/urlPath',
-    name: '',
+    name: 'iframe',
     meta: {
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "about" */ '@/components/iframe/Main.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/components/iframe/Iframe.vue')
   }
   ]
 }])

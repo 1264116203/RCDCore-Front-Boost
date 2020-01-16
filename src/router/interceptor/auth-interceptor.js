@@ -54,7 +54,10 @@ router.beforeEach((to, from, next) => {
           path: value,
           params: to.params,
           query: to.query,
-          meta: meta,
+          meta: {
+            ...meta,
+            isIframe: value.indexOf('http') === 0
+          },
           group: []
         })
       }
