@@ -24,7 +24,6 @@ router.afterEach((to, from) => {
           }
           cache[key].componentInstance.$destroy()
           delete cache[key]
-          console.log('正在销毁路由节点key:' + key)
         }
       }
     }

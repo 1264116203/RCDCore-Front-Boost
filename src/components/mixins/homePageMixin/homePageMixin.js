@@ -2,7 +2,7 @@ import { mapActions, mapMutations } from 'vuex'
 import { isUrl } from '@/util/validate'
 export const homePageMixin = {
   methods: {
-    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB']),
+    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB', 'UPDATE_IS_IFRAME_SHOW']),
     ...mapActions('tabs', ['navTo']),
 
     onEdit(targetKey, action) {
@@ -23,6 +23,7 @@ export const homePageMixin = {
           this.navToIframe(found)
         } else {
           this.navTo(found)
+          this.UPDATE_IS_IFRAME_SHOW(false)
         }
       }
     },
