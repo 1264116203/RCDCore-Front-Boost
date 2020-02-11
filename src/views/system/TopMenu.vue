@@ -183,7 +183,7 @@ export default {
         this.grantMenuTreeDta = res.data
       })
       getTopTree(id).then(res => {
-        this.menuIds = [...res.data.data.menu]
+        this.menuIds = [...res.data.menu]
       })
     },
     onSelectGrant(checkedKeys) {
