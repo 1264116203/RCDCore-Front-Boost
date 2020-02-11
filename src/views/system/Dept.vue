@@ -63,7 +63,7 @@ import {
 } from '@/api/system/dept'
 import { ACTION_TYPE } from '@/config/env'
 import DeptEdit from './DeptEdit.vue'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 
 const columns = [
   {

@@ -61,7 +61,7 @@ import {
   update,
   getRole
 } from '@/api/system/role'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
 import { disabledNode } from '@/util/tree'
@@ -74,7 +74,7 @@ const EmptyFormData = {
 }
 
 export default {
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     return {
       /** 原始数据的深拷贝，上级角色选择时设置当前节点的disable状态 */

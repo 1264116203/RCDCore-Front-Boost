@@ -76,7 +76,7 @@ import {
 } from '@/api/system/user'
 import UserEdit from './UserEdit.vue'
 import { ACTION_TYPE } from '@/config/env'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 import LimitedTags from '@/components/scraps/LimitedTags'
 
 const columns = [

@@ -7,31 +7,42 @@
                   :key="tabElem.key"
                   :closable="tabElem.closeable"
       >
-        <span slot="tab" v-contextmenu:contextmenu class="tab-slot">
+        <span slot="tab" v-contextmenu:contextmenu class="tab-slot" :tab-key="tabElem.key"
+              @contextmenu="onRightClick"
+        >
           {{ tabElem.label }}
         </span>
       </a-tab-pane>
     </a-tabs>
     <v-contextmenu ref="contextmenu">
-      <tab-contextmenu />
+      <v-contextmenu-item :disabled="closeTabItemDisabled" @click="closeTabByContextMenu">
+        关闭标签页
+      </v-contextmenu-item>
+      <v-contextmenu-item divider />
+      <v-contextmenu-item @click="closeOtherTabs">
+        关闭其他
+      </v-contextmenu-item>
+      <v-contextmenu-item @click="closeAllTabs">
+        关闭所有
+      </v-contextmenu-item>
     </v-contextmenu>
   </div>
 </template>
 
 <script>
-import TabContextmenu from '@/page/layout/tabs/TabContextmenu'
-import { mapState } from 'vuex'
-import { homePageMixin } from '@/components/mixins/homePageMixin/homePageMixin'
+import { TabPanelMixin } from '@/components/mixins/tab-panel/TabPanelMixin'
 
 export default {
   name: 'Tabs',
-  components: { TabContextmenu },
-  mixins: [homePageMixin],
-  data() {
-    return {}
-  },
+  mixins: [TabPanelMixin],
   computed: {
-    ...mapState('tabs', ['tabList', 'homepageTab']),
+    closeTabItemDisabled() {
+      const tab = this.tabList.find(elem => elem.key === this.rightTabKey)
+      if (!tab) {
+        return true
+      }
+      return !tab.closeable
+    },
     activeTabKey: {
       get () {
         return this.$store.state.tabs.activeTabKey
@@ -39,6 +50,22 @@ export default {
       set(val) {
         this.$store.commit('tabs/UPDATE_ACTIVE_TAB_KEY', val)
       }
+    },
+    rightTabKey: {
+      get () {
+        return this.$store.state.tabs.rightTabKey
+      },
+      set(val) {
+        this.$store.commit('tabs/UPDATE_RIGHT_TAB_KEY', val)
+      }
+    }
+  },
+  methods: {
+    onRightClick(event) {
+      this.rightTabKey = event.target.getAttribute('tab-key')
+    },
+    closeTabByContextMenu() {
+      this.closeTab(this.rightTabKey)
     }
   }
 }
@@ -61,7 +88,7 @@ export default {
         .ant-tabs-tab {
           padding: 0 16px 0 0;
           .tab-slot {
-            padding: 0 0 0 16px;
+            padding: 16px 0 16px 16px;
             user-select: none;
           }
         }

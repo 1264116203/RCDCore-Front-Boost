@@ -77,7 +77,7 @@ import {
   getDept,
   update
 } from '@/api/system/dept'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 import { mapGetters } from 'vuex'
 import { cloneDeep } from 'lodash'
 import { disabledNode } from '@/util/tree'
@@ -91,7 +91,7 @@ const EmptyFormData = {
 }
 
 export default {
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     return {
       /** 原始数据的深拷贝，上级部门选择时设置当前节点的disable状态 */

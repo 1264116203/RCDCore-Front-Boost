@@ -1,8 +1,15 @@
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { isUrl } from '@/util/validate'
-export const homePageMixin = {
+
+/**
+ * 标签页混入模块
+ */
+export const TabPanelMixin = {
+  computed: {
+    ...mapState('tabs', ['tabList'])
+  },
   methods: {
-    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB', 'UPDATE_IS_IFRAME_SHOW']),
+    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB', 'CLOSE_OTHER', 'CLOSE_ALL', 'UPDATE_IS_IFRAME_SHOW']),
     ...mapActions('tabs', ['navTo']),
 
     onEdit(targetKey, action) {
@@ -43,6 +50,14 @@ export const homePageMixin = {
           this.onTabClick(this.tabList[index - 1].key)
         }
       }
+    },
+    closeAllTabs() {
+      this.CLOSE_ALL()
+      this.navTo(null)
+    },
+    closeOtherTabs() {
+      this.CLOSE_OTHER(this.rightTabKey)
+      this.onTabClick(this.rightTabKey)
     }
   }
 }

@@ -136,7 +136,7 @@ import {
 } from '@/api/system/menu'
 import menuIconList from '@/config/menuIcon'
 import { mapGetters } from 'vuex'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 import { cloneDeep } from 'lodash'
 import { disabledNode } from '@/util/tree'
 
@@ -153,7 +153,7 @@ const EmptyFormData = {
 }
 
 export default {
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     return {
       /** *菜单图标选择的弹框 */

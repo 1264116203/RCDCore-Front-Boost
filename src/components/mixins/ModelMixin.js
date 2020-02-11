@@ -1,4 +1,4 @@
-export const modelMixin = {
+export const ModelMixin = {
   data() {
     return {
       /** 当前数据项的id，新增时则为空 */

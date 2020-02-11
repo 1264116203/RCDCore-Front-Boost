@@ -83,7 +83,7 @@ import {
 } from '@/api/system/topmenu'
 import { TreeSelect } from 'ant-design-vue'
 import menuIconList from '@/config/menuIcon'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 
 const EmptyFormData = {
   name: '',
@@ -93,7 +93,7 @@ const EmptyFormData = {
 }
 
 export default {
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     return {
       /** *Tree选择器 当父节点下所有子节点都选中时默认只显示子节点 */

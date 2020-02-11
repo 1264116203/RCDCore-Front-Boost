@@ -76,7 +76,7 @@ import {
 } from '@/api/system/dict'
 import { ACTION_TYPE } from '@/config/env'
 import DictEdit from './DictEdit.vue'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 
 const columns = [
   {

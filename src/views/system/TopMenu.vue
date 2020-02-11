@@ -56,9 +56,7 @@
         </div>
       </template>
       <template #MenuIcon="text, record">
-        <a-icon :type="record.source">
-          {{ record.source }}
-        </a-icon>
+        <a-icon :type="record.source" />
       </template>
     </a-table>
 
@@ -90,7 +88,7 @@ import {
 } from '@/api/system/topmenu'
 import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 
 const columns = [
   {

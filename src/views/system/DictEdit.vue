@@ -58,7 +58,7 @@ import {
   getDict,
   update
 } from '@/api/system/dict'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 import DictTable from '@/components/dict-table/DictTable'
 
 const innerColumns = [
@@ -99,7 +99,7 @@ const EmptyFormData = {
 
 export default {
   components: { DictTable },
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     return {
       innerColumns,

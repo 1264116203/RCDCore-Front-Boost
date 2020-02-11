@@ -86,7 +86,7 @@ import {
 } from '@/api/system/role'
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 
 const columns = [
   {

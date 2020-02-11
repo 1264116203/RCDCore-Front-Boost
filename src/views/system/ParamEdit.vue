@@ -53,7 +53,7 @@ import {
   update,
   getParam
 } from '@/api/system/param'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 
 const EmptyFormData = {
   paramName: '',
@@ -62,7 +62,7 @@ const EmptyFormData = {
 }
 
 export default {
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     return {
     }

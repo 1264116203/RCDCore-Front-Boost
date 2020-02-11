@@ -135,7 +135,7 @@
 import { add, getUser, update } from '@/api/system/user'
 import { getDeptTree } from '@/api/system/dept'
 import { getRoleTree } from '@/api/system/role'
-import { modelMixin } from '@/components/mixins/modelMixin'
+import { ModelMixin } from '@/components/mixins/ModelMixin'
 
 const EmptyFormData = {
   account: '',
@@ -148,7 +148,7 @@ const EmptyFormData = {
 }
 
 export default {
-  mixins: [modelMixin],
+  mixins: [ModelMixin],
   data() {
     const validatePass = (rule, value, callback) => {
       if (!value) {

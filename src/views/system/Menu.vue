@@ -65,7 +65,7 @@ import {
 } from '@/api/system/menu'
 import { ACTION_TYPE } from '@/config/env'
 import MenuEdit from './MenuEdit.vue'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 
 const columns = [
   {

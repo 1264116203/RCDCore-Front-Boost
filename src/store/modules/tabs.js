@@ -56,15 +56,17 @@ function tabDiff(tab1, tab2) {
 const tabs = {
   namespaced: true,
   state: {
-    // 标签列表
+    /** 标签列表 */
     tabList: getStore('tabList') || [homepageTab],
 
-    // 当前标签key
+    /** 当前标签key */
     activeTabKey: '1',
+    /** 当前右击激活的标签 */
+    rightTabKey: null,
 
-    // 首页标签
+    /** 首页标签 */
     homepageTab: homepageTab,
-    // 当前显示的是否为iframe
+    /** 当前显示的是否为iframe */
     isIframeShow: false
   },
   actions: {
@@ -119,9 +121,9 @@ const tabs = {
       state.tabList = [state.homepageTab]
       setStore('tabList', state.tabList)
     },
-    CLOSE_OTHER: (state) => {
+    CLOSE_OTHER: (state, key) => {
       state.tabList = state.tabList.filter(item => {
-        if (item.path === state.nowTab.path) {
+        if (item.key === key) {
           return true
         } else if (!firstPageCloseable && item.path === homepageTab.path) {
           return true
@@ -134,7 +136,9 @@ const tabs = {
     UPDATE_ACTIVE_TAB_KEY: (state, key) => {
       state.activeTabKey = key
     },
-
+    UPDATE_RIGHT_TAB_KEY: (state, key) => {
+      state.rightTabKey = key
+    },
     UPDATE_IS_IFRAME_SHOW: (state, payload) => {
       state.isIframeShow = payload
     }

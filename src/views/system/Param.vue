@@ -62,7 +62,7 @@ import {
 } from '@/api/system/param'
 import { ACTION_TYPE } from '@/config/env'
 import ParamEdit from './ParamEdit.vue'
-import { myMixin } from '@/components/mixins/mainMixin'
+import { myMixin } from '@/components/mixins/MainMixin'
 
 const columns = [
   {
