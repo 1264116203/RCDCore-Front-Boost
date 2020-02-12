@@ -155,6 +155,14 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '@/components/iframe/RouterIframe.vue')
+  }, {
+    path: '/user/info',
+    name: '个人信息',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/user/Info.vue')
   }]
 }])
 
