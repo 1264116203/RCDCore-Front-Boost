@@ -14,6 +14,7 @@ import router from '@/router'
 import { serialize } from '@/util/util'
 import { getToken } from '@/util/auth'
 import website from '@/config/website'
+import { baseUrl } from '@/config/env'
 
 axios.defaults.timeout = 10000
 // 返回其他状态码
@@ -22,6 +23,7 @@ axios.defaults.validateStatus = function (status) {
 }
 // 跨域请求，允许保存cookie
 axios.defaults.withCredentials = true
+axios.defaults.baseURL = baseUrl
 // NProgress Configuration
 NProgress.configure({
   showSpinner: false

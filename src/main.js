@@ -27,7 +27,6 @@ Vue.filter('textClip', function (value, clipNum) {
   return value.substring(0, clipNum) + '...'
 })
 
-axios.baseUrl = baseUrl
 Vue.prototype.$http = axios
 Vue.prototype.$baseUrl = baseUrl
 
