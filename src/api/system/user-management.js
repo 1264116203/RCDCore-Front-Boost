@@ -23,10 +23,3 @@ export const update = (row) => {
 export const getUser = (id) => {
   return request.get('/api/user/' + id)
 }
-
-export const updatePassword = (oldPassword, newPassword) => {
-  return request.put('/api/user/update-password', {
-    oldPassword,
-    newPassword
-  })
-}

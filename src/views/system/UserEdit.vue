@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { add, getUser, update } from '@/api/system/user'
+import { add, getUser, update } from '@/api/system/user-management'
 import { getDeptTree } from '@/api/system/dept'
 import { getRoleTree } from '@/api/system/role'
 import { ModelMixin } from '@/components/mixins/ModelMixin'

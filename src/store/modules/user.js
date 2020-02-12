@@ -3,7 +3,7 @@ import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
 import { deepClone } from '@/util/util'
 import website from '@/config/website'
-import { login, getUserInfo, logout, refreshToken, getButtons } from '@/api/user'
+import { login, getUserInfo, logout, refreshToken, getButtons } from '@/api/common'
 import { getTopMenu, getRoutes } from '@/api/system/menu'
 
 function addPath(ele, first = false) {

@@ -19,7 +19,7 @@ export const refreshToken = (refreshToken, tenantId) => request.post('/api/blade
 
 export const getButtons = () => request.get('/api/menu/buttons')
 
-export const getUserInfo = () => request.get(baseUrl + '/user/getUserInfo')
+export const getUserInfo = () => request.get(baseUrl + '/user/selfInfo')
 
 export const sendLogs = (list) => request.post(baseUrl + '/user/logout', list)
 
@@ -30,3 +30,10 @@ export const logout = () => Promise.resolve()
 //   url: baseUrl + '/user/logout',
 //   method: 'get'
 // })
+
+export const updatePassword = (oldPassword, newPassword) => {
+  return request.put('/api/user/update-password', {
+    oldPassword,
+    newPassword
+  })
+}
