@@ -1,6 +1,6 @@
 import { setStore, getStore } from '@/util/browser-storage'
 import { dateFormat } from '@/util/date'
-import { sendLogs } from '@/api/user'
+import { sendLogs } from '@/api/common'
 
 const logs = {
   state: {
