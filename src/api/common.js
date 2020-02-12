@@ -19,7 +19,7 @@ export const refreshToken = (refreshToken, tenantId) => request.post('/api/blade
 
 export const getButtons = () => request.get('/api/menu/buttons')
 
-export const getUserInfo = () => request.get(baseUrl + '/user/selfInfo')
+export const getUserInfo = () => request.get('/api/user/selfInfo')
 
 export const sendLogs = (list) => request.post(baseUrl + '/user/logout', list)
 
