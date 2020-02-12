@@ -13,7 +13,8 @@
 
 <script>
 import option from '@/const/user/info'
-import { getUser, update, updatePassword } from '@/api/system/user'
+import update from '@/api/system/user-management'
+import { getUserInfo, updatePassword } from '@/api/common'
 
 export default {
   data() {
@@ -60,7 +61,7 @@ export default {
     },
     handleWitch() {
       if (this.type === 'info') {
-        getUser().then(res => {
+        getUserInfo().then(res => {
           const user = res.data.data
           this.form = {
             id: user.id,

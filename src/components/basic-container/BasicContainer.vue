@@ -15,6 +15,7 @@ export default {
 <style lang="less">
 .basic-container {
   padding: 10px 6px;
+  margin-top: 10px;
   border-radius: 10px;
   box-sizing: border-box;
   .el-card {
