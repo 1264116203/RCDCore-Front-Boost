@@ -8,7 +8,7 @@
                 @click="toggleCollapsed"
         />
       </span>
-      <div class="quick-action">
+      <!-- <div class="quick-action">
         <a-dropdown>
           <span class="pointer"> <a-icon type="block" /> 快捷操作</span>
           <a-menu slot="overlay">
@@ -23,23 +23,25 @@
             </a-menu-item>
           </a-menu>
         </a-dropdown>
-      </div>
+      </div>-->
     </div>
     <div class="top-banner-right">
-      <a-tooltip placement="bottom" title="锁屏">
-        <div>
+      <!--
+      <div>
+        <a-tooltip placement="bottom" title="锁屏">
           <a-button type="link" class="right-button">
             <a-icon type="lock" theme="filled" />
           </a-button>
-        </div>
-      </a-tooltip>
-      <a-tooltip placement="bottom" title="全屏切换">
-        <div>
-          <a-button type="link" class="right-button">
-            <a-icon type="fullscreen" />
+        </a-tooltip>
+      </div>
+      -->
+      <div>
+        <a-tooltip placement="bottom" title="全屏切换">
+          <a-button type="link" class="right-button" @click="toggleFullScreenClicked">
+            <a-icon :type="isFullScreen ? 'fullscreen-exit' : 'fullscreen'" />
           </a-button>
-        </div>
-      </a-tooltip>
+        </a-tooltip>
+      </div>
 
       <div class="pointer avatar-dropdown">
         <a-dropdown>
@@ -66,18 +68,28 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+import { fullscreenListener, toggleFullscreen } from '@/util/util'
 
 export default {
   name: 'TopBanner',
   computed: {
-    ...mapState('common', ['isCollapse', 'showCollapse'])
+    ...mapState('common', ['isCollapse', 'showCollapse']),
+    ...mapGetters(['isFullScreen'])
+  },
+  mounted() {
+    fullscreenListener(() => {
+      this.TOGGLE_FULLSCREEN()
+    })
   },
   methods: {
-    ...mapMutations('common', ['TOGGLE_COLLAPSE']),
+    ...mapMutations('common', ['TOGGLE_COLLAPSE', 'TOGGLE_FULLSCREEN']),
     ...mapActions('user', ['logout']),
     toggleCollapsed() {
       this.TOGGLE_COLLAPSE()
+    },
+    toggleFullScreenClicked () {
+      toggleFullscreen()
     },
     doLogout() {
       this.logout()
