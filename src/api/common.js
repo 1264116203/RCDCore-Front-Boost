@@ -36,3 +36,7 @@ export const updatePassword = (oldPassword, newPassword) => {
     newPassword
   })
 }
+
+export const updateUserInfo = (userInfo) => {
+  return request.put('/api/user/self', userInfo)
+}
