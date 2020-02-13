@@ -46,7 +46,8 @@
       <div class="pointer avatar-dropdown">
         <a-dropdown>
           <div style="display:inline-block; height: 3rem;">
-            <a-avatar icon="user" style="margin-right: 0.5rem;" :size="32" />
+            <a-avatar v-if="userInfo.avatar" :src="userInfo.avatar" style="margin-right: 0.5rem;" :size="32" />
+            <a-avatar v-else icon="user" style="margin-right: 0.5rem;" :size="32" />
             <a-icon type="down" />
           </div>
           <a-menu slot="overlay">
@@ -75,7 +76,8 @@ export default {
   name: 'TopBanner',
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
-    ...mapGetters(['isFullScreen'])
+    ...mapGetters(['isFullScreen']),
+    ...mapGetters(['userInfo'])
   },
   mounted() {
     fullscreenListener(() => {

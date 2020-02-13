@@ -111,6 +111,7 @@ export default {
       }
       updateUserInfo(formData).then(res => {
         this.$message.success('修改信息成功!')
+        this.$store.commit('user/SET_USER_INFO', formData)
       })
         .catch(error => { console.log(error) })
     },
