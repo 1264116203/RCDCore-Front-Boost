@@ -1,35 +1,35 @@
 <template>
   <div>
-    <a-form ref="form" :form="form" class="d2-col-form"
-            :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+    <a-form ref="form" :form="form" class="d1-col-form width64-centered"
+            :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }"
     >
-      <a-form-item label="头像" style="width: 60%" :label-col="{ span: 10 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="头像">
         <a-upload
-          v-decorator="['avatar']"
+          ref="avatarUpload"
           name="avatar"
           list-type="picture-card"
           class="avatar-uploader"
-          :headers="{
-            Authorization: 'Bearer ' + token
-          }"
-          :show-upload-list="false"
           action="/api/upload?subPath=avatar"
+          :headers="{ Authorization: 'Bearer ' + token }"
+          :show-upload-list="false"
           :before-upload="beforeUpload"
           @change="onChangeAvatar"
         >
-          <a-badge v-if="imageUrl" @click.stop="onCancelAvatar">
-            <a-icon type="close" style="color: #f5222d" />
-          </a-badge>
-          <img v-if="imageUrl" :src="imageUrl" alt="avatar" class="avatar-img">
-          <div v-else>
-            <a-icon :type="loading ? 'loading' : 'plus'" />
-            <div class="ant-upload-text">
-              点击上传
+          <div style="position: relative;">
+            <a-badge v-if="imageUrl" @click.stop="onCancelAvatar">
+              <a-icon type="close-circle" theme="filled" style="color: #f5222d" />
+            </a-badge>
+            <img v-if="imageUrl" :src="imageUrl" class="avatar-img">
+            <div v-else>
+              <a-icon :type="loading ? 'loading' : 'plus'" />
+              <div class="ant-upload-text">
+                点击上传
+              </div>
             </div>
           </div>
         </a-upload>
       </a-form-item>
-      <a-form-item label="姓名" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="姓名">
         <a-input
           v-decorator="['realName', { rules: [
             { required: true, message: '请输入用户姓名' }
@@ -38,7 +38,7 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item label="用户名" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="用户名">
         <a-input
           v-decorator="['name', { rules: [
             { required: true, message: '请输入用户名' }
@@ -47,7 +47,7 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item label="手机号" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="手机号">
         <a-input
           v-decorator="['phone', { rules: [
             { pattern:/^1[0-9]{10}$/, message: '请输入以1开头的11位手机号码'}
@@ -56,7 +56,7 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item label="邮箱" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="邮箱">
         <a-input
           v-decorator="['email', { rules: [
             { pattern:/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '请输入正确的邮箱' }
@@ -66,12 +66,13 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 24, offset: 24 }">
-        <a-button type="primary" @click="onSubmit">
-          提交
-        </a-button>
-        <a-button style="margin-left: 15px" @click="onCancel">
+      <a-divider />
+      <a-form-item class="text-right" :wrapper-col="{ span: 24 }">
+        <a-button @click="onCancel">
           清除
+        </a-button>
+        <a-button type="primary" style="margin-left: 15px" @click="onSubmit">
+          提交
         </a-button>
       </a-form-item>
     </a-form>
@@ -82,31 +83,27 @@
 import { getUserInfo, updateUserInfo } from '@/api/common'
 import { mapGetters } from 'vuex'
 
-function getBase64(img, callback) {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result))
-  reader.readAsDataURL(img)
-}
 export default {
   data() {
     return {
       form: this.$form.createForm(this),
       currentId: '',
       loading: false,
-      imageUrl: ''
+      imageUrl: '',
+      avatarFile: null
     }
   },
   computed: {
     ...mapGetters(['token'])
   },
   created() {
-    this.doSwitch()
+    this.fetchData()
   },
   methods: {
     onSubmit() {
       const formData = {
         ...this.form.getFieldsValue(),
-        avatar: this.form.getFieldValue('avatar').fileList[0].response.url,
+        avatar: this.imageUrl,
         id: this.currentId
       }
       updateUserInfo(formData).then(res => {
@@ -118,30 +115,32 @@ export default {
     onCancel() {
       this.form.resetFields()
     },
-    doSwitch() {
+    fetchData() {
       getUserInfo().then(res => {
         const user = res.data
         this.currentId = user.id
         this.form.setFieldsValue({
-          avatar: user.avatar,
           name: user.name,
           realName: user.realName,
           phone: user.phone,
           email: user.email
         })
+        this.imageUrl = user.avatar
       })
     },
-    onChangeAvatar(info) {
-      if (info.file.status === 'uploading') {
+    onChangeAvatar({ file, fileList, event }) {
+      if (file.status === 'uploading') {
         this.loading = true
+        if (this.avatarFile) {
+          this.$refs.avatarUpload.handleManualRemove(this.avatarFile)
+          this.avatarFile = null
+        }
         return
       }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, imageUrl => {
-          this.imageUrl = imageUrl
-          this.loading = false
-        })
+      if (file.status === 'done') {
+        this.imageUrl = file.response.url
+        this.loading = false
+        this.avatarFile = file
       }
     },
     beforeUpload(file) {
@@ -156,22 +155,26 @@ export default {
       return isJPG && isLt2M
     },
     onCancelAvatar() {
-      this.imageUrl = ''
+      this.imageUrl = null
+      if (this.avatarFile) {
+        this.$refs.avatarUpload.handleManualRemove(this.avatarFile)
+        this.avatarFile = null
+      }
     }
   }
 }
 </script>
 
 <style>
-.avatar-uploader .avatar-img{
-    width: 128px;
-    height: 128px;
-  }
+.avatar-uploader .avatar-img {
+  display: block;
+  max-width: 128px;
+}
 
-.ant-upload .ant-badge{
-    position: absolute;
-    left: 138px;
-    top: 138px;
-  }
+.ant-upload .ant-badge {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+}
 
 </style>

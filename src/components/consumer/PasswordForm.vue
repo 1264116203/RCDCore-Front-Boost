@@ -1,12 +1,12 @@
 <template>
   <div>
-    <a-form ref="form" :form="passwordForm" class="d2-col-form"
-            :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+    <a-form ref="form" :form="passwordForm" class="d1-col-form width64-centered"
+            :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }"
     >
-      <a-form-item label="原密码" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="原密码">
         <a-input v-decorator="['oldPassword']" placeholder="请输入原密码" allow-clear />
       </a-form-item>
-      <a-form-item label="新密码" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="新密码">
         <a-input
           v-decorator="['newPassword', { rules: [
             { required: true, validator: validatePass },
@@ -17,7 +17,7 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item label="确认密码" style="width: 100%" :label-col="{ span: 6 }" :wrapper-col="{ span: 10 }">
+      <a-form-item label="确认密码">
         <a-input
           v-decorator="['newPassword1', { rules: [
             { required: true, validator: validatePass2 }
@@ -27,12 +27,13 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 24, offset: 24 }">
-        <a-button type="primary" @click="onSubmit">
-          提交
-        </a-button>
-        <a-button style="margin-left: 15px" @click="onCancel">
+      <a-divider />
+      <a-form-item class="text-right" :wrapper-col="{ span: 24 }">
+        <a-button @click="onCancel">
           清除
+        </a-button>
+        <a-button type="primary" style="margin-left: 15px" @click="onSubmit">
+          提交
         </a-button>
       </a-form-item>
     </a-form>
