@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model="formVisible"
-      width="600px"
+      width="800px"
       title="查看"
       :closable="true"
       :mask-closable="true"
@@ -78,7 +78,7 @@
         <a-form-item label="堆栈信息" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-textarea
             v-decorator="['stackTrace']"
-            :autosize="{ minRows: 4, maxRows: 10 }"
+            :autosize="{ minRows: 5, maxRows: 15 }"
             :disabled="isDisable"
           />
         </a-form-item>

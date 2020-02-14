@@ -9,7 +9,7 @@ export const TabPanelMixin = {
     ...mapState('tabs', ['tabList'])
   },
   methods: {
-    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB', 'CLOSE_OTHER', 'CLOSE_ALL', 'UPDATE_IS_IFRAME_SHOW']),
+    ...mapMutations('tabs', ['SWITCH_TAB', 'CLOSE_TAB', 'CLOSE_OTHER', 'CLOSE_ALL']),
     ...mapActions('tabs', ['navTo']),
 
     onEdit(targetKey, action) {
@@ -30,7 +30,6 @@ export const TabPanelMixin = {
           this.navToIframe(found)
         } else {
           this.navTo(found)
-          this.UPDATE_IS_IFRAME_SHOW(false)
         }
       }
     },

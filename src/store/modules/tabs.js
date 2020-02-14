@@ -83,6 +83,7 @@ const tabs = {
       })
         .then(() => {
           commit('sidemenu/UPDATE_MENU_PATH', tabElem.path, { root: true })
+          commit('UPDATE_IS_IFRAME_SHOW', tabElem.path.indexOf('/myiframe') === 0)
         })
         .catch(reason => {
           if (reason && reason.name === 'NavigationDuplicated') {
