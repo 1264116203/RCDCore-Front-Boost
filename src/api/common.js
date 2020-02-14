@@ -1,5 +1,4 @@
 import request from '@/rcore-axios'
-import { baseUrl } from '@/config/env'
 
 export const login = (username, password, rememberMe) => (
   request.post('/api/authenticate', { username, password, rememberMe })
@@ -19,9 +18,9 @@ export const refreshToken = (refreshToken, tenantId) => request.post('/api/blade
 
 export const getButtons = () => request.get('/api/menu/buttons')
 
-export const getUserInfo = () => request.get(baseUrl + '/user/selfInfo')
+export const getUserInfo = () => request.get('/api/user/selfInfo')
 
-export const sendLogs = (list) => request.post(baseUrl + '/user/logout', list)
+export const sendLogs = (list) => request.post('/api/user/logout', list)
 
 // TODO 这里的请求是假的，是Mock的，事实上压根没有退出登录请求发出
 export const logout = () => Promise.resolve()
@@ -36,4 +35,8 @@ export const updatePassword = (oldPassword, newPassword) => {
     oldPassword,
     newPassword
   })
+}
+
+export const updateUserInfo = (userInfo) => {
+  return request.put('/api/user/self', userInfo)
 }

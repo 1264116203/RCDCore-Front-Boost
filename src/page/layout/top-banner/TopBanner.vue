@@ -46,15 +46,16 @@
       <div class="pointer avatar-dropdown">
         <a-dropdown>
           <div style="display:inline-block; height: 3rem;">
-            <a-avatar icon="user" style="margin-right: 0.5rem;" :size="32" />
+            <a-avatar v-if="userInfo.avatar" :src="userInfo.avatar" style="margin-right: 0.5rem;" :size="32" />
+            <a-avatar v-else icon="user" style="margin-right: 0.5rem;" :size="32" />
             <a-icon type="down" />
           </div>
           <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">1st menu item</a>
+            <a-menu-item @click="doBackHome">
+              首页
             </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">2nd menu item</a>
+            <a-menu-item @click="doUserInfo">
+              个人信息
             </a-menu-item>
             <a-menu-divider />
             <a-menu-item @click="doLogout">
@@ -75,7 +76,8 @@ export default {
   name: 'TopBanner',
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
-    ...mapGetters(['isFullScreen'])
+    ...mapGetters(['isFullScreen']),
+    ...mapGetters(['userInfo'])
   },
   mounted() {
     fullscreenListener(() => {
@@ -85,6 +87,7 @@ export default {
   methods: {
     ...mapMutations('common', ['TOGGLE_COLLAPSE', 'TOGGLE_FULLSCREEN']),
     ...mapActions('user', ['logout']),
+    ...mapActions('tabs', ['navTo']),
     toggleCollapsed() {
       this.TOGGLE_COLLAPSE()
     },
@@ -100,6 +103,24 @@ export default {
           this.$message.error('注销失败！')
           console.error(err)
         })
+    },
+    doBackHome() {
+      this.navTo({
+        path: '/main/home',
+        meta: {
+          isAuth: true,
+          isTab: true
+        }
+      })
+    },
+    doUserInfo() {
+      this.navTo({
+        path: '/user/info',
+        meta: {
+          isAuth: true,
+          isTab: true
+        }
+      })
     }
   }
 }

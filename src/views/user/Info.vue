@@ -1,0 +1,29 @@
+<template>
+  <div>
+    <basic-container>
+      <a-tabs default-active-key="info">
+        <a-tab-pane key="info" tab="个人信息">
+          <info-form />
+        </a-tab-pane>
+        <a-tab-pane key="password" tab="修改密码">
+          <password-form />
+        </a-tab-pane>
+      </a-tabs>
+    </basic-container>
+  </div>
+</template>
+
+<script>
+import InfoForm from '@/components/consumer/InfoForm'
+import PasswordForm from '@/components/consumer/PasswordForm'
+
+export default {
+  components: {
+    InfoForm,
+    PasswordForm
+  }
+}
+</script>
+
+<style>
+</style>
