@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import updatePassword from '@/api/common'
+import { updatePassword } from '@/api/common'
 import { mapActions } from 'vuex'
 
 export default {

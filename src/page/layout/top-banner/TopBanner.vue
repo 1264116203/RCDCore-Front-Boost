@@ -76,8 +76,7 @@ export default {
   name: 'TopBanner',
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
-    ...mapGetters(['isFullScreen']),
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['isFullScreen', 'userInfo'])
   },
   mounted() {
     fullscreenListener(() => {
