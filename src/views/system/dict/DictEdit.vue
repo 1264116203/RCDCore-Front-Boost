@@ -59,7 +59,7 @@ import {
   update
 } from '@/api/system/dict'
 import { ModelMixin } from '@/components/mixins/ModelMixin'
-import DictTable from '@/components/dict-table/DictTable'
+import DictTable from './DictTable.vue'
 
 const innerColumns = [
   {

@@ -34,7 +34,7 @@ export default {
       type: String,
       required: true
     },
-    avatarUrl: {
+    defaultImageUrl: {
       type: String,
       required: true
     }
@@ -48,7 +48,7 @@ export default {
   computed: {
     ...mapGetters(['token']),
     imageUrl() {
-      return this.avatarUrl
+      return this.defaultImageUrl
     }
   },
   methods: {
@@ -62,7 +62,6 @@ export default {
         return
       }
       if (file.status === 'done') {
-        // this.imageUrl = file.response.url
         this.$emit('update:imageUrl', file.response.url)
         this.loading = false
         this.avatarFile = file
@@ -80,8 +79,7 @@ export default {
       return isJPG && isLt2M
     },
     onCancelAvatar() {
-    //   this.imageUrl = null
-      this.$emit('update:imageUrl', null)
+      this.$emit('update:imageUrl', '')
       if (this.avatarFile) {
         this.$refs.avatarUpload.handleManualRemove(this.avatarFile)
         this.avatarFile = null

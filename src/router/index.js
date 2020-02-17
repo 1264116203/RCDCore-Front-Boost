@@ -90,7 +90,7 @@ router.addRoutes([{
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Dict.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/views/system/dict/Dict.vue')
   }, {
     path: '/system/menu',
     name: '菜单管理',
@@ -162,7 +162,7 @@ router.addRoutes([{
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/user/Info.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/views/userInfo/Info.vue')
   }]
 }])
 

@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import InfoForm from '@/components/consumer/InfoForm'
-import PasswordForm from '@/components/consumer/PasswordForm'
+import InfoForm from './InfoForm.vue'
+import PasswordForm from './PasswordForm.vue'
 
 export default {
   components: {

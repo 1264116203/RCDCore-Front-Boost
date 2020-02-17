@@ -4,7 +4,7 @@
             :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }"
     >
       <a-form-item label="头像">
-        <upload-avatar :action="action" :image-url.sync="imageUrl" :avatar-url="imageUrl" />
+        <upload-avatar :action="action" :image-url.sync="imageUrl" :default-image-url="imageUrl" />
       </a-form-item>
       <a-form-item label="姓名">
         <a-input
@@ -58,7 +58,7 @@
 
 <script>
 import { getUserInfo, updateUserInfo } from '@/api/common'
-import UploadAvatar from '@/components/consumer/UploadAvatar'
+import UploadAvatar from '@/components/upload-avatar/UploadAvatar'
 
 export default {
   components: {
