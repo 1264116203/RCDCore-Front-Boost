@@ -77,16 +77,22 @@ export default {
   },
   methods: {
     onSubmit() {
-      const formData = {
-        ...this.form.getFieldsValue(),
-        avatar: this.imageUrl,
-        id: this.currentId
-      }
-      updateUserInfo(formData).then(res => {
-        this.$message.success('修改信息成功!')
-        this.$store.commit('user/SET_USER_INFO', formData)
+      this.form.validateFields((errors, values) => {
+        if (!errors) {
+          const formData = {
+            ...this.form.getFieldsValue(),
+            avatar: this.imageUrl,
+            id: this.currentId
+          }
+          updateUserInfo(formData).then(res => {
+            this.$message.success('修改信息成功!')
+            this.$store.commit('user/SET_USER_INFO', formData)
+          })
+        } else {
+          this.$message.error('校验失败！')
+          console.error(errors, values)
+        }
       })
-        .catch(error => { console.log(error) })
     },
     onCancel() {
       this.form.resetFields()

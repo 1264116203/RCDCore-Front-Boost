@@ -73,11 +73,17 @@ export default {
   methods: {
     ...mapActions('user', ['logout']),
     onSubmit() {
-      updatePassword(this.passwordForm.getFieldValue('oldPassword'), this.passwordForm.getFieldValue('newPassword')).then(res => {
-        this.$message.success('修改密码成功!')
-        this.doLogout()
+      this.passwordForm.validateFields((errors, values) => {
+        if (!errors) {
+          updatePassword(this.passwordForm.getFieldValue('oldPassword'), this.passwordForm.getFieldValue('newPassword')).then(res => {
+            this.$message.success('修改密码成功!')
+            this.doLogout()
+          })
+        } else {
+          this.$message.error('校验失败！')
+          console.error(errors, values)
+        }
       })
-        .catch(error => { console.log(error) })
     },
     onCancel() {
       this.passwordForm.resetFields()
