@@ -43,3 +43,7 @@ export const getRoutes = (topMenuId) => {
     }
   })
 }
+
+export const listWithTree = () => {
+  return request.get('/api/menu/tree')
+}

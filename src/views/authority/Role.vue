@@ -39,16 +39,22 @@
       <template #operation="text, record">
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
-            <a-icon type="eye" />查看
+            <a-icon type="eye" />
+            查看
           </a>
           <a @click="openUpdateModal(record.id)">
-            <a-icon type="edit" />修改
+            <a-icon type="edit" />
+            修改
           </a>
           <a-popconfirm title="是否删除?" @confirm="onDeleteRecord(record.id)">
-            <a><a-icon type="delete" />删除</a>
+            <a>
+              <a-icon type="delete" />
+              删除
+            </a>
           </a-popconfirm>
           <a @click="handleGrantSet(record.id)">
-            <a-icon type="setting" />权限设置
+            <a-icon type="setting" />
+            权限设置
           </a>
         </div>
       </template>
@@ -61,17 +67,28 @@
       title="角色权限配置"
       @ok="onOk"
     >
-      <a-tabs default-active-key="0">
-        <a-tab-pane v-for="(value, key, index) in grantTreeDta" :key="index" :tab="title[key]">
-          <a-tree
-            v-model="defaultSelected [ key ]"
-            checkable
-            :tree-data="value"
-            :selected-keys="selectedKeys"
-            @check="(checkedKeys) => onSelectGrant(checkedKeys,key)"
-          />
-        </a-tab-pane>
-      </a-tabs>
+      <div style="height: 50vh;min-height: 300px;overflow-y: auto">
+        <a-tree
+          checkable
+          check-strictly
+          :tree-data="menuTree"
+          :selected-keys="selectedKeys"
+          :checked-keys="menuIds"
+          @check="(checkedKeys) => onSelectGrant(checkedKeys)"
+        >
+          <template #expandSlot="item">
+            <span>
+              {{ item.title }}
+            </span>
+            <span class="sel-link" @click="checkAll(item)">
+              全选
+            </span>
+            <span class="sel-link danger" @click="uncheckAll(item)">
+              全不选
+            </span>
+          </template>
+        </a-tree>
+      </div>
     </a-modal>
   </a-spin>
 </template>
@@ -79,14 +96,13 @@
 import {
   getList,
   remove,
-  grantTree,
   grant,
-  getRoleTreeKeys,
   singleRemove
 } from '@/api/system/role'
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
+import { listWithTree } from '@/api/system/menu'
 
 const columns = [
   {
@@ -112,7 +128,7 @@ export default {
     RoleEdit
   },
   mixins: [myMixin],
-  data () {
+  data() {
     return {
       /** 搜索的条件  角色名称 角色别名 */
       searchInfo: {
@@ -123,10 +139,9 @@ export default {
       current: 1,
       pageSize: 10,
       /** 权限设置 */
-      title: { 'menu': '菜单权限', 'dataScope': '数据权限', 'apiScope': '接口权限' },
+      menuTree: [],
       defaultSelected: { 'menu': [], 'dataScope': [], 'apiScope': [] },
       grantVisible: false,
-      grantTreeDta: {},
       selectedKeys: [],
       menuIds: [],
       dataScopeIds: [],
@@ -134,9 +149,25 @@ export default {
       nowId: ''
     }
   },
+  created() {
+    listWithTree().then(res => {
+      function appendSlot(menu) {
+        if (menu.children && menu.children.length > 0) {
+          menu.scopedSlots = {
+            title: 'expandSlot'
+          }
+          menu.children.forEach(appendSlot)
+        }
+      }
+
+      const menuData = res.data
+      menuData.forEach(appendSlot)
+      this.menuTree = menuData
+    })
+  },
   methods: {
     /** 表格数据 */
-    fetchTableData () {
+    fetchTableData() {
       this.isLoading = true
       getList(this.searchInfo)
         .then(res => {
@@ -157,7 +188,7 @@ export default {
       this.$refs.modal.open(ACTION_TYPE.DETAIL, id)
     },
     /** 清空按钮事件 */
-    clearSearch () {
+    clearSearch() {
       this.searchInfo = {
         roleName: '',
         roleAlias: ''
@@ -165,13 +196,13 @@ export default {
       this.fetchTableData()
     },
     /** 单行删除按钮事件 */
-    onDeleteRecord (id) {
+    onDeleteRecord(id) {
       this.commonDeleteRecord(singleRemove, id).then(() => {
         this.$store.dispatch('role/getTree')
       })
     },
     /** 批量删除 */
-    handleBatchDelete () {
+    handleBatchDelete() {
       this.commonBatchDelete(remove).then(() => {
         this.$store.dispatch('role/getTree')
       })
@@ -180,51 +211,81 @@ export default {
     handleGrantSet(id) {
       this.nowId = id
       this.grantVisible = true
-      grantTree().then(res => {
-        this.grantTreeDta = res.data
-      })
-      getRoleTreeKeys(id).then(res => {
-        this.menuIds = [...res.data.menu]
-        this.dataScopeIds = [...res.data.dataScope]
-        this.apiScopeIds = [...res.data.apiScope]
-        this.defaultSelected = res.data
-      })
     },
-    onSelectGrant(checkedKeys, key) {
-      switch (key) {
-        case 'menu':
-          this.menuIds = [...checkedKeys]
-          break
-        case 'dataScope':
-          this.dataScopeIds = [...checkedKeys]
-          break
-        case 'apiScope':
-          this.apiScopeIds = [...checkedKeys]
-          break
-      }
+    onSelectGrant(checkedKeys) {
+      const { checked } = checkedKeys
+      this.menuIds = [...checked]
     },
     onOk() {
       grant(this.nowId, this.menuIds, this.dataScopeIds, this.apiScopeIds).then(() => {
         this.$message.success('操作成功')
         this.grantVisible = false
       })
+    },
+    checkAll(item) {
+      console.log('checkAll', item)
+      let tempList = [...this.menuIds]
+      function addItemId(menuItem) {
+        if (tempList.findIndex(id => id === menuItem.id) === -1) {
+          tempList.push(menuItem.id)
+        }
+        if (menuItem.children && menuItem.children.length > 0) {
+          menuItem.children.forEach(addItemId)
+        }
+      }
+
+      addItemId(item)
+      this.menuIds = tempList
+    },
+    uncheckAll(item) {
+      console.log('uncheckAll', item)
+      let tempList = [...this.menuIds]
+      function removeItem(menuItem) {
+        const index = tempList.findIndex(id => id === menuItem.id)
+        if (index !== -1) {
+          tempList.splice(index, 1)
+        }
+        if (menuItem.children && menuItem.children.length > 0) {
+          menuItem.children.forEach(removeItem)
+        }
+      }
+
+      removeItem(item)
+      this.menuIds = tempList
     }
   }
 }
 </script>
 
-<style scoped>
-.warp{
-  margin: 20px;
-}
-.warp .operation-btn .editable-add-btn{
-  margin-right: 20px;
-}
-.editable-row-operations a {
-  margin-right: 8px;
-}
+<style lang="less" scoped>
+  @import "../../custom-variables";
 
-.warp .operation-btn{
-  margin: 20px 0;
-}
+  .warp {
+    margin: 20px;
+  }
+
+  .warp .operation-btn .editable-add-btn {
+    margin-right: 20px;
+  }
+
+  .editable-row-operations a {
+    margin-right: 8px;
+  }
+
+  .warp .operation-btn {
+    margin: 20px 0;
+  }
+
+  .sel-link {
+    color: @primary-color;
+    font-size: 12px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.danger {
+      color: @btn-danger-color;
+    }
+  }
 </style>
