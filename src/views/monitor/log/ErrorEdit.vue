@@ -6,6 +6,7 @@
       title="查看"
       :closable="true"
       :mask-closable="true"
+      :ok-button-props="{ props: {disabled: isDisable} }"
       :footer="null"
       @cancel="onCancel"
     >

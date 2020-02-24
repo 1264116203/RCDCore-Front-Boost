@@ -5,6 +5,7 @@
       width="600px"
       :title="title"
       :mask-closable="false"
+      :ok-button-props="{ props: {disabled: isDisable} }"
       @cancel="onCancel"
       @ok="onOk"
     >
