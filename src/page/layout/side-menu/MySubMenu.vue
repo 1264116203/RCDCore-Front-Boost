@@ -1,5 +1,5 @@
 <template functional>
-  <a-sub-menu :key="props.menuInfo.path">
+  <a-sub-menu v-if="props.menuInfo.children && props.menuInfo.children.length > 0" :key="props.menuInfo.path">
     <span slot="title">
       <a-icon :type="props.menuInfo.icon ? props.menuInfo.icon : props.defaultIcon" />
       <span>{{ props.menuInfo.name }}</span>
@@ -14,6 +14,10 @@
       <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="props.defaultIcon" />
     </template>
   </a-sub-menu>
+  <a-menu-item v-else :key="props.menuInfo.path">
+    <a-icon :type="props.menuInfo.icon ? props.menuInfo.icon : props.defaultIcon" />
+    <span>{{ props.menuInfo.name }}</span>
+  </a-menu-item>
 </template>
 
 <script>
