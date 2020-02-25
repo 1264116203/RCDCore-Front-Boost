@@ -47,3 +47,7 @@ export const listCurrentUserMenuWithTree = (topMenuId) => {
     }
   })
 }
+
+export const byRoleIdMenuWithTree = (roleId) => {
+  return axios.get('/api/authority/tree/by-role/' + roleId)
+}

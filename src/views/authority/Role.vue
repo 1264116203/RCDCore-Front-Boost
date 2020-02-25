@@ -70,24 +70,11 @@
       <div style="height: 50vh;min-height: 300px;overflow-y: auto">
         <a-tree
           checkable
-          check-strictly
+          default-expand-all
           :tree-data="menuTree"
-          :selected-keys="selectedKeys"
-          :checked-keys="menuIds"
-          @check="(checkedKeys) => onSelectGrant(checkedKeys)"
-        >
-          <template #expandSlot="item">
-            <span>
-              {{ item.title }}
-            </span>
-            <span class="sel-link" @click="checkAll(item)">
-              全选
-            </span>
-            <span class="sel-link danger" @click="uncheckAll(item)">
-              全不选
-            </span>
-          </template>
-        </a-tree>
+          :checked-keys="checkedKeys"
+          @check="onCheck"
+        />
       </div>
     </a-modal>
   </a-spin>
@@ -102,7 +89,7 @@ import {
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
-import { listWithTree } from '@/api/system/menu'
+import { listWithTree, byRoleIdMenuWithTree } from '@/api/system/menu'
 
 const columns = [
   {
@@ -140,29 +127,14 @@ export default {
       pageSize: 10,
       /** 权限设置 */
       menuTree: [],
-      defaultSelected: { 'menu': [], 'dataScope': [], 'apiScope': [] },
       grantVisible: false,
-      selectedKeys: [],
-      menuIds: [],
-      dataScopeIds: [],
-      apiScopeIds: [],
-      nowId: ''
+      checkedKeys: [],
+      nowId: []
     }
   },
   created() {
     listWithTree().then(res => {
-      function appendSlot(menu) {
-        if (menu.children && menu.children.length > 0) {
-          menu.scopedSlots = {
-            title: 'expandSlot'
-          }
-          menu.children.forEach(appendSlot)
-        }
-      }
-
-      const menuData = res.data
-      menuData.forEach(appendSlot)
-      this.menuTree = menuData
+      this.menuTree = res.data
     })
   },
   methods: {
@@ -209,49 +181,21 @@ export default {
     },
     /** 设置权限 */
     handleGrantSet(id) {
-      this.nowId = id
+      byRoleIdMenuWithTree(id).then(res => {
+        this.checkedKeys = res.data.map(item => item.id)
+      })
+      this.nowId.push(id)
       this.grantVisible = true
     },
-    onSelectGrant(checkedKeys) {
-      const { checked } = checkedKeys
-      this.menuIds = [...checked]
+    onCheck(checkedKeys) {
+      this.checkedKeys = checkedKeys
     },
     onOk() {
-      grant(this.nowId, this.menuIds, this.dataScopeIds, this.apiScopeIds).then(() => {
-        this.$message.success('操作成功')
-        this.grantVisible = false
-      })
-    },
-    checkAll(item) {
-      console.log('checkAll', item)
-      let tempList = [...this.menuIds]
-      function addItemId(menuItem) {
-        if (tempList.findIndex(id => id === menuItem.id) === -1) {
-          tempList.push(menuItem.id)
-        }
-        if (menuItem.children && menuItem.children.length > 0) {
-          menuItem.children.forEach(addItemId)
-        }
-      }
-
-      addItemId(item)
-      this.menuIds = tempList
-    },
-    uncheckAll(item) {
-      console.log('uncheckAll', item)
-      let tempList = [...this.menuIds]
-      function removeItem(menuItem) {
-        const index = tempList.findIndex(id => id === menuItem.id)
-        if (index !== -1) {
-          tempList.splice(index, 1)
-        }
-        if (menuItem.children && menuItem.children.length > 0) {
-          menuItem.children.forEach(removeItem)
-        }
-      }
-
-      removeItem(item)
-      this.menuIds = tempList
+      grant(this.checkedKeys, this.nowId)
+        .then(() => {
+          this.$message.success('操作成功')
+          this.grantVisible = false
+        })
     }
   }
 }

@@ -12,14 +12,10 @@ export const grantTree = () => {
   return request.get('/api/menu/grant-top-tree')
 }
 
-export const grant = (roleIds, menuIds, dataScopeIds, apiScopeIds) => {
+export const grant = (menuIds, roleIds) => {
   return request.post('/api/role/grant', {
-    data: {
-      roleIds,
-      menuIds,
-      dataScopeIds,
-      apiScopeIds
-    }
+    menuIds,
+    roleIds
   })
 }
 
