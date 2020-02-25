@@ -131,7 +131,7 @@
 <script>
 import {
   add,
-  getMenu,
+  getById,
   update
 } from '@/api/system/menu'
 import menuIconList from '@/config/menuIcon'
@@ -182,7 +182,7 @@ export default {
         disabledNode(this.id, clonedTreeData)
         this.clonedMenuTreeData = this.transformTreeData(clonedTreeData)
 
-        getMenu(id).then(res => {
+        getById(id).then(res => {
           const requestData = res.data
 
           const formData = {}

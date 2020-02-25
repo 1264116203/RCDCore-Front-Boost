@@ -16,7 +16,7 @@ export const refreshToken = (refreshToken, tenantId) => request.post('/api/blade
   }
 })
 
-export const getButtons = () => request.get('/api/menu/buttons')
+export const listCurrentUserButtons = () => request.get('/api/authority/current-user/buttons')
 
 export const getUserInfo = () => request.get('/api/user/selfInfo')
 

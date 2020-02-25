@@ -3,8 +3,8 @@ import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
 import { deepClone } from '@/util/util'
 import website from '@/config/website'
-import { login, getUserInfo, logout, refreshToken, getButtons } from '@/api/common'
-import { getTopMenu, getRoutes } from '@/api/system/menu'
+import { login, getUserInfo, logout, refreshToken, listCurrentUserButtons } from '@/api/common'
+import { getTopMenu, listCurrentUserMenuWithTree } from '@/api/system/menu'
 
 function addPath(ele, first = false) {
   // 设置图标，如果不存在则使用默认图标
@@ -60,7 +60,7 @@ const user = {
         })
     },
     getButtons({ commit }) {
-      return getButtons().then(res => {
+      return listCurrentUserButtons().then(res => {
         const data = res.data
         commit('SET_PERMISSION', data)
       })
@@ -115,7 +115,7 @@ const user = {
     },
     // 获取系统菜单
     getMenu({ commit, dispatch }, topMenuId) {
-      return getRoutes(topMenuId).then((res) => {
+      return listCurrentUserMenuWithTree(topMenuId).then((res) => {
         const data = res.data
         let menu = deepClone(data)
         menu.forEach(ele => {

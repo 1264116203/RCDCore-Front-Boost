@@ -1,5 +1,5 @@
 import { setStore, getStore } from '@/util/browser-storage'
-import { getRoutes } from '@/api/system/menu'
+import { listCurrentUserMenuWithTree } from '@/api/system/menu'
 const resource = {
   namespaced: true,
   state: {
@@ -7,7 +7,7 @@ const resource = {
   },
   actions: {
     getTree({ commit }) {
-      return getRoutes().then(res => {
+      return listCurrentUserMenuWithTree().then(res => {
         const resourceTreeData = [{
           id: '0',
           name: '顶级菜单',

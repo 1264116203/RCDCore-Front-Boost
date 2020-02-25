@@ -59,9 +59,9 @@
 </template>
 <script>
 import {
-  getList,
-  remove,
-  singleRemove
+  queryListWithTree,
+  batchDelete,
+  deleteById
 } from '@/api/system/menu'
 import { ACTION_TYPE } from '@/config/env'
 import MenuEdit from './MenuEdit.vue'
@@ -121,7 +121,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getList(this.searchInfo)
+      queryListWithTree(this.searchInfo)
         .then(res => {
           const tableDataList = res.data
           /** 表格数据从小到大排序 */
@@ -154,13 +154,13 @@ export default {
     },
     /** 单行删除按钮事件 */
     onDeleteRecord (id) {
-      this.commonDeleteRecord(singleRemove, id).then(() => {
+      this.commonDeleteRecord(deleteById, id).then(() => {
         this.$store.dispatch('resource/getTree')
       })
     },
     /** 批量删除 */
     handleBatchDelete () {
-      this.commonBatchDelete(remove).then(() => {
+      this.commonBatchDelete(batchDelete).then(() => {
         this.$store.dispatch('resource/getTree')
       })
     }
