@@ -43,7 +43,7 @@ export const add = (row) => {
 export const update = (row) => {
   return request({
     url: '/api/blade-system/client/submit',
-    method: 'post',
+    method: 'put',
     data: row
   })
 }

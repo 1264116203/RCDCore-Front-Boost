@@ -8,14 +8,10 @@ export const getList = (params) => {
   })
 }
 
-export const grantTree = () => {
-  return request.get('/api/menu/grant-top-tree')
-}
-
-export const grant = (menuIds, roleIds) => {
+export const grant = (authorityIdList, roleIdList) => {
   return request.post('/api/role/grant', {
-    menuIds,
-    roleIds
+    authorityIdList,
+    roleIdList
   })
 }
 
@@ -40,15 +36,7 @@ export const add = (row) => {
 }
 
 export const update = (row) => {
-  return request.post('/api/role', row)
-}
-
-export const getRoleTreeKeys = (roleIds) => {
-  return request.get('/api/menu/top-tree-keys', {
-    params: {
-      roleIds
-    }
-  })
+  return request.put('/api/role', row)
 }
 
 export const getRoleTree = (tenantId) => {
@@ -56,5 +44,13 @@ export const getRoleTree = (tenantId) => {
     params: {
       tenantId
     }
+  })
+}
+
+/** 设置角色对应的顶级菜单 */
+export const getTopMenuTree = (authorityIdList, roleIdList) => {
+  return request.post('/api/role/top-menu', {
+    authorityIdList,
+    roleIdList
   })
 }

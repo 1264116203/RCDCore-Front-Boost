@@ -33,7 +33,7 @@ export const addDataScope = (row) => {
 export const updateDataScope = (row) => {
   return request({
     url: '/api/blade-system/data-scope/submit',
-    method: 'post',
+    method: 'put',
     data: row
   })
 }

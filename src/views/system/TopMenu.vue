@@ -67,13 +67,15 @@
       title="下级菜单配置"
       @ok="onOk"
     >
-      <a-tree
-        v-model="menuIds"
-        checkable
-        :tree-data="grantMenuTreeDta"
-        :selected-keys="selectedKeys"
-        @check="(checkedKeys) => onSelectGrant(checkedKeys)"
-      />
+      <div style="height: 50vh;min-height: 300px;overflow-y: auto">
+        <a-tree
+          checkable
+          default-expand-all
+          :tree-data="menuTree"
+          :checked-keys="checkedKeys"
+          @check="onCheck"
+        />
+      </div>
     </a-modal>
   </a-spin>
 </template>
@@ -81,14 +83,13 @@
 import {
   getList,
   remove,
-  grantTree,
-  getTopTree,
   grant,
   singleRemove
 } from '@/api/system/topmenu'
 import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
+import { listWithTree, byTopMenuIdMenuWithTree } from '@/api/system/menu'
 
 const columns = [
   {
@@ -130,12 +131,16 @@ export default {
       current: 1,
       pageSize: 10,
       /** 权限设置 */
+      menuTree: [],
       grantVisible: false,
-      selectedKeys: [],
-      menuIds: [],
-      grantMenuTreeDta: [],
-      nowId: ''
+      checkedKeys: [],
+      nowId: []
     }
+  },
+  created() {
+    listWithTree().then(res => {
+      this.menuTree = res.data
+    })
   },
   methods: {
     /** 表格数据 */
@@ -177,23 +182,21 @@ export default {
     },
     /** 设置权限 */
     handleGrantSet(id) {
-      this.nowId = id
+      this.nowId.push(id)
       this.grantVisible = true
-      grantTree().then(res => {
-        this.grantMenuTreeDta = res.data
-      })
-      getTopTree(id).then(res => {
-        this.menuIds = [...res.data.menu]
+      byTopMenuIdMenuWithTree(id).then(res => {
+        this.checkedKeys = res.data.map(item => item.id)
       })
     },
-    onSelectGrant(checkedKeys) {
-      this.menuIds = [...checkedKeys]
+    onCheck(checkedKeys) {
+      this.checkedKeys = checkedKeys
     },
     onOk() {
-      grant(this.nowId, this.menuIds.join(',')).then(() => {
-        this.$message.success('操作成功')
-        this.grantVisible = false
-      })
+      grant(this.checkedKeys, this.nowId)
+        .then(() => {
+          this.$message.success('操作成功')
+          this.grantVisible = false
+        })
     }
   }
 }

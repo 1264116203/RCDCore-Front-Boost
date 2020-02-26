@@ -56,6 +56,10 @@
             <a-icon type="setting" />
             权限设置
           </a>
+          <a @click="handleMenuSet(record.id)">
+            <a-icon type="setting" />
+            子集菜单设置
+          </a>
         </div>
       </template>
     </a-table>
@@ -77,6 +81,22 @@
         />
       </div>
     </a-modal>
+
+    <a-modal
+      v-model="menuGrantVisible"
+      title="下级菜单配置"
+      @ok="onOk"
+    >
+      <div style="height: 50vh;min-height: 300px;overflow-y: auto">
+        <a-tree
+          checkable
+          default-expand-all
+          :tree-data="menuIdTree"
+          :checked-keys="menuCheckedKeys"
+          @check="onCheck"
+        />
+      </div>
+    </a-modal>
   </a-spin>
 </template>
 <script>
@@ -89,7 +109,8 @@ import {
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
-import { listWithTree, byRoleIdMenuWithTree } from '@/api/system/menu'
+import { AllTree, byRoleIdMenuWithTree } from '@/api/system/menu'
+import { byRoleIdMenuIdTree } from '@/api/system/topmenu'
 
 const columns = [
   {
@@ -129,11 +150,16 @@ export default {
       menuTree: [],
       grantVisible: false,
       checkedKeys: [],
-      nowId: []
+      nowId: [],
+      /** 权限设置 */
+      menuIdTree: [],
+      menuGrantVisible: false,
+      menuCheckedKeys: [],
+      menuNowId: []
     }
   },
   created() {
-    listWithTree().then(res => {
+    AllTree().then(res => {
       this.menuTree = res.data
     })
   },
@@ -196,7 +222,26 @@ export default {
           this.$message.success('操作成功')
           this.grantVisible = false
         })
+    },
+    /** 子集菜单设置 */
+    handleMenuSet(id) {
+      byRoleIdMenuIdTree(id).then(res => {
+        console.log(res)
+        // this.menuCheckedKeys = res.data.map(item => item.id)
+      })
+      this.menuNowId.push(id)
+      this.menuGrantVisible = true
     }
+    // onCheck(checkedKeys) {
+    //   this.checkedKeys = checkedKeys
+    // },
+    // onOk() {
+    //   grant(this.checkedKeys, this.nowId)
+    //     .then(() => {
+    //       this.$message.success('操作成功')
+    //       this.grantVisible = false
+    //     })
+    // }
   }
 }
 </script>

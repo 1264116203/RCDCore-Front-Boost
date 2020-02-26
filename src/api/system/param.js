@@ -31,5 +31,5 @@ export const add = (row) => {
 }
 
 export const update = (row) => {
-  return request.post('/api/param', row)
+  return request.put('/api/param', row)
 }

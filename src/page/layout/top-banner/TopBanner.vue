@@ -24,6 +24,7 @@
           </a-menu>
         </a-dropdown>
       </div>-->
+      <top-menu />
     </div>
     <div class="top-banner-right">
       <!--
@@ -71,9 +72,11 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { fullscreenListener, toggleFullscreen } from '@/util/util'
+import TopMenu from '@/page/layout/top-menu/TopMenu'
 
 export default {
   name: 'TopBanner',
+  components: { TopMenu },
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
     ...mapGetters(['isFullScreen', 'userInfo'])
@@ -142,7 +145,7 @@ export default {
       justify-items: center;
 
       .collapseButton {
-        margin-left: 1rem;
+        margin: 0 1rem;
         font-size: 1.2rem;
       }
 

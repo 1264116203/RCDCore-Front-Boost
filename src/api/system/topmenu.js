@@ -1,7 +1,7 @@
 import request from '@/rcore-axios'
 
 export const getList = (page, size, params) => {
-  return request.get('/api/topmenu/pagination', {
+  return request.get('/api/top-menu/pagination', {
     params: {
       ...params,
       page,
@@ -11,33 +11,37 @@ export const getList = (page, size, params) => {
 }
 
 export const getDetail = (id) => {
-  return request.get('/api/topmenu/' + id)
+  return request.get('/api/top-menu/' + id)
 }
 
 export const remove = (ids) => {
-  return request.delete('/api/topmenu/batch', { params: { ids } })
+  return request.delete('/api/top-menu/batch', { params: { ids } })
 }
 
 export const singleRemove = (id) => {
-  return request.delete('/api/topmenu/' + id)
+  return request.delete('/api/top-menu/' + id)
 }
 
 export const add = (row) => {
-  return request.post('/api/topmenu', row)
+  return request.post('/api/top-menu', row)
 }
 
 export const update = (row) => {
-  return request.put('/api/topmenu', row)
+  return request.put('/api/top-menu', row)
 }
 
-export const grantTree = () => {
-  return request.get('/api/menu/grant-top-tree')
+/** 顶部菜单树形结构数据 */
+export const TopMenulist = () => {
+  return request.get('/api/top-menu/list/current-user')
 }
 
-export const getTopTree = (topMenuIds) => {
-  return request.get('/api/menu/top-tree-keys', { params: { topMenuIds } })
+/** 根据角色ID获取菜单ID列表 */
+export const byRoleIdMenuIdTree = (roleId) => {
+  return request.get('/api/top-menu/list-id/by-role/' + roleId)
 }
-
-export const grant = (topMenuIds, menuIds) => {
-  return request.post('/api/topmenu/grant', { params: { topMenuIds, menuIds } })
+export const grant = (authorityIdList, topMenuIdList) => {
+  return request.post('/api/top-menu/grant', {
+    authorityIdList,
+    topMenuIdList
+  })
 }
