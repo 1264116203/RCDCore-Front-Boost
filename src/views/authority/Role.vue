@@ -69,33 +69,43 @@
     <a-modal
       v-model="grantVisible"
       title="角色权限配置"
+      :mask-closable="false"
       @ok="onOk"
     >
-      <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-        <a-tree
-          checkable
-          default-expand-all
-          :tree-data="menuTree"
-          :checked-keys="checkedKeys"
-          @check="onCheck"
-        />
-      </div>
+      <a-spin :spinning="spinning">
+        <div style="height: 50vh;min-height: 300px;overflow-y: auto">
+          <a-tree
+            checkable
+            default-expand-all
+            :tree-data="menuTree"
+            :checked-keys="checkedKeys"
+            @check="onCheck"
+          />
+        </div>
+      </a-spin>
     </a-modal>
 
     <a-modal
       v-model="menuGrantVisible"
       title="下级菜单配置"
-      @ok="onOk"
+      :mask-closable="false"
+      @ok="onSetMenuOk"
     >
-      <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-        <a-tree
-          checkable
-          default-expand-all
-          :tree-data="menuIdTree"
-          :checked-keys="menuCheckedKeys"
-          @check="onCheck"
-        />
-      </div>
+      <a-spin :spinning="spinning">
+        <div style="height: 25vh;min-height: 100px;overflow-y: auto">
+          <a-tree
+            checkable
+            default-expand-all
+            :tree-data="menuIdTree"
+            :replace-fields="{
+              title:'name',
+              key:'id'
+            }"
+            :checked-keys="menuCheckedKeys"
+            @check="onCheckMenu"
+          />
+        </div>
+      </a-spin>
     </a-modal>
   </a-spin>
 </template>
@@ -104,13 +114,14 @@ import {
   getList,
   remove,
   grant,
-  singleRemove
+  singleRemove,
+  setTopMenuGrant
 } from '@/api/system/role'
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './RoleEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
 import { AllTree, byRoleIdMenuWithTree } from '@/api/system/menu'
-import { byRoleIdMenuIdTree } from '@/api/system/topmenu'
+import { byRoleIdMenuIdTree, AllTopMenulist } from '@/api/system/topmenu'
 
 const columns = [
   {
@@ -147,6 +158,7 @@ export default {
       current: 1,
       pageSize: 10,
       /** 权限设置 */
+      spinning: false,
       menuTree: [],
       grantVisible: false,
       checkedKeys: [],
@@ -161,6 +173,9 @@ export default {
   created() {
     AllTree().then(res => {
       this.menuTree = res.data
+    })
+    AllTopMenulist().then(res => {
+      this.menuIdTree = res.data
     })
   },
   methods: {
@@ -207,11 +222,16 @@ export default {
     },
     /** 设置权限 */
     handleGrantSet(id) {
+      this.spinning = true
+      this.nowId.push(id)
+      this.grantVisible = true
       byRoleIdMenuWithTree(id).then(res => {
         this.checkedKeys = res.data.map(item => item.id)
       })
-      this.nowId.push(id)
-      this.grantVisible = true
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.spinning = false
+        })
     },
     onCheck(checkedKeys) {
       this.checkedKeys = checkedKeys
@@ -225,23 +245,27 @@ export default {
     },
     /** 子集菜单设置 */
     handleMenuSet(id) {
-      byRoleIdMenuIdTree(id).then(res => {
-        console.log(res)
-        // this.menuCheckedKeys = res.data.map(item => item.id)
-      })
+      this.spinning = true
       this.menuNowId.push(id)
       this.menuGrantVisible = true
+      byRoleIdMenuIdTree(id).then(res => {
+        this.menuCheckedKeys = res.data.map(item => item.id)
+      })
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.spinning = false
+        })
+    },
+    onCheckMenu(checkedKeys) {
+      this.menuCheckedKeys = checkedKeys
+    },
+    onSetMenuOk() {
+      setTopMenuGrant(this.menuNowId, this.menuCheckedKeys)
+        .then(() => {
+          this.$message.success('操作成功')
+          this.menuGrantVisible = false
+        })
     }
-    // onCheck(checkedKeys) {
-    //   this.checkedKeys = checkedKeys
-    // },
-    // onOk() {
-    //   grant(this.checkedKeys, this.nowId)
-    //     .then(() => {
-    //       this.$message.success('操作成功')
-    //       this.grantVisible = false
-    //     })
-    // }
   }
 }
 </script>

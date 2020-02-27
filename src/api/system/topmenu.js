@@ -35,13 +35,19 @@ export const TopMenulist = () => {
   return request.get('/api/top-menu/list/current-user')
 }
 
-/** 根据角色ID获取菜单ID列表 */
+/** 根据角色ID获取菜单列表 */
 export const byRoleIdMenuIdTree = (roleId) => {
-  return request.get('/api/top-menu/list-id/by-role/' + roleId)
+  return request.get('/api/top-menu/list/by-role/' + roleId)
 }
+
 export const grant = (authorityIdList, topMenuIdList) => {
   return request.post('/api/top-menu/grant', {
     authorityIdList,
     topMenuIdList
   })
+}
+
+/** 获取所有顶部菜单记录 */
+export const AllTopMenulist = () => {
+  return request.get('/api/top-menu/list')
 }

@@ -48,9 +48,9 @@ export const getRoleTree = (tenantId) => {
 }
 
 /** 设置角色对应的顶级菜单 */
-export const getTopMenuTree = (authorityIdList, roleIdList) => {
-  return request.post('/api/role/top-menu', {
-    authorityIdList,
-    roleIdList
+export const setTopMenuGrant = (roleIdList, topMenuIdList) => {
+  return request.put('/api/role/top-menu', {
+    roleIdList,
+    topMenuIdList
   })
 }

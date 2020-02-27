@@ -65,17 +65,20 @@
     <a-modal
       v-model="grantVisible"
       title="下级菜单配置"
+      :mask-closable="false"
       @ok="onOk"
     >
-      <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-        <a-tree
-          checkable
-          default-expand-all
-          :tree-data="menuTree"
-          :checked-keys="checkedKeys"
-          @check="onCheck"
-        />
-      </div>
+      <a-spin :spinning="spinning">
+        <div style="height: 50vh;min-height: 300px;overflow-y: auto">
+          <a-tree
+            checkable
+            default-expand-all
+            :tree-data="menuTree"
+            :checked-keys="checkedKeys"
+            @check="onCheck"
+          />
+        </div>
+      </a-spin>
     </a-modal>
   </a-spin>
 </template>
@@ -131,6 +134,7 @@ export default {
       current: 1,
       pageSize: 10,
       /** 权限设置 */
+      spinning: false,
       menuTree: [],
       grantVisible: false,
       checkedKeys: [],
@@ -149,6 +153,10 @@ export default {
       getList(this.current - 1, this.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
+          /** 数据从小到大排序 */
+          this.tableDataList.sort(function(a, b) {
+            return a.sort - b.sort
+          })
         })
         .catch(err => console.error(err))
         .finally(() => {
@@ -182,11 +190,16 @@ export default {
     },
     /** 设置权限 */
     handleGrantSet(id) {
+      this.spinning = true
       this.nowId.push(id)
       this.grantVisible = true
       byTopMenuIdMenuWithTree(id).then(res => {
         this.checkedKeys = res.data.map(item => item.id)
       })
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.spinning = false
+        })
     },
     onCheck(checkedKeys) {
       this.checkedKeys = checkedKeys
