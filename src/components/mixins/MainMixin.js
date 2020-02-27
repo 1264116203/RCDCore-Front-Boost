@@ -70,11 +70,10 @@ export const myMixin = {
     },
     /** 批量删除 */
     commonBatchDelete(api) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         if (this.selectedRowKeys.length === 0) {
           this.$message.warning('请选择至少一条数据')
-          // eslint-disable-next-line prefer-promise-reject-errors
-          reject('请选择至少一条数据')
+          return
         }
 
         this.$confirm({
@@ -89,11 +88,6 @@ export const myMixin = {
               this.fetchTableData()
               this.$message.success('操作成功!')
             })
-          },
-          onCancel: () => {
-            // eslint-disable-next-line prefer-promise-reject-errors
-            reject('cancel')
-            console.log('Cancel')
           }
         })
       })
