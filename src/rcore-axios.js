@@ -6,7 +6,8 @@
  * needToken是否需要token
  */
 
-import NProgress from 'nprogress' // progress bar
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'

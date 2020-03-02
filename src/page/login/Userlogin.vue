@@ -47,7 +47,7 @@ export default {
       spinning: false,
       tenantMode: website.tenantMode,
       loginForm: {
-        rememberMe: true,
+        rememberMe: false,
         username: devUsername,
         password: devPassword
       },
