@@ -26,6 +26,9 @@
       <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
         批量删除
       </a-button>
+      <a-button class="editable-add-btn" @click="handleResetPassword">
+        重置密码
+      </a-button>
     </div>
 
     <a-table
@@ -66,10 +69,14 @@
     </a-table>
 
     <user-edit ref="modal" @ok="onModalOk" />
+
+    <a-modal v-model="passwordInputvisible" title="请输入重置的密码" @ok="handleOK">
+      <a-input v-model="newPassword" placeholder="请输入重置的密码" />
+    </a-modal>
   </a-spin>
 </template>
 <script>
-import { getList, remove, singleRemove } from '@/api/system/user-management'
+import { getList, remove, singleRemove, restetPassword } from '@/api/system/user-management'
 import UserEdit from './UserEdit.vue'
 import { ACTION_TYPE } from '@/config/env'
 import { myMixin } from '@/components/mixins/MainMixin'
@@ -130,7 +137,10 @@ export default {
         pageSize: 10,
         showQuickJumper: true,
         showSizeChanger: true
-      }
+      },
+      /** 新密码 */
+      passwordInputvisible: false,
+      newPassword: ''
     }
   },
   methods: {
@@ -171,6 +181,28 @@ export default {
     /** 批量删除 */
     handleBatchDelete () {
       this.commonBatchDelete(remove)
+    },
+    /** 重置密码 */
+    handleResetPassword () {
+      return new Promise((resolve) => {
+        if (this.selectedRowKeys.length === 0) {
+          this.$message.warning('请选择至少一条数据')
+        } else {
+          this.newPassword = ''
+          this.passwordInputvisible = true
+        }
+      })
+    },
+    handleOK() {
+      if (this.newPassword === '') {
+        this.$message.warning('密码不能为空')
+        return
+      }
+      restetPassword(this.newPassword, this.selectedRowKeys).then(() => {
+        this.fetchTableData()
+        this.$message.success('操作成功!')
+        this.passwordInputvisible = false
+      })
     }
   }
 }

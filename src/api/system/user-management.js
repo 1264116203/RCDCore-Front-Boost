@@ -23,3 +23,11 @@ export const update = (row) => {
 export const getUser = (id) => {
   return request.get('/api/user/' + id)
 }
+
+/** 重置密码 */
+export const restetPassword = (password, userIdList) => {
+  return request.put('/api/user/reset-password', {
+    password,
+    userIdList
+  })
+}

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="topMenuWarp">
     <a-menu v-if="showTopMenu" v-model="current" mode="horizontal" @click="onClick">
       <a-menu-item v-for="item in topMenuList" :key="item.id">
         <a-icon :type="item.source" />{{ item.name }}
@@ -48,3 +48,8 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.topMenuWarp{
+  padding: 6px 0;
+}
+</style>
