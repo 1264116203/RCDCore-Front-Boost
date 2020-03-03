@@ -76,7 +76,7 @@
   </a-spin>
 </template>
 <script>
-import { getList, remove, singleRemove, restetPassword } from '@/api/system/user-management'
+import { getList, remove, singleRemove, resetPassword } from '@/api/system/user-management'
 import UserEdit from './UserEdit.vue'
 import { ACTION_TYPE } from '@/config/env'
 import { myMixin } from '@/components/mixins/MainMixin'
@@ -198,7 +198,7 @@ export default {
         this.$message.warning('密码不能为空')
         return
       }
-      restetPassword(this.newPassword, this.selectedRowKeys).then(() => {
+      resetPassword(this.newPassword, this.selectedRowKeys).then(() => {
         this.fetchTableData()
         this.$message.success('操作成功!')
         this.passwordInputvisible = false
