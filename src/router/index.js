@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LoginIndex from '@/page/login/LoginIndex'
+import AuthenticatePage from '@/page/Authenticate'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,10 @@ const routes = [
     path: '/login',
     name: 'loginPage',
     component: LoginIndex
+  }, {
+    path: '/authenticate',
+    name: 'authenticatePage',
+    component: AuthenticatePage
   }
 ]
 

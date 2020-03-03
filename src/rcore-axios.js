@@ -14,7 +14,6 @@ import store from '@/store'
 import router from '@/router'
 import { serialize } from '@/util/util'
 import { getToken } from '@/util/auth'
-import website from '@/config/website'
 import { baseUrl } from '@/config/env'
 
 axios.defaults.timeout = 10000
@@ -54,22 +53,45 @@ axios.interceptors.response.use(res => {
   NProgress.done()
   return res
 }, error => {
-  const res = error.response
   NProgress.done()
-  const statusWhiteList = website.statusWhiteList || []
-  const message = res.headers['x-error-message']
-    ? decodeURIComponent(res.headers['x-error-message']) : '请求异常，但服务器未给出错误信息。'
 
-  // 如果在白名单里则自行catch逻辑处理
-  if (statusWhiteList.includes(status)) {
-    return Promise.reject(res)
-  }
+  console.log(error)
+
+  const res = error.response
+  const { status } = res
+  let message = res.headers['x-error-message']
+
   // 如果是401则跳转到登录页面
   if (status === 401) {
     store.dispatch('user/clearAllAuthInfos')
       .then(() => router.push({ path: '/login' }))
   }
-  // 如果请求为非200否者默认统一处理
+
+  if (!message) {
+    switch (status) {
+      case 400:
+        message = '请求参数有误。'
+        break
+      case 401:
+        message = '令牌已失效，请重新登录。'
+        break
+      case 403:
+        message = '请求被拒绝，请检查用户权限。'
+        break
+      case 404:
+        message = '要访问的记录不存在或服务器变更了请求路径。'
+        break
+      case 405:
+        message = '请求方法不正确。'
+        break
+      case 500:
+        message = '服务器内部错误。'
+        break
+      default:
+        message = '请求异常，但服务器未给出错误信息。'
+    }
+  }
+  // 如果请求为非200则默认统一处理
   if (status !== 200) {
     Vue.prototype.$message.error(message)
     return Promise.reject(new Error(message))

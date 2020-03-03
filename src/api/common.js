@@ -1,10 +1,16 @@
-import request from '@/rcore-axios'
+import axios from '@/rcore-axios'
 
 export const login = (username, password, rememberMe) => (
-  request.post('/api/authenticate', { username, password, rememberMe })
+  axios.post('/api/authenticate', { username, password, rememberMe })
 )
 
-export const refreshToken = (refreshToken, tenantId) => request.post('/api/blade-auth/oauth/token', {
+export const checkAuthenticate = () => axios.get('/api/login-status/check', {
+  validateStatus (status) {
+    return (status >= 200 && status < 300) || status === 401
+  }
+})
+
+export const refreshToken = (refreshToken, tenantId) => axios.post('/api/blade-auth/oauth/token', {
   headers: {
     'Tenant-Id': tenantId
   },
@@ -16,11 +22,11 @@ export const refreshToken = (refreshToken, tenantId) => request.post('/api/blade
   }
 })
 
-export const listCurrentUserButtons = () => request.get('/api/authority/current-user/buttons')
+export const listCurrentUserButtons = () => axios.get('/api/authority/current-user/buttons')
 
-export const getUserInfo = () => request.get('/api/user/selfInfo')
+export const getUserInfo = () => axios.get('/api/user/selfInfo')
 
-export const sendLogs = (list) => request.post('/api/user/logout', list)
+export const sendLogs = (list) => axios.post('/api/user/logout', list)
 
 // TODO 这里的请求是假的，是Mock的，事实上压根没有退出登录请求发出
 export const logout = () => Promise.resolve()
@@ -31,12 +37,12 @@ export const logout = () => Promise.resolve()
 // })
 
 export const updatePassword = (oldPassword, newPassword) => {
-  return request.put('/api/user/update-password', {
+  return axios.put('/api/user/update-password', {
     oldPassword,
     newPassword
   })
 }
 
 export const updateUserInfo = (userInfo) => {
-  return request.put('/api/user/self', userInfo)
+  return axios.put('/api/user/self', userInfo)
 }

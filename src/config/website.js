@@ -20,8 +20,6 @@ export default {
   lockPage: '/lock',
   // 令牌有效期（单位？）
   tokenTime: 3000,
-  // http的status默认放行不用统一处理的,
-  statusWhiteList: [],
   // 配置首页不可关闭
   firstPageCloseable: false,
   homepageTab: {

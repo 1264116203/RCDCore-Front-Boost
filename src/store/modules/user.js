@@ -1,4 +1,3 @@
-import { setToken, setRefreshToken, removeToken, removeRefreshToken } from '@/util/auth'
 import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
 import { deepClone } from '@/util/util'
@@ -38,7 +37,11 @@ const user = {
     // 令牌
     token: getStore('token') || '',
     // 刷新令牌
-    refreshToken: getStore('refreshToken') || ''
+    refreshToken: getStore('refreshToken') || '',
+    // 是否已鉴权
+    authenticated: 'not-yet',
+    // 登录前最后一页
+    lastPageBeforeLogin: null
   },
   actions: {
     // 根据用户名登录
@@ -54,6 +57,7 @@ const user = {
             // commit('SET_REFRESH_TOKEN', data.refresh_token)
             // commit('SET_TENANT_ID', data.tenant_id)
             commit('SET_USER_INFO', data)
+            commit('SET_AUTHENTICATED', 'yes')
             commit('tabs/CLOSE_ALL', null, { root: true })
             commit('common/UNLOCK', null, { root: true })
           }
@@ -101,10 +105,9 @@ const user = {
       commit('SET_TOKEN', '')
       commit('SET_MENU_LIST', [])
       commit('SET_ROLE_LIST', [])
+      commit('SET_AUTHENTICATED', 'no')
       commit('tabs/CLOSE_ALL', null, { root: true })
       commit('common/UNLOCK', null, { root: true })
-      removeToken()
-      removeRefreshToken()
     },
     // 获取顶部菜单
     getTopMenu() {
@@ -130,13 +133,12 @@ const user = {
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
-      setToken(token)
+      // setToken(token)
       setStore('token', state.token)
     },
     SET_REFRESH_TOKEN: (state, refreshToken) => {
       state.refreshToken = refreshToken
-      setRefreshToken(refreshToken)
-      setStore('refreshToken', state.refreshToken)
+      setStore('refreshToken', state.refreshToken, 'local')
     },
     SET_TENANT_ID: (state, tenantId) => {
       state.tenantId = tenantId
@@ -152,6 +154,12 @@ const user = {
     },
     SET_ROLE_LIST: (state, roles) => {
       state.roleList = roles
+    },
+    SET_AUTHENTICATED: (state, val) => {
+      state.authenticated = val
+    },
+    SET_LAST_PAGE_BEFORE_LOGIN: (state, val) => {
+      state.lastPageBeforeLogin = val
     },
     SET_PERMISSION: (state, permission) => {
       let result = [];

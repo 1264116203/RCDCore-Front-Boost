@@ -1,32 +1,33 @@
 import router from '@/router'
 import store from '@/store'
 import { validateNull } from '@/util/validate'
-import { getToken } from '@/util/auth'
 import NProgress from 'nprogress'
 
 NProgress.configure({ showSpinner: false })
 
-// 锁屏页
-const lockPage = store.getters.website.lockPage
-
 router.beforeEach((to, from, next) => {
   const meta = Object.assign({ isAuth: false, isTab: false }, (to.meta || {}))
 
-  const cookieToken = getToken()
+  const authenticated = store.getters.authenticated
 
-  // 未登录时
-  if (!cookieToken) {
-    // 判断是否需要认证，没有登录访问去登录页
-    if (!meta.isAuth) {
-      next()
-    } else {
-      next('/login')
-    }
+  // 无需鉴权的页面直接放行
+  if (!to.meta.isAuth) {
+    next()
     return
   }
 
-  if (store.getters.token !== cookieToken) {
-    store.commit('user/SET_TOKEN', cookieToken)
+  // 如果尚未鉴定权限且目标路由需要权限，则跳转至鉴权页面
+  if (authenticated === 'not-yet') {
+    store.commit('user/SET_LAST_PAGE_BEFORE_LOGIN', to)
+    next({
+      path: '/authenticate'
+    })
+    return
+  }
+  // 如果权限鉴定失败，则跳转至登录页
+  if (authenticated === 'no') {
+    next('/login')
+    return
   }
 
   // 如果登录成功访问登录页跳转到主页
@@ -35,35 +36,23 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  if (store.getters.isLock && to.path !== lockPage) { // 如果系统激活锁屏，全部跳转到锁屏页
-    next({ path: lockPage })
-  } else {
-    // 如果用户信息为空则获取用户信息失败，跳转到登录页
-    if (store.getters.token.length === 0) {
-      store.dispatch('user/clearAllAuthInfos').then(() => {
-        next({ path: '/login' })
-      })
-    } else {
-      const value = to.query.src || to.fullPath
-      const label = to.query.name || to.name
-      const meta = to.meta || {}
-      // 如果路由meta信息中isTab不为false，则将其加入标签页中
-      if (meta.isTab && !validateNull(value) && !validateNull(label)) {
-        store.commit('tabs/SWITCH_TAB', {
-          label: label,
-          path: value,
-          params: to.params,
-          query: to.query,
-          meta: {
-            ...meta,
-            isIframe: value.indexOf('http') === 0
-          },
-          group: []
-        })
-      }
-      next()
-    }
+  const value = to.query.src || to.fullPath
+  const label = to.query.name || to.name
+  // 如果路由meta信息中isTab不为false，则将其加入标签页中
+  if (meta.isTab && !validateNull(value) && !validateNull(label)) {
+    store.commit('tabs/SWITCH_TAB', {
+      label: label,
+      path: value,
+      params: to.params,
+      query: to.query,
+      meta: {
+        ...meta,
+        isIframe: value.indexOf('http') === 0
+      },
+      group: []
+    })
   }
+  next()
 })
 
 router.afterEach((to, from) => {
