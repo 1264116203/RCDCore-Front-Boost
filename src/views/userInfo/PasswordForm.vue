@@ -4,26 +4,24 @@
             :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }"
     >
       <a-form-item label="原密码">
-        <a-input v-decorator="['oldPassword']" placeholder="请输入原密码" allow-clear />
+        <a-input-password v-decorator="['oldPassword']" placeholder="请输入原密码" allow-clear />
       </a-form-item>
       <a-form-item label="新密码">
-        <a-input
+        <a-input-password
           v-decorator="['newPassword', { rules: [
             { required: true, validator: validatePass },
             { pattern:/^(?=.*[0-9a-zA-Z])\w{4,16}$/, message: '必须有数字或者字母并且长度在4~16之间' }
           ]}]"
           placeholder="请输入密码"
-          type="password"
           allow-clear
         />
       </a-form-item>
       <a-form-item label="确认密码">
-        <a-input
+        <a-input-password
           v-decorator="['newPassword1', { rules: [
             { required: true, validator: validatePass2 }
           ]}]"
           placeholder="请再次输入密码"
-          type="password"
           allow-clear
         />
       </a-form-item>

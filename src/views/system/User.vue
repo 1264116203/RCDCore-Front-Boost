@@ -71,7 +71,17 @@
     <user-edit ref="modal" @ok="onModalOk" />
 
     <a-modal v-model="passwordInputvisible" title="请输入重置的密码" @ok="handleOK">
-      <a-input v-model="newPassword" placeholder="请输入重置的密码" />
+      <a-form ref="form" :form="passwordForm">
+        <a-form-item>
+          <a-input-password
+            v-decorator="['newPassword', { rules: [
+              { required: true,message: '请输入密码'},
+              { pattern:/^(?=.*[0-9a-zA-Z])\w{4,16}$/, message: '必须有数字或者字母并且长度在4~16之间' }
+            ]}]"
+            placeholder="请输入重置的密码"
+          />
+        </a-form-item>
+      </a-form>
     </a-modal>
   </a-spin>
 </template>
@@ -139,6 +149,7 @@ export default {
         showSizeChanger: true
       },
       /** 新密码 */
+      passwordForm: this.$form.createForm(this),
       passwordInputvisible: false,
       newPassword: ''
     }
@@ -194,6 +205,7 @@ export default {
       })
     },
     handleOK() {
+      this.newPassword = this.passwordForm.getFieldValue('newPassword')
       if (this.newPassword === '') {
         this.$message.warning('密码不能为空')
         return
