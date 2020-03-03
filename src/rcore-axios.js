@@ -55,11 +55,12 @@ axios.interceptors.response.use(res => {
 }, error => {
   NProgress.done()
 
-  console.log(error)
-
   const res = error.response
   const { status } = res
   let message = res.headers['x-error-message']
+  if (message) {
+    message = decodeURIComponent(message)
+  }
 
   // 如果是401则跳转到登录页面
   if (status === 401) {

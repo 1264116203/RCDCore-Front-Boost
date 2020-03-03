@@ -12,6 +12,12 @@ router.beforeEach((to, from, next) => {
 
   // 无需鉴权的页面直接放行
   if (!to.meta.isAuth) {
+    if (to.path === '/login') {
+      if (authenticated === 'yes') {
+        next({ path: '/' })
+        return
+      }
+    }
     next()
     return
   }
@@ -27,12 +33,6 @@ router.beforeEach((to, from, next) => {
   // 如果权限鉴定失败，则跳转至登录页
   if (authenticated === 'no') {
     next('/login')
-    return
-  }
-
-  // 如果登录成功访问登录页跳转到主页
-  if (to.path === '/login') {
-    next({ path: '/' })
     return
   }
 
