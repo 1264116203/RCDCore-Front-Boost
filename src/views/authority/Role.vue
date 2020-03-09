@@ -223,7 +223,7 @@ export default {
     /** 设置权限 */
     handleGrantSet(id) {
       this.spinning = true
-      this.nowId.push(id)
+      this.nowId = [id]
       this.grantVisible = true
       byRoleIdMenuWithTree(id).then(res => {
         this.checkedKeys = res.data.map(item => item.id)
@@ -246,7 +246,7 @@ export default {
     /** 子集菜单设置 */
     handleMenuSet(id) {
       this.spinning = true
-      this.menuNowId.push(id)
+      this.menuNowId = [id]
       this.menuGrantVisible = true
       byRoleIdMenuIdTree(id).then(res => {
         this.menuCheckedKeys = res.data.map(item => item.id)

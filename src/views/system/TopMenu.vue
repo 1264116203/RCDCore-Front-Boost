@@ -191,7 +191,7 @@ export default {
     /** 设置权限 */
     handleGrantSet(id) {
       this.spinning = true
-      this.nowId.push(id)
+      this.nowId = [id]
       this.grantVisible = true
       byTopMenuIdMenuWithTree(id).then(res => {
         this.checkedKeys = res.data.map(item => item.id)
