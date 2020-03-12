@@ -13,6 +13,9 @@ import App from './App.vue'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
 
+// mock
+import '@/mockApi/news/news-mock.js'
+
 Vue.use(contentmenu)
 
 // 注册全局容器

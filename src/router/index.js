@@ -168,6 +168,14 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '@/views/userInfo/Info.vue')
+  }, {
+    path: '/news/notice',
+    name: '公告',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/news/notice.vue')
   }]
 }])
 
