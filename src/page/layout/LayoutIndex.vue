@@ -2,11 +2,8 @@
   <a-layout>
     <a-layout-sider
       v-model="collapsed"
-      breakpoint="lg"
       width="260px"
       :style="{ overflow: 'auto', height: '100vh' }"
-      @collapse="onCollapse"
-      @breakpoint="onBreakpoint"
     >
       <top-logo />
       <side-menu />
@@ -65,14 +62,6 @@ export default {
           this.$store.commit('common/TOGGLE_COLLAPSE')
         }
       }
-    }
-  },
-  methods: {
-    onCollapse(collapsed, type) {
-      // console.log(collapsed, type)
-    },
-    onBreakpoint(broken) {
-      // console.log(broken)
     }
   }
 }

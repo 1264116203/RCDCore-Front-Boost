@@ -11,7 +11,7 @@ const common = {
     // 系统语言
     language: getStore('language') || 'zh',
     // 左侧菜单是否折叠
-    isCollapse: false,
+    isCollapse: getStore('collapse') || false,
     // 是否为全屏模式
     isFullScreen: false,
     // 屏幕大小，0超小屏幕，1小屏幕，2中屏幕，3大屏幕，详见admin.js
@@ -54,6 +54,7 @@ const common = {
     },
     TOGGLE_COLLAPSE: (state) => {
       state.isCollapse = !state.isCollapse
+      setStore('collapse', state.isCollapse, 'local')
     },
     TOGGLE_FULLSCREEN: (state) => {
       state.isFullScreen = !state.isFullScreen
@@ -67,7 +68,7 @@ const common = {
     },
     SET_THEME_NAME: (state, themeName) => {
       state.themeName = themeName
-      setStore('themeName', state.themeName, 'locale')
+      setStore('themeName', state.themeName, 'local')
     },
     SET_LOCK_PASSWORD: (state, password) => {
       state.lockPasswd = password

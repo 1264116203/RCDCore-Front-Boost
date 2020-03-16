@@ -52,7 +52,7 @@ export const getStore = (name, raw = false) => {
   } else if (obj.dataType === 'number') {
     return Number(obj.content)
   } else if (obj.dataType === 'boolean') {
-    return (obj.content === 'true')
+    return obj.content
   } else if (obj.dataType === 'object') {
     return obj.content
   }
