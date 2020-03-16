@@ -38,22 +38,20 @@
 
           <template v-if="actionType === 'creation'">
             <a-form-item label="密码">
-              <a-input
+              <a-input-password
                 v-decorator="['password', { rules: [
                   { required: true, validator: validatePass },
                   { pattern:/^[a-zA-Z]\w{5,17}$/, message: '以字母开头，长度在6~18之间' }
                 ]}]"
                 placeholder="请输入密码"
-                type="password"
               />
             </a-form-item>
             <a-form-item v-if="actionType === 'creation'" label="确认密码">
-              <a-input
+              <a-input-password
                 v-decorator="['passwordAgain', { rules: [
                   { required: true, validator: validatePass2 }
                 ]}]"
                 placeholder="请再次输入密码"
-                type="password"
               />
             </a-form-item>
           </template>
