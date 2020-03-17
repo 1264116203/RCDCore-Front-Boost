@@ -71,10 +71,11 @@
       <a-spin :spinning="spinning">
         <div style="height: 50vh;min-height: 300px;overflow-y: auto">
           <a-tree
-            checkable
-            default-expand-all
+            v-model="checkedKeys"
             :tree-data="menuTree"
-            :checked-keys="checkedKeys"
+            checkable
+            check-strictly
+            default-expand-all
             @check="onCheck"
           />
         </div>
@@ -93,6 +94,7 @@ import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
 import { listWithTree, byTopMenuIdMenuWithTree } from '@/api/system/menu'
+import { conductCheck } from '@/util/antd-tree-util'
 
 const columns = [
   {
@@ -137,7 +139,11 @@ export default {
       spinning: false,
       menuTree: [],
       grantVisible: false,
-      checkedKeys: [],
+      checkedKeys: {
+        checked: [],
+        halfChecked: []
+      },
+      menuSelected: [],
       nowId: []
     }
   },
@@ -194,18 +200,39 @@ export default {
       this.nowId = [id]
       this.grantVisible = true
       byTopMenuIdMenuWithTree(id).then(res => {
-        this.checkedKeys = res.data.map(item => item.id)
+        const tree = res.data
+        const keyList = []
+
+        function fun(item) {
+          keyList.push(item.id)
+          if (item.children && item.children.length) {
+            item.children.forEach(fun)
+          }
+        }
+        tree.forEach(fun)
+
+        this.checkedKeys.checked = keyList
+        this.menuSelected = [...this.checkedKeys.checked]
       })
         .catch(err => console.error(err))
         .finally(() => {
           this.spinning = false
         })
     },
-    onCheck(checkedKeys) {
-      this.checkedKeys = checkedKeys
+    onCheck(_, event) {
+      const checked = event.checked
+      const key = event.node.value
+
+      const result = conductCheck([key], checked, this.menuTree, {
+        checkedKeys: this.checkedKeys.checked,
+        halfCheckedKeys: this.checkedKeys.halfChecked
+      })
+
+      this.checkedKeys.checked = [...result.checkedKeys, ...result.halfCheckedKeys]
+      this.menuSelected = [...this.checkedKeys.checked, ...this.checkedKeys.halfChecked]
     },
     onOk() {
-      grant(this.checkedKeys, this.nowId)
+      grant(this.menuSelected, this.nowId)
         .then(() => {
           this.$message.success('操作成功')
           this.grantVisible = false
