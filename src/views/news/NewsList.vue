@@ -16,7 +16,8 @@
   </a-spin>
 </template>
 <script>
-import { getList } from '@/api/tool/news'
+// import { mapGetters } from 'vuex'
+import { _initWebSocket } from '@/webSocket/web-socket'
 
 export default {
   data() {
@@ -25,22 +26,70 @@ export default {
       isLoading: false
     }
   },
+  // computed: {
+  //   ...mapGetters(['token'])
+  // },
   created () {
-    this.fetchTableData()
+    _initWebSocket()
   },
   methods: {
-    /** 列表数据 */
-    fetchTableData () {
-      this.isLoading = true
-      getList()
-        .then(res => {
-          this.data = res.data
-        })
-        .catch(err => console.error(err))
-        .finally(() => {
-          this.isLoading = false
-        })
-    }
+
+    // initWebSocket () { // 初始化weosocket
+    //   this.destroyWebSocket()
+    //   try {
+    //     console.log('连接websocket')
+    //     const wsurl = 'ws://172.25.34.83:8088/websocket/messaging?token=abc'
+    //     this.webSocket = new WebSocket(wsurl)
+    //     this.webSocket.onopen = (event) => {
+    //       console.log('send:' + this.currSceneInfo)
+    //       // this.webSocket.send(this.currSceneInfo.id)
+    //       this.heartCheck.start(this.webSocket) // 心跳
+    //     }
+    //     this.webSocket.onmessage = (event) => {
+    //       if (event.data === 'HeartBeat') {
+    //         console.log('收到了心跳检测')
+    //         this.heartCheck.start(this.webSocket) // 心跳
+    //       } else {
+    //         this.data = event.data
+    //         console.log(this.data)
+    //       }
+    //     }
+    //     this.webSocket.onerror = () => {
+    //       console.log('发生异常了')
+    //       this.reconnect() // 重连
+    //     }
+    //     this.webSocket.onclose = (event) => {
+    //       console.log('断线重连')
+    //       this.reconnect() // 重连
+    //     }
+    //   } catch (e) {
+    //     console.log(e.message)
+    //     this.reconnect()
+    //   }
+    // },
+
+    // destroyWebSocket () {
+    //   if (this.webSocket) {
+    //     this.webSocket.onclose = (event) => {
+    //       console.log('链接关闭')
+    //     }
+    //     this.webSocket.close()
+    //     this.webSocket = null
+    //   }
+    // },
+
+    // reconnect () {
+    //   if (this.lockReconnect) {
+    //     return
+    //   }
+    //   this.lockReconnect = true
+    //   // 没连接上会一直重连，设置延迟避免请求过多
+    //   this.tt && clearTimeout(this.tt)
+    //   this.tt = setTimeout(() => {
+    //     this.initWebSocket()
+    //     this.lockReconnect = false
+    //   }, 4000)
+    // }
   }
 }
 </script>

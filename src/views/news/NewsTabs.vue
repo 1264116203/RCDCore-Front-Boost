@@ -22,7 +22,7 @@
     </a-tabs>
     <div class="news-list-footer">
       <div class="news-list-btn news-list-btn-border">
-        清空 消息
+        清空 {{ title[activeKey] }}
       </div>
       <div class="news-list-btn" @click="goMorelist">
         查看更多
@@ -41,7 +41,12 @@ export default {
   components: { NewsList, NoticeList, BacklogList },
   data() {
     return {
-      activeKey: ''
+      activeKey: 'notice',
+      title: {
+        'notice': '通知',
+        'news': '消息',
+        'backlog': '待办'
+      }
     }
   },
   methods: {
