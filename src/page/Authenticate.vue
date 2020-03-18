@@ -1,6 +1,10 @@
 <template>
-  <a-spin :tip="tip">
+  <a-spin :tip="tip" size="large">
     <div class="fullscreen"></div>
+    <template slot="indicator">
+      <a-icon v-if="!gotError" type="loading" style="font-size: 24px" spin />
+      <a-icon v-else type="info-circle" style="font-size: 24px" />
+    </template>
   </a-spin>
 </template>
 
@@ -11,7 +15,8 @@ export default {
   name: 'InitialPage',
   data () {
     return {
-      tip: '正在验证用户令牌…'
+      tip: '正在验证用户令牌…',
+      gotError: false
     }
   },
   computed: {
@@ -44,9 +49,11 @@ export default {
         }
       })
       .catch(() => {
-        this.$notification.error({
-          description: '鉴定用户身份时发生了未知异常！'
-        })
+        this.gotError = true
+        // this.$notification.error({
+        //   description: '鉴定用户身份时发生了未知异常！'
+        // })
+        this.tip = '鉴定用户身份时发生了未知异常，似乎没能连接至后端服务！'
       })
   }
 }
