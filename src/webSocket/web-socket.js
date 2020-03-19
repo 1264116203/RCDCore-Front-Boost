@@ -1,88 +1,102 @@
-/** 避免重复连接 */
-var lockReconnect = false
-var webSocket
-var tt
+export default class WebSocketConnection {
+  websocketInstance = null
 
-/** websocket心跳检测 */
-var heartCheck = {
-  timeout: 6000,
-  timeoutObj: null,
-  serverTimeoutObj: null,
-  start: function (ws) {
-    var self = this
-    this.timeoutObj && clearTimeout(this.timeoutObj)
-    this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj)
-    this.timeoutObj = setTimeout(function () {
-      // 这里发送一个心跳，后端收到后，返回一个心跳消息，
-      if (ws.readyState === 3) {
-        return
-      }
-      console.log('发送了心跳检测')
-      ws.send('HeartBeat')
-      self.serverTimeoutObj = setTimeout(function () {
-        console.log('检测不到心跳')
-        ws.close()
-      }, self.timeout)
-    }, this.timeout)
+  url = null
+  token = null
+
+  lockReconnect = false
+
+  reconnectTimerId = null
+
+  heartBeatDuration = 5000
+  heartBeatTimerId = null
+
+  messageHandler = function (data) {
   }
-}
 
-/** websocket启动 */
-export function _initWebSocket () { // 初始化weosocket
-  let data
-  destroyWebSocket()
-  try {
-    console.log('连接websocket')
-    const wsurl = 'ws://172.25.34.83:8088/websocket/messaging?token=abc'
-    webSocket = new WebSocket(wsurl)
-    webSocket.onopen = (event) => {
-      heartCheck.start(webSocket) // 心跳
+  constructor(option) {
+    this.url = option.url
+    this.token = option.token
+
+    this.messageHandler = option.messageHandler
+
+    this.establishConnection()
+  }
+
+  establishConnection() {
+    try {
+      const wsurl = `${this.url}?token=${this.token}`
+      console.log('正在连接websocket至' + wsurl)
+      this.websocketInstance = new WebSocket(wsurl)
+    } catch (e) {
+      console.log(e.message)
+      this.reconnect()
     }
-    webSocket.onmessage = (event) => {
-      if (event.data === 'HeartBeat') {
-        console.log('收到了心跳检测')
-        heartCheck.start(webSocket) // 心跳
-      } else {
-        data = event.data
-        console.log(data)
+
+    this.websocketInstance.onopen = (event) => {
+      console.log('websocket连接建立成功。')
+      this.heartBeatTimerId = window.setInterval(() => this.heartBeat(), this.heartBeatDuration)
+      // heartCheck.start(webSocket) // 心跳
+    }
+
+    this.websocketInstance.onmessage = (event) => {
+      // if (event.data === 'HeartBeat') {
+      //   console.log('收到了心跳检测')
+      //   heartCheck.start(this.websocketInstance) // 心跳
+      // } else {
+      //   const data = event.data
+      //   console.log(data)
+      // }
+      const data = event.data
+      console.log(data)
+      if (this.messageHandler) {
+        this.messageHandler(data)
       }
     }
-    webSocket.onerror = () => {
+
+    this.websocketInstance.onerror = () => {
       console.log('发生异常了')
-      reconnect() // 重连
+      this.reconnect() // 重连
     }
-    webSocket.onclose = (event) => {
+    this.websocketInstance.onclose = (event) => {
       console.log('断线重连')
-      reconnect() // 重连
+      this.reconnect() // 重连
     }
-  } catch (e) {
-    console.log(e.message)
-    reconnect()
   }
-  return data
-}
 
-/** 销毁WebSocket */
-function destroyWebSocket () {
-  if (webSocket) {
-    webSocket.onclose = (event) => {
-      console.log('链接关闭')
+  /** websocket重连 */
+  reconnect() {
+    if (this.lockReconnect) {
+      return
     }
-    webSocket.close()
-    webSocket = null
-  }
-}
+    this.lockReconnect = true
+    // 没连接上会一直重连，设置延迟避免请求过多
+    this.reconnectTimerId && clearTimeout(this.reconnectTimerId)
 
-/** websocket重连 */
-function reconnect () {
-  if (lockReconnect) {
-    return
+    this.reconnectTimerId = setTimeout(() => {
+      this.establishConnection()
+      this.lockReconnect = false
+    }, 4000)
   }
-  lockReconnect = true
-  // 没连接上会一直重连，设置延迟避免请求过多
-  tt && clearTimeout(tt)
-  tt = setTimeout(() => {
-    _initWebSocket()
-    lockReconnect = false
-  }, 4000)
+
+  /** 销毁WebSocket */
+  destroy() {
+    if (this.heartBeatTimerId) {
+      window.clearInterval(this.heartBeatTimerId)
+      this.heartBeatTimerId = null
+    }
+    if (this.websocketInstance) {
+      this.websocketInstance.onclose = (event) => {
+        console.log('链接关闭')
+      }
+      this.websocketInstance.close()
+      this.websocketInstance = null
+    }
+  }
+
+  heartBeat() {
+    if (this.websocketInstance) {
+      this.websocketInstance.send('HeartBeat' + new Date().getTime())
+    }
+  }
 }

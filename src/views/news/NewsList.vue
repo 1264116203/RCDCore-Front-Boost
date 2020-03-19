@@ -17,20 +17,31 @@
 </template>
 <script>
 // import { mapGetters } from 'vuex'
-import { _initWebSocket } from '@/webSocket/web-socket'
+import WebSocketConnection from '@/webSocket/web-socket'
 
 export default {
   data() {
     return {
       data: [],
-      isLoading: false
+      isLoading: false,
+      sconn: null
     }
   },
   // computed: {
   //   ...mapGetters(['token'])
   // },
   created () {
-    _initWebSocket()
+    const sconn = new WebSocketConnection({
+      url: 'ws://172.25.34.83:8088/websocket/messaging',
+      token: 'abc',
+      messageHandler: (data) => {
+        this.$message.info(data)
+      }
+    })
+    this.sconn = sconn
+  },
+  destroyed () {
+    this.sconn.destroy()
   },
   methods: {
 
