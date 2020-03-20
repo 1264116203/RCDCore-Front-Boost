@@ -26,6 +26,12 @@ export default {
   },
   created () {
     this.fetchTableData()
+    this.$eventBus.$on('getNewsData', target => {
+      this.$notification.info({
+        description: target,
+        message: target
+      })
+    })
   },
   methods: {
     /** 列表数据 */

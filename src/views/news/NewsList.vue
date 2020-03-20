@@ -16,7 +16,6 @@
   </a-spin>
 </template>
 <script>
-import bus from '@/util/eventBus.js'
 
 export default {
   data() {
@@ -25,17 +24,27 @@ export default {
       isLoading: false
     }
   },
-  created () {
-    bus.$on('getNewsData', target => {
-      this.$message.info(target)
-    })
+  mounted() {
+    this.$eventBus.$on('getNewsData', this.onNewsData)
+  },
+  destroyed() {
+    this.$eventBus.$off('getNewsData', this.onNewsData)
+  },
+  methods: {
+    onNewsData(data) {
+      this.$message.info(data)
+      this.printMsg()
+    },
+    printMsg() {
+      console.log('我收到了消息！')
+    }
   }
 }
 </script>
 <style lang="less">
-.news-list{
-  .ant-list-item{
-  padding: 12px;
+  .news-list {
+    .ant-list-item {
+      padding: 12px;
+    }
   }
-}
 </style>
