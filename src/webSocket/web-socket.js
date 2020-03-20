@@ -48,7 +48,6 @@ export default class WebSocketConnection {
       //   console.log(data)
       // }
       const data = event.data
-      console.log(data)
       if (this.messageHandler) {
         this.messageHandler(data)
       }

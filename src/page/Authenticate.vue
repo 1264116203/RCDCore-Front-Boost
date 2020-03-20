@@ -6,6 +6,7 @@
 
 <script>
 import { checkAuthenticate } from '@/api/common'
+import { initConnection } from '@/util/eventBus.js'
 
 export default {
   name: 'InitialPage',
@@ -37,6 +38,8 @@ export default {
         } else {
           this.authenticated = 'yes'
           if (this.lastPageBeforeLogin) {
+            // 初始webSocket连接
+            initConnection()
             this.$router.push(this.lastPageBeforeLogin)
           } else {
             this.$router.push('/login')

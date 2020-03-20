@@ -4,6 +4,7 @@ import { deepClone } from '@/util/util'
 import website from '@/config/website'
 import { login, getUserInfo, logout, refreshToken, listCurrentUserButtons } from '@/api/common'
 import { getTopMenu, listCurrentUserMenuWithTree } from '@/api/system/menu'
+import { initConnection, beforDestory } from '@/util/eventBus.js'
 
 function addPath(ele, first = false) {
   // 设置图标，如果不存在则使用默认图标
@@ -61,6 +62,8 @@ const user = {
             commit('tabs/CLOSE_ALL', null, { root: true })
             commit('common/UNLOCK', null, { root: true })
           }
+          // 初始webSocket连接
+          initConnection()
         })
     },
     getButtons({ commit }) {
@@ -98,6 +101,8 @@ const user = {
     logout({ commit, dispatch }) {
       return logout().then(() => {
         dispatch('clearAllAuthInfos')
+        // 断开webSocket连接
+        beforDestory()
       })
     },
     // 注销session
