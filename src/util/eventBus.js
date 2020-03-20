@@ -18,7 +18,7 @@ export function initConnection () {
   }
 }
 
-export function beforDestory () {
+export function beforeDestory () {
   if (sconn) {
     sconn.destroy()
     sconn = null

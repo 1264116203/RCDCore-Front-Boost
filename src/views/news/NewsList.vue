@@ -33,10 +33,6 @@ export default {
   methods: {
     onNewsData(data) {
       this.$message.info(data)
-      this.printMsg()
-    },
-    printMsg() {
-      console.log('我收到了消息！')
     }
   }
 }

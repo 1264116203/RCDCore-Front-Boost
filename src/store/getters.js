@@ -24,7 +24,6 @@ const getters = {
   token: state => state.user.token,
   authenticated: state => state.user.authenticated,
   userInfo: state => state.user.userInfo,
-  sconn: state => state.user.sconn,
   // TODO 菜单列表后续也要改名或移除
   menuList: state => state.user.menuList,
   permission: state => state.user.permission,
