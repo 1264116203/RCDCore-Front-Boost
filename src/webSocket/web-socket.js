@@ -1,3 +1,4 @@
+import store from '@/store'
 export default class WebSocketConnection {
   websocketInstance = null
 
@@ -26,15 +27,16 @@ export default class WebSocketConnection {
   establishConnection() {
     try {
       const wsurl = `${this.url}?token=${this.token}`
-      console.log('正在连接websocket至' + wsurl)
+      store.commit('websocket/SET_WEB_SOCKET_STATE', false)
+      store.commit('websocket/SET_WEB_SOCKET_MSG', '正在连接websocket...')
       this.websocketInstance = new WebSocket(wsurl)
     } catch (e) {
-      console.log(e.message)
       this.reconnect()
     }
 
     this.websocketInstance.onopen = (event) => {
-      console.log('websocket连接建立成功。')
+      store.commit('websocket/SET_WEB_SOCKET_STATE', true)
+      store.commit('websocket/SET_WEB_SOCKET_MSG', 'websocket连接建立成功!')
       this.heartBeatTimerId = window.setInterval(() => this.heartBeat(), this.heartBeatDuration)
       // heartCheck.start(webSocket) // 心跳
     }
@@ -54,11 +56,13 @@ export default class WebSocketConnection {
     }
 
     this.websocketInstance.onerror = () => {
-      console.log('发生异常了')
+      store.commit('websocket/SET_WEB_SOCKET_STATE', false)
+      store.commit('websocket/SET_WEB_SOCKET_MSG', '发生异常了')
       this.reconnect() // 重连
     }
     this.websocketInstance.onclose = (event) => {
-      console.log('断线重连')
+      store.commit('websocket/SET_WEB_SOCKET_STATE', false)
+      store.commit('websocket/SET_WEB_SOCKET_MSG', '断线重连')
       this.reconnect() // 重连
     }
   }
@@ -86,7 +90,8 @@ export default class WebSocketConnection {
     }
     if (this.websocketInstance) {
       this.websocketInstance.onclose = (event) => {
-        console.log('链接关闭')
+        store.commit('websocket/SET_WEB_SOCKET_STATE', false)
+        store.commit('websocket/SET_WEB_SOCKET_MSG', '链接关闭')
       }
       this.websocketInstance.close()
       this.websocketInstance = null
