@@ -205,15 +205,18 @@ export default {
       })
     },
     handleOK() {
-      this.newPassword = this.passwordForm.getFieldValue('newPassword')
-      if (this.newPassword === '') {
-        this.$message.warning('密码不能为空')
-        return
-      }
-      resetPassword(this.newPassword, this.selectedRowKeys).then(() => {
-        this.fetchTableData()
-        this.$message.success('操作成功!')
-        this.passwordInputvisible = false
+      this.passwordForm.validateFields((errors, values) => {
+        if (!errors) {
+          this.newPassword = this.passwordForm.getFieldValue('newPassword')
+          resetPassword(this.newPassword, this.selectedRowKeys).then(() => {
+            this.fetchTableData()
+            this.$message.success('操作成功!')
+            this.passwordInputvisible = false
+          })
+        } else {
+          this.$message.error('校验失败！')
+          console.error(errors, values)
+        }
       })
     }
   }
