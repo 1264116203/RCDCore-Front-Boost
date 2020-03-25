@@ -99,7 +99,7 @@ export default class WebSocketConnection {
   }
 
   heartBeat() {
-    if (this.websocketInstance) {
+    if (this.websocketInstance && this.websocketInstance.readyState === WebSocket.OPEN) {
       this.websocketInstance.send('HeartBeat' + new Date().getTime())
     }
   }
