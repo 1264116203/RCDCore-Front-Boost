@@ -27,13 +27,13 @@ const routes = [
     name: '403',
     component: () => import(/* webpackChunkName: "about" */ '@/page/exception/403')
   }, {
-    path: '/exception/404',
-    name: '404',
-    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/404')
-  }, {
     path: '/exception/500',
     name: '500',
     component: () => import(/* webpackChunkName: "about" */ '@/page/exception/500')
+  }, {
+    path: '*',
+    name: '404',
+    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/404')
   }
 ]
 
