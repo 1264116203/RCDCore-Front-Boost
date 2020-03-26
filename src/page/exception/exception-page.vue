@@ -10,8 +10,8 @@
         {{ config[type].desc }}
       </div>
       <div class="actions">
-        <a-button type="primary" @click="doBackHome">
-          返回首页
+        <a-button type="primary" @click="$router.go(-1)">
+          返回上一级
         </a-button>
       </div>
     </div>
@@ -47,12 +47,6 @@ export default {
   data () {
     return {
       config: types
-    }
-  },
-  methods: {
-    doBackHome() {
-    //   this.navTo({ path: '/main/home' })
-      this.$router.push('/main/home')
     }
   }
 }
