@@ -1,15 +1,11 @@
 import LoginIndex from '@/page/login/LoginIndex'
 import AuthenticatePage from '@/page/Authenticate'
 
-const routes = [
+const pages = [
   {
     path: '/',
     name: 'root',
     redirect: '/main'
-  }, {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
   }, {
     path: '/login',
     name: 'loginPage',
@@ -18,6 +14,10 @@ const routes = [
     path: '/authenticate',
     name: 'authenticatePage',
     component: AuthenticatePage
+  }, {
+    path: '/test',
+    name: 'test',
+    component: () => import(/* webpackChunkName: "test" */ '@/views/TestPage')
   }, {
     path: '/exception/403',
     name: '403',
@@ -33,4 +33,4 @@ const routes = [
   }
 ]
 
-export default routes
+export default pages
