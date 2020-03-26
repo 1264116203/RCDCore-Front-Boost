@@ -86,7 +86,7 @@
   </a-spin>
 </template>
 <script>
-import { getList, remove, singleRemove, restetPassword } from '@/api/system/user-management'
+import { getList, remove, singleRemove, resetPassword } from '@/api/system/user-management'
 import UserEdit from './UserEdit.vue'
 import { ACTION_TYPE } from '@/config/env'
 import { myMixin } from '@/components/mixins/MainMixin'
