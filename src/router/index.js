@@ -1,41 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import LoginIndex from '@/page/login/LoginIndex'
-import AuthenticatePage from '@/page/Authenticate'
+
+import routes from './modules/routes'
+import about from './modules/about'
+import base from './modules/base'
+import system from './modules/system'
+import monitor from './modules/monitor'
+import news from './modules/news'
 
 Vue.use(VueRouter)
-
-const routes = [
-  {
-    path: '/',
-    name: 'root',
-    redirect: '/main'
-  }, {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }, {
-    path: '/login',
-    name: 'loginPage',
-    component: LoginIndex
-  }, {
-    path: '/authenticate',
-    name: 'authenticatePage',
-    component: AuthenticatePage
-  }, {
-    path: '/exception/403',
-    name: '403',
-    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/403')
-  }, {
-    path: '/exception/500',
-    name: '500',
-    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/500')
-  }, {
-    path: '*',
-    name: '404',
-    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/404')
-  }
-]
 
 const router = new VueRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -68,127 +41,7 @@ router.addRoutes([{
     isTab: false
   },
   component: () => import(/* webpackChunkName: "base" */ '@/page/layout/LayoutIndex'),
-  children: [{
-    path: 'about',
-    name: '关于',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
-  }, {
-    path: 'home',
-    name: '欢迎页',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/Home.vue')
-  }, {
-    path: '/system/user',
-    name: '用户管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/User.vue')
-  }, {
-    path: '/system/dept',
-    name: '部门管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Dept.vue')
-  }, {
-    path: '/system/dict',
-    name: '字典管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/dict/Dict.vue')
-  }, {
-    path: '/system/menu',
-    name: '菜单管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Menu.vue')
-  }, {
-    path: '/system/topmenu',
-    name: '顶部菜单',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/TopMenu.vue')
-  }, {
-    path: '/system/param',
-    name: '参数管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/system/Param.vue')
-  }, {
-    path: '/authority/role',
-    name: '角色管理',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/authority/Role.vue')
-  }, {
-    path: '/monitor/log/usual',
-    name: '通用日志',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/monitor/log/Usual.vue')
-  }, {
-    path: '/monitor/log/api',
-    name: '接口日志',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/monitor/log/Api.vue')
-  }, {
-    path: '/monitor/log/error',
-    name: '错误日志',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/monitor/log/Error.vue')
-  }, {
-    path: '/myiframe/urlPath',
-    name: 'iframe',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/components/iframe/RouterIframe.vue')
-  }, {
-    path: '/user/info',
-    name: '个人信息',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/userInfo/Info.vue')
-  }, {
-    path: '/news/notice',
-    name: '公告',
-    meta: {
-      isTab: true,
-      isAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '@/views/news/notice.vue')
-  }]
+  children: [...about, ...base, ...system, ...monitor, ...news]
 }])
 
 export default router
