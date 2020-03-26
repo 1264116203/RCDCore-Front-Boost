@@ -22,6 +22,18 @@ const routes = [
     path: '/authenticate',
     name: 'authenticatePage',
     component: AuthenticatePage
+  }, {
+    path: '/exception/403',
+    name: '403',
+    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/403')
+  }, {
+    path: '/exception/404',
+    name: '404',
+    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/404')
+  }, {
+    path: '/exception/500',
+    name: '500',
+    component: () => import(/* webpackChunkName: "about" */ '@/page/exception/500')
   }
 ]
 
@@ -168,6 +180,14 @@ router.addRoutes([{
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '@/views/userInfo/Info.vue')
+  }, {
+    path: '/news/notice',
+    name: '公告',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/news/notice.vue')
   }]
 }])
 

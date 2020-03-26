@@ -43,6 +43,29 @@
           </a-button>
         </a-tooltip>
       </div>
+      <div>
+        <a-dropdown :trigger="['click']">
+          <a-button type="link" class="right-button" disabled="false">
+            <a-badge dot>
+              <a-icon type="mail" />
+            </a-badge>
+          </a-button>
+          <a-menu slot="overlay">
+            <news-tabs />
+          </a-menu>
+        </a-dropdown>
+      </div>
+
+      <div>
+        <a-tooltip>
+          <template slot="title">
+            {{ webSocketMsg }}
+          </template>
+          <a-button type="link" class="right-button">
+            <a-icon :type="webSocketState ? 'link' : 'disconnect'" />
+          </a-button>
+        </a-tooltip>
+      </div>
 
       <div class="pointer avatar-dropdown">
         <a-dropdown>
@@ -73,13 +96,24 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { fullscreenListener, toggleFullscreen } from '@/util/util'
 import TopMenu from '@/page/layout/top-menu/TopMenu'
+import NewsTabs from '@/views/news/NewsTabs'
 
 export default {
   name: 'TopBanner',
-  components: { TopMenu },
+  components: { TopMenu, NewsTabs },
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
-    ...mapGetters(['isFullScreen', 'userInfo'])
+    ...mapGetters(['isFullScreen', 'userInfo']),
+    webSocketState: {
+      get () {
+        return this.$store.state.websocket.webSocketState
+      }
+    },
+    webSocketMsg: {
+      get() {
+        return this.$store.state.websocket.webSocketMsg
+      }
+    }
   },
   mounted() {
     fullscreenListener(() => {
@@ -163,6 +197,10 @@ export default {
         font-size: 18px;
         color: @text-color;
         padding: 0 0.5rem;
+        .ant-badge{
+          font-size: 18px;
+          color: @text-color;
+        }
       }
 
       .avatar-dropdown {

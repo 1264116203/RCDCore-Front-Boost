@@ -9,6 +9,7 @@ import user from './modules/user'
 import dept from './modules/dept'
 import role from './modules/role'
 import resource from './modules/resource'
+import websocket from './modules/websocket'
 import getters from '../store/getters'
 
 Vue.use(Vuex)
@@ -22,7 +23,8 @@ const store = new Vuex.Store({
     user,
     dept,
     role,
-    resource
+    resource,
+    websocket
   },
   getters
 })
