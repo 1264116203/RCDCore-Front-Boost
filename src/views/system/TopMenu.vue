@@ -70,13 +70,11 @@
     >
       <a-spin :spinning="spinning">
         <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-          <a-tree
-            v-model="checkedKeys"
+          <tree-checked
+            :checked-keys.sync="checkedKeys"
+            :selected-data.sync="menuSelected"
+            :default-checked-keys="checkedKeys"
             :tree-data="menuTree"
-            checkable
-            check-strictly
-            default-expand-all
-            @check="onCheck"
           />
         </div>
       </a-spin>
@@ -94,7 +92,7 @@ import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
 import { listWithTree, byTopMenuIdMenuWithTree } from '@/api/system/menu'
-import { conductCheck } from '@/util/antd-tree-util'
+import TreeChecked from '@/components/tree-checked/TreeChecked'
 
 const columns = [
   {
@@ -122,7 +120,8 @@ const columns = [
 ]
 export default {
   components: {
-    TopMenuEdit
+    TopMenuEdit,
+    TreeChecked
   },
   mixins: [myMixin],
   data () {
@@ -221,21 +220,6 @@ export default {
         .finally(() => {
           this.spinning = false
         })
-    },
-    onCheck(_, event) {
-      const checked = event.checked
-      const key = event.node.value
-
-      const result = conductCheck([key], checked, this.menuTree, {
-        checkedKeys: this.checkedKeys.checked,
-        halfCheckedKeys: this.checkedKeys.halfChecked
-      })
-
-      this.checkedKeys = {
-        checked: [...result.checkedKeys, ...result.halfCheckedKeys],
-        halfChecked: []
-      }
-      this.menuSelected = [...this.checkedKeys.checked, ...this.checkedKeys.halfChecked]
     },
     onOk() {
       grant(this.menuSelected, this.nowId)
