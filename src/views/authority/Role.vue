@@ -74,10 +74,8 @@
     >
       <a-spin :spinning="spinning">
         <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-          <tree-checked
-            :checked-keys.sync="checkedKeys"
-            :selected-data.sync="authSelected"
-            :default-checked-keys="checkedKeys"
+          <no-half-tree
+            v-model="authSelected"
             :tree-data="menuTree"
           />
         </div>
@@ -121,7 +119,6 @@ import RoleEdit from './RoleEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
 import { AllTree, byRoleIdMenuWithTree } from '@/api/system/menu'
 import { byRoleIdMenuIdTree, AllTopMenulist } from '@/api/system/topmenu'
-import TreeChecked from '@/components/tree-checked/TreeChecked'
 
 const columns = [
   {
@@ -144,8 +141,7 @@ const columns = [
 ]
 export default {
   components: {
-    RoleEdit,
-    TreeChecked
+    RoleEdit
   },
   mixins: [myMixin],
   data() {
@@ -160,12 +156,8 @@ export default {
       pageSize: 10,
       /** 权限设置 */
       spinning: false,
-      menuTree: [],
       grantVisible: false,
-      checkedKeys: {
-        checked: [],
-        halfChecked: []
-      },
+      menuTree: [],
       authSelected: [],
       nowId: [],
       /** 权限设置 */
@@ -242,11 +234,7 @@ export default {
         }
         tree.forEach(fun)
 
-        this.checkedKeys = {
-          checked: keyList,
-          halfChecked: []
-        }
-        this.authSelected = [...this.checkedKeys.checked]
+        this.authSelected = keyList
       })
         .catch(err => console.error(err))
         .finally(() => {

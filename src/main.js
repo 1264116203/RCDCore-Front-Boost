@@ -15,11 +15,13 @@ import 'v-contextmenu/dist/index.css'
 
 // mock
 import '@/mockApi/news/news-mock.js'
+import { NoHalfTree } from '@/components/rcore'
 
 Vue.use(contentmenu)
 
 // 注册全局容器
 Vue.component('basicContainer', BasicContainer)
+Vue.component('noHalfTree', NoHalfTree)
 
 Vue.filter('textClip', function (value, clipNum) {
   if (!value) return ''

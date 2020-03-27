@@ -70,10 +70,8 @@
     >
       <a-spin :spinning="spinning">
         <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-          <tree-checked
-            :checked-keys.sync="checkedKeys"
-            :selected-data.sync="menuSelected"
-            :default-checked-keys="checkedKeys"
+          <no-half-tree
+            v-model="menuSelected"
             :tree-data="menuTree"
           />
         </div>
@@ -92,7 +90,6 @@ import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './TopMenuEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
 import { listWithTree, byTopMenuIdMenuWithTree } from '@/api/system/menu'
-import TreeChecked from '@/components/tree-checked/TreeChecked'
 
 const columns = [
   {
@@ -120,8 +117,7 @@ const columns = [
 ]
 export default {
   components: {
-    TopMenuEdit,
-    TreeChecked
+    TopMenuEdit
   },
   mixins: [myMixin],
   data () {
@@ -136,12 +132,8 @@ export default {
       pageSize: 10,
       /** 权限设置 */
       spinning: false,
-      menuTree: [],
       grantVisible: false,
-      checkedKeys: {
-        checked: [],
-        halfChecked: []
-      },
+      menuTree: [],
       menuSelected: [],
       nowId: []
     }
@@ -210,11 +202,7 @@ export default {
         }
         tree.forEach(fun)
 
-        this.checkedKeys = {
-          checked: keyList,
-          halfChecked: []
-        }
-        this.menuSelected = [...this.checkedKeys.checked]
+        this.menuSelected = keyList
       })
         .catch(err => console.error(err))
         .finally(() => {
