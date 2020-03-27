@@ -74,13 +74,11 @@
     >
       <a-spin :spinning="spinning">
         <div style="height: 50vh;min-height: 300px;overflow-y: auto">
-          <a-tree
-            v-model="checkedKeys"
+          <tree-checked
+            :checked-keys.sync="checkedKeys"
+            :selected-data.sync="authSelected"
+            :default-checked-keys="checkedKeys"
             :tree-data="menuTree"
-            checkable
-            check-strictly
-            default-expand-all
-            @check="onCheck"
           />
         </div>
       </a-spin>
@@ -123,7 +121,7 @@ import RoleEdit from './RoleEdit.vue'
 import { myMixin } from '@/components/mixins/MainMixin'
 import { AllTree, byRoleIdMenuWithTree } from '@/api/system/menu'
 import { byRoleIdMenuIdTree, AllTopMenulist } from '@/api/system/topmenu'
-import { conductCheck } from '@/util/antd-tree-util'
+import TreeChecked from '@/components/tree-checked/TreeChecked'
 
 const columns = [
   {
@@ -146,7 +144,8 @@ const columns = [
 ]
 export default {
   components: {
-    RoleEdit
+    RoleEdit,
+    TreeChecked
   },
   mixins: [myMixin],
   data() {
@@ -243,25 +242,16 @@ export default {
         }
         tree.forEach(fun)
 
-        this.checkedKeys.checked = keyList
+        this.checkedKeys = {
+          checked: keyList,
+          halfChecked: []
+        }
         this.authSelected = [...this.checkedKeys.checked]
       })
         .catch(err => console.error(err))
         .finally(() => {
           this.spinning = false
         })
-    },
-    onCheck(_, event) {
-      const checked = event.checked
-      const key = event.node.value
-
-      const result = conductCheck([key], checked, this.menuTree, {
-        checkedKeys: this.checkedKeys.checked,
-        halfCheckedKeys: this.checkedKeys.halfChecked
-      })
-
-      this.checkedKeys.checked = [...result.checkedKeys, ...result.halfCheckedKeys]
-      this.authSelected = [...this.checkedKeys.checked, ...this.checkedKeys.halfChecked]
     },
     onOk() {
       grant(this.authSelected, this.nowId)
