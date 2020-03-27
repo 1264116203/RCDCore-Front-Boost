@@ -211,7 +211,10 @@ export default {
         }
         tree.forEach(fun)
 
-        this.checkedKeys.checked = keyList
+        this.checkedKeys = {
+          checked: keyList,
+          halfChecked: []
+        }
         this.menuSelected = [...this.checkedKeys.checked]
       })
         .catch(err => console.error(err))
@@ -228,7 +231,10 @@ export default {
         halfCheckedKeys: this.checkedKeys.halfChecked
       })
 
-      this.checkedKeys.checked = [...result.checkedKeys, ...result.halfCheckedKeys]
+      this.checkedKeys = {
+        checked: [...result.checkedKeys, ...result.halfCheckedKeys],
+        halfChecked: []
+      }
       this.menuSelected = [...this.checkedKeys.checked, ...this.checkedKeys.halfChecked]
     },
     onOk() {
