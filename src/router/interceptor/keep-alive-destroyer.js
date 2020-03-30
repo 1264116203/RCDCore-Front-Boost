@@ -2,8 +2,9 @@ import router from '@/router'
 import store from '@/store'
 
 router.afterEach((to, from) => {
-  const beforeRouter = store.getters.tabList.find(tab => tab.path === from.path)
-  if (from.meta.isTab && !beforeRouter) {
+  // 当前离开的路由是否在标签列表中
+  const isInTabList = store.getters.tabList.find(tab => tab.path === from.path)
+  if (from.meta.isTab && !isInTabList) {
     const component = from.matched[from.matched.length - 1].instances['default']
 
     if (component && component.$vnode && component.$vnode.parent && component.$vnode.parent.componentInstance &&

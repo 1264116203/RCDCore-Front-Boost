@@ -6,6 +6,7 @@ import base from './modules/base'
 import system from './modules/system'
 import monitor from './modules/monitor'
 import news from './modules/news'
+import demos from './modules/demo'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,13 @@ routes.push({
 })
 // 添加其他页面到总路由表
 routes.push(...pages)
+routes.push(...demos)
+// 将该匹配放到最后，使不存在路由导航至404
+routes.push({
+  path: '*',
+  name: '404',
+  component: () => import(/* webpackChunkName: "base" */ '@/page/exception/404')
+})
 
 const router = new VueRouter({
   scrollBehavior(to, from, savedPosition) {

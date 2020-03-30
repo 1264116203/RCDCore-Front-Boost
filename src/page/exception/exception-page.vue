@@ -11,7 +11,7 @@
       </div>
       <div class="actions">
         <a-button type="primary" @click="$router.go(-1)">
-          返回上一级
+          返回上一页
         </a-button>
       </div>
     </div>

@@ -26,10 +26,6 @@ const pages = [
     path: '/exception/500',
     name: '500',
     component: () => import(/* webpackChunkName: "base" */ '@/page/exception/500')
-  }, {
-    path: '*',
-    name: '404',
-    component: () => import(/* webpackChunkName: "base" */ '@/page/exception/404')
   }
 ]
 
