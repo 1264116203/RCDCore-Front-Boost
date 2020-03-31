@@ -15,10 +15,23 @@
       </a-form-item>
     </a-row>
 
+    <a-row>
+      <a-form-item label="标签宽度（px）">
+        <a-row :gutter="24">
+          <a-col :span="5">
+            <a-slider v-model="itemWidth" :min="64" :max="200" />
+          </a-col>
+          <a-col :span="5">
+            <a-input-number v-model="itemWidth" :min="64" :max="200" />
+          </a-col>
+        </a-row>
+      </a-form-item>
+    </a-row>
+
     <a-card>
       <a-form
+        layout="horizontal"
         :style="{width: formWidth + 'px'}"
-        :layout="formLayout"
         :label-col="formItemLayout.labelCol"
         :wrapper-col="formItemLayout.wrapperCol"
         style="border: 1px dashed orange"
@@ -81,20 +94,16 @@ export default {
   data: function () {
     return {
       formWidth: 400,
-      formLayout: 'horizontal',
       // 自定义labelCol的最小宽度
       itemWidth: 70
     }
   },
   computed: {
     formItemLayout() {
-      const { formLayout } = this
-      return formLayout === 'horizontal'
-        ? {
-          labelCol: { style: `min-width: ${this.itemWidth}px` },
-          wrapperCol: { span: 18 }
-        }
-        : {}
+      return {
+        labelCol: { style: `min-width: ${this.itemWidth}px` },
+        wrapperCol: { style: { flex: '1 1 auto' } }
+      }
     }
   }
 }
@@ -105,6 +114,7 @@ export default {
   .ant-form-item{
     display: inline-flex;
     width: 100%;
+    // padding-left: 1rem;
     // /deep/.ant-form-item-label{
     //   min-width: 70px;
     // }
