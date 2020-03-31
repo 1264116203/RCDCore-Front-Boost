@@ -10,5 +10,9 @@ export default [{
     path: 'forms',
     name: '表单示例页',
     component: () => import(/* webpackChunkName: "demo" */ '@/page/demo/views/forms')
+  }, {
+    path: 'horizontalForm',
+    name: '纵向表单示例页',
+    component: () => import(/* webpackChunkName: "demo" */ '@/page/demo/views/horizontal-form')
   }]
 }]
