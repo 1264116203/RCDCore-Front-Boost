@@ -38,17 +38,9 @@ export default class WebSocketConnection {
       store.commit('websocket/SET_WEB_SOCKET_STATE', true)
       store.commit('websocket/SET_WEB_SOCKET_MSG', '消息服务建立连接成功!')
       this.heartBeatTimerId = window.setInterval(() => this.heartBeat(), this.heartBeatDuration)
-      // heartCheck.start(webSocket) // 心跳
     }
 
     this.websocketInstance.onmessage = (event) => {
-      // if (event.data === 'HeartBeat') {
-      //   console.log('收到了心跳检测')
-      //   heartCheck.start(this.websocketInstance) // 心跳
-      // } else {
-      //   const data = event.data
-      //   console.log(data)
-      // }
       const data = event.data
       if (this.messageHandler) {
         this.messageHandler(data)

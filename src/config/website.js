@@ -36,5 +36,7 @@ export default {
     iconDefault: 'check-circle'
   },
   // 流程设计器地址
-  flowDesignUrl: 'http://localhost:9999'
+  flowDesignUrl: 'http://localhost:9999',
+  // WebSocket地址
+  wsUrl: 'ws://172.25.34.83:8088/websocket/messaging'
 }
