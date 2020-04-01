@@ -23,6 +23,7 @@ router.afterEach((to, from) => {
               keys.splice(index, 1)
             }
           }
+          console.log(`正在移除已失效路由组件，key：${key}`)
           cache[key].componentInstance.$destroy()
           delete cache[key]
         }
