@@ -7,9 +7,13 @@
       <a-icon type="home" />
       <span>首页</span>
     </a-menu-item>
-    <my-sub-menu v-for="item in menuList" :key="item.path"
-                 :menu-info="item" :default-icon="iconDefault"
-    />
+    <template v-for="item in menuList">
+      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
+        <a-icon :type="item.icon ? item.icon : iconDefault" />
+        <span>{{ item.name }}</span>
+      </a-menu-item>
+      <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="iconDefault" />
+    </template>
   </a-menu>
 </template>
 
@@ -48,6 +52,7 @@ export default {
     ...mapActions('user', ['getMenu']),
     ...mapActions('tabs', ['navTo']),
     menuSelected(item) {
+      debugger
       const menuItem = deepSearch(this.menuList, item.key)
       if (!menuItem) {
         this.navTo({
