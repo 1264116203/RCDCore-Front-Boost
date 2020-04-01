@@ -52,7 +52,6 @@ export default {
     ...mapActions('user', ['getMenu']),
     ...mapActions('tabs', ['navTo']),
     menuSelected(item) {
-      debugger
       const menuItem = deepSearch(this.menuList, item.key)
       if (!menuItem) {
         this.navTo({
