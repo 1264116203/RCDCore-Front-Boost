@@ -1,32 +1,31 @@
-<template functional>
-  <a-sub-menu v-if="props.menuInfo.children && props.menuInfo.children.length > 0" :key="props.menuInfo.path">
+<template>
+  <a-sub-menu v-bind="$props" v-on="$listeners">
     <span slot="title">
-      <a-icon :type="props.menuInfo.icon ? props.menuInfo.icon : props.defaultIcon" />
-      <span>{{ props.menuInfo.name }}</span>
+      <a-icon :type="menuInfo.icon ? menuInfo.icon : defaultIcon" /><span>{{ menuInfo.name }}</span>
     </span>
-    <template v-for="item in props.menuInfo.children">
-      <a-menu-item v-if="!item.children || item.children.length === 0"
-                   :key="item.path"
-      >
-        <a-icon :type="item.icon ? item.icon : props.defaultIcon" />
+    <template v-for="item in menuInfo.children">
+      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
+        <a-icon :type="item.icon ? item.icon : defaultIcon" />
         <span>{{ item.name }}</span>
       </a-menu-item>
-      <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="props.defaultIcon" />
+      <sub-menu v-else :key="item.path" :menu-info="item" :default-icon="defaultIcon" />
     </template>
   </a-sub-menu>
-  <a-menu-item v-else :key="props.menuInfo.path">
-    <a-icon :type="props.menuInfo.icon ? props.menuInfo.icon : props.defaultIcon" />
-    <span>{{ props.menuInfo.name }}</span>
-  </a-menu-item>
 </template>
 
 <script>
 
+import { Menu } from 'ant-design-vue'
+
 export default {
-  functional: true,
+  name: 'SubMenu',
+  // must add isSubMenu: true
+  isSubMenu: true,
   props: {
+    ...Menu.SubMenu.props,
+    // Cannot overlap with properties within Menu.SubMenu.props
     menuInfo: { type: Object, required: true },
-    defaultIcon: { type: String, required: true }
+    defaultIcon: { type: String, default: 'mail' }
   }
 }
 </script>
