@@ -1,7 +1,7 @@
 <template>
   <div class="no-border-margin-tabs">
     <a-tabs v-model="activeTabKey" type="editable-card" :hide-add="true"
-            @tabClick="onTabClick" @edit="onEdit"
+            @change="onTabClick" @edit="onEdit"
     >
       <a-tab-pane v-for="tabElem in tabList"
                   :key="tabElem.key"
