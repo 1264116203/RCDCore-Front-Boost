@@ -293,17 +293,4 @@ export default {
   .warp .operation-btn {
     margin: 20px 0;
   }
-
-  .sel-link {
-    color: @primary-color;
-    font-size: 12px;
-
-    &:hover {
-      text-decoration: underline;
-    }
-
-    &.danger {
-      color: @btn-danger-color;
-    }
-  }
 </style>
