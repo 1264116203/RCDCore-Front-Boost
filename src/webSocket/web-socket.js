@@ -9,9 +9,6 @@ export default class WebSocketConnection {
 
   reconnectTimerId = null
 
-  heartBeatDuration = 5000
-  heartBeatTimerId = null
-
   messageHandler = function (data) {
   }
 
@@ -37,7 +34,6 @@ export default class WebSocketConnection {
     this.websocketInstance.onopen = (event) => {
       store.commit('websocket/SET_WEB_SOCKET_STATE', true)
       store.commit('websocket/SET_WEB_SOCKET_MSG', '消息服务建立连接成功!')
-      this.heartBeatTimerId = window.setInterval(() => this.heartBeat(), this.heartBeatDuration)
     }
 
     this.websocketInstance.onmessage = (event) => {
@@ -76,10 +72,6 @@ export default class WebSocketConnection {
 
   /** 销毁WebSocket */
   destroy() {
-    if (this.heartBeatTimerId) {
-      window.clearInterval(this.heartBeatTimerId)
-      this.heartBeatTimerId = null
-    }
     if (this.websocketInstance) {
       this.websocketInstance.onclose = (event) => {
         store.commit('websocket/SET_WEB_SOCKET_STATE', false)
@@ -87,12 +79,6 @@ export default class WebSocketConnection {
       }
       this.websocketInstance.close()
       this.websocketInstance = null
-    }
-  }
-
-  heartBeat() {
-    if (this.websocketInstance && this.websocketInstance.readyState === WebSocket.OPEN) {
-      this.websocketInstance.send('HeartBeat' + new Date().getTime())
     }
   }
 }
