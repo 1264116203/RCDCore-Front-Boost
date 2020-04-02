@@ -29,8 +29,10 @@ NProgress.configure({
   showSpinner: false
 })
 
+const rcdAxios = axios.create()
+
 // HTTP request拦截
-axios.interceptors.request.use(config => {
+rcdAxios.interceptors.request.use(config => {
   NProgress.start() // start progress bar
   const meta = (config.meta || {})
   const isToken = meta.isToken === false
@@ -49,7 +51,7 @@ axios.interceptors.request.use(config => {
 })
 
 // HTTP response拦截
-axios.interceptors.response.use(res => {
+rcdAxios.interceptors.response.use(res => {
   NProgress.done()
   return res
 }, error => {
@@ -100,4 +102,4 @@ axios.interceptors.response.use(res => {
   return Promise.reject(new Error(error))
 })
 
-export default axios
+export default rcdAxios

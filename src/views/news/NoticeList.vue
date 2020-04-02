@@ -15,7 +15,7 @@
   </a-spin>
 </template>
 <script>
-import { getList } from '@/api/tool/news'
+import { listCurrentUsersNotification } from '@/api/notification/notification'
 
 export default {
   data() {
@@ -25,15 +25,16 @@ export default {
     }
   },
   created () {
-    this.fetchTableData()
+    this.fetchNotificationData()
   },
   methods: {
     /** 列表数据 */
-    fetchTableData () {
+    fetchNotificationData () {
       this.isLoading = true
-      getList()
+      listCurrentUsersNotification()
         .then(res => {
-          this.data = res.data
+          // this.data = res.data
+          console.log(res)
         })
         .catch(err => console.error(err))
         .finally(() => {

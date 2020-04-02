@@ -37,7 +37,7 @@ export default {
         },
         {
           key: 'project',
-          tab: 'project'
+          tab: '全部数据'
         }
       ],
       key: 'tab1',
