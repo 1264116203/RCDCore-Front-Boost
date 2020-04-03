@@ -9,42 +9,93 @@
       :active-tab-key="noTitleKey"
       @tabChange="key => onTabChange(key, 'noTitleKey')"
     >
-      <p v-if="noTitleKey === 'article'">
+      <p v-if="noTitleKey=== 'all'">
+        <a-spin :spinning="isLoading">
+          <a-list item-layout="vertical" size="large" :data-source="data">
+            <a-list-item slot="renderItem" key="item.title" slot-scope="item">
+              <template slot="actions">
+                <span>
+                  发送人：{{ item.senderName }}
+                </span>
+                <span>
+                  发送时间：{{ item.createTime }}
+                </span>
+              </template>
+              <div slot="extra">
+                <a-button type="primary" style="margin-right: 20px">
+                  已读
+                </a-button>
+                <a-button>去处理</a-button>
+              </div>
+              <a-list-item-meta :description="item.summary">
+                <a slot="title">{{ item.title }}</a>
+                <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+              </a-list-item-meta>
+              {{ item.payload }}
+            </a-list-item>
+          </a-list>
+        </a-spin>
+      </p>
+      <p v-else-if="noTitleKey === 'alreadyRead'">
         article content
       </p>
-      <p v-else-if="noTitleKey === 'app'">
+      <p v-else-if="noTitleKey === 'unread'">
         app content
       </p>
-      <p v-else>
-        project content
+      <p v-else-if="noTitleKey === 'send'">
+        <send />
       </p>
     </a-card>
   </div>
 </template>
 
 <script>
+import { listCurrentUsersNotification } from '@/api/notification/notification'
+import send from './send'
+
 export default {
+  components: { send },
   data() {
     return {
       tabListNoTitle: [
         {
-          key: 'article',
+          key: 'all',
+          tab: '全部数据'
+        },
+        {
+          key: 'alreadyRead',
           tab: '已读'
         },
         {
-          key: 'app',
+          key: 'unread',
           tab: '未读'
         },
         {
-          key: 'project',
-          tab: '全部数据'
+          key: 'send',
+          tab: '发送'
         }
       ],
-      key: 'tab1',
-      noTitleKey: 'app'
+      noTitleKey: 'all',
+      data: [],
+      isLoading: false
     }
   },
+  created () {
+    this.fetchListData()
+  },
   methods: {
+    /** 列表数据 */
+    fetchListData () {
+      this.isLoading = true
+      listCurrentUsersNotification()
+        .then(res => {
+          this.data = res.data
+        })
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
     onTabChange(key, type) {
       this[type] = key
     }

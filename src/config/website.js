@@ -39,5 +39,6 @@ export default {
   flowDesignUrl: 'http://localhost:9999',
   // WebSocket地址
   wsUrl: 'ws://172.25.34.83:8088/websocket/messaging',
+  // 消息网关host
   notificationGatewayHost: '172.25.34.83:8088'
 }
