@@ -3,6 +3,7 @@
     <a-list item-layout="horizontal" :data-source="data">
       <a-list-item slot="renderItem" slot-scope="item">
         <a slot="actions" @click="getDetails(item)">详情</a>
+        <a-badge :dot="!item.read" />
         <a-list-item-meta
           :description="item.summary"
         >
@@ -42,7 +43,7 @@
   </a-spin>
 </template>
 <script>
-import { listWithPagination } from '@/api/notification/notification'
+import { listWithPagination, readNotification } from '@/api/notification/notification'
 
 export default {
   data() {
@@ -55,7 +56,8 @@ export default {
       // 详情数据
       spinning: false,
       detailsData: [],
-      detailsGrantVisible: false
+      detailsGrantVisible: false,
+      id: ''
     }
   },
   created () {
@@ -77,6 +79,7 @@ export default {
     getDetails(item) {
       this.detailsGrantVisible = true
       this.spinning = true
+      this.id = item.id
       listWithPagination(0, 1, { title: item.title })
         .then(res => {
           this.detailsData = res.data.content
@@ -86,14 +89,14 @@ export default {
           this.spinning = false
         })
     },
-    cancel(item) {
+    cancel() {
       this.detailsGrantVisible = false
       // 查看详情关闭后标记已读
-      // readNotification('ff8080817139c0ad017139cefe1f0000')
-      //   .then(res => {
-      //     console.log(res)
-      //   })
-      //   .catch(err => console.error(err))
+      readNotification(this.id)
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.$message.success('消息已读!')
+        })
     }
   }
 }

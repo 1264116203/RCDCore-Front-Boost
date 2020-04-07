@@ -22,11 +22,12 @@
                 </span>
               </template>
               <div slot="extra">
-                <a-button type="primary" style="margin-right: 20px">
+                <a-button type="primary" style="margin-right: 20px" :disabled="item.read" @click="doRead(item.id)">
                   已读
                 </a-button>
                 <a-button>去处理</a-button>
               </div>
+              <a-badge :dot="!item.read" />
               <a-list-item-meta :description="item.summary">
                 <a slot="title">{{ item.title }}</a>
                 <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
@@ -50,7 +51,7 @@
 </template>
 
 <script>
-import { listCurrentUsersNotification } from '@/api/notification/notification'
+import { listCurrentUsersNotification, readNotification } from '@/api/notification/notification'
 import send from './send'
 
 export default {
@@ -98,6 +99,13 @@ export default {
     },
     onTabChange(key, type) {
       this[type] = key
+    },
+    doRead(id) {
+      readNotification(id)
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.$message.success('消息已读!')
+        })
     }
   }
 }
