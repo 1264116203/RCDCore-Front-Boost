@@ -36,6 +36,14 @@ export default {
         return this.$store.state.notification.detailsGrantVisible
       }
     },
+    showNewsDropdown: {
+      get() {
+        return this.$store.state.notification.showNewsDropdown
+      },
+      set (val) {
+        this.$store.commit('notification/SET_NEWS_DROPDOWN', val)
+      }
+    },
     detailsId: {
       get() {
         return this.$store.state.notification.detailsId
@@ -48,8 +56,10 @@ export default {
     }
   },
   watch: {
-    detailsContent: function () {
-      this.fetchNotificationData()
+    showNewsDropdown: function (val) {
+      if (val) {
+        this.fetchNotificationData()
+      }
     }
   },
   created () {

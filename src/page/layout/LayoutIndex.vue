@@ -80,9 +80,14 @@ export default {
     this.$eventBus.$on('getNewsData', this.onNewsData)
   },
   created () {
-    setInterval(() => {
-      this.$store.dispatch('notification/getCount')
-    }, 30000)
+    const that = this
+    function fetchNotificationCount() {
+      that.$store.dispatch('notification/getCount').then(() => {
+        setTimeout(fetchNotificationCount, 30 * 1000)
+      })
+    }
+
+    fetchNotificationCount()
   },
   methods: {
     onNewsData(data) {

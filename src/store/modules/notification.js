@@ -1,4 +1,3 @@
-import { setStore, getStore } from '@/util/browser-storage'
 import { getNotificationCount, getDetailsNotification } from '@/api/notification/notification'
 import moment from 'moment'
 
@@ -8,7 +7,7 @@ export default {
     // 是否显示消息组件
     showNewsDropdown: false,
     // 消息总数
-    newsTotal: getStore('newsTotal') || '',
+    newsTotal: 0,
     // 是否显示详细信息组件
     detailsGrantVisible: false,
     // 详细信息ID
@@ -44,7 +43,6 @@ export default {
     },
     SET_NEWS_TOTAL: (state, newsTotal) => {
       state.newsTotal = newsTotal
-      setStore('newsTotal', state.newsTotal)
     },
     SET_DETAILS_GRANT_VISIBLE: (state, detailsGrantVisible) => {
       state.detailsGrantVisible = detailsGrantVisible
@@ -54,7 +52,6 @@ export default {
     },
     SET_DETAILS_CONTENT: (state, detailsContent) => {
       state.detailsContent = detailsContent
-      setStore('detailsContent', state.detailsContent)
     }
   }
 }
