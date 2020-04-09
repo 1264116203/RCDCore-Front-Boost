@@ -20,11 +20,11 @@
       <a-form-item label="消息类型">
         <a-input v-model="searchInfo.type" placeholder="消息类型" />
       </a-form-item>
-      <a-form-item label="开始时间" has-feedback validate-status="timeStart">
-        <a-input id="timeStart" placeholder="请选择开始时间" />
+      <a-form-item label="开始时间">
+        <a-date-picker v-model="searchInfo.timeStart" placeholder="请选择开始时间" />
       </a-form-item>
-      <a-form-item label="结束时间" has-feedback validate-status="timeEnd">
-        <a-input id="timeEnd" placeholder="请选择结束时间" />
+      <a-form-item label="结束时间">
+        <a-date-picker v-model="searchInfo.timeEnd" placeholder="请选择结束时间" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="onSearch">
@@ -120,8 +120,8 @@ export default {
         read: '',
         title: '',
         type: '',
-        timeStart: '',
-        timeEnd: ''
+        timeStart: null,
+        timeEnd: null
       }
     }
   },
@@ -144,7 +144,16 @@ export default {
     /** 表格数据 */
     fetchNotificationData () {
       this.isLoading = true
-      listWithPagination(this.page, this.size, this.searchInfo)
+
+      const searchInfo = {
+        ...this.searchInfo,
+        timeStart: this.searchInfo.timeStart ? this.searchInfo.timeStart.valueOf() : null,
+        timeEnd: this.searchInfo.timeEnd ? this.searchInfo.timeEnd.valueOf() : null,
+
+        sort: ['createTime,desc']
+      }
+
+      listWithPagination(this.page, this.size, searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
           /** 转换为时间格式 */
@@ -172,8 +181,8 @@ export default {
         read: '',
         title: '',
         type: '',
-        timeStart: '',
-        timeEnd: ''
+        timeStart: null,
+        timeEnd: null
       }
       this.fetchTableData()
     },

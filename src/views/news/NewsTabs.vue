@@ -19,9 +19,9 @@
         </span>
         <backlog-list />
       </a-tab-pane>
-      <a-button slot="tabBarExtraContent" type="link" @click="closeTab">
-        <a-icon type="close" />
-      </a-button>
+      <!--      <a-button slot="tabBarExtraContent" type="link" @click="closeTab">-->
+      <!--        <a-icon type="close" />-->
+      <!--      </a-button>-->
     </a-tabs>
     <div class="news-list-footer">
       <div class="news-list-btn news-list-btn-border">

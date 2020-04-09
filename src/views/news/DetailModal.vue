@@ -3,10 +3,7 @@
     v-model="modelVisible"
     title="信息详情"
     :mask-closable="false"
-    ok-text="去处理"
-    cancel-text="已读"
     @cancel="cancel"
-    @ok="doHandleNotice"
   >
     <a-spin :spinning="spinning">
       <a-list item-layout="vertical" size="large" :data-source="detailsData">
@@ -29,6 +26,12 @@
         </a-list-item>
       </a-list>
     </a-spin>
+
+    <template slot="footer">
+      <a-button key="submit" type="primary" @click="doHandleNotice">
+        去处理
+      </a-button>
+    </template>
   </a-modal>
 </template>
 

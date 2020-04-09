@@ -49,7 +49,7 @@ export default {
     /** 列表数据 */
     fetchNotificationData () {
       this.isLoading = true
-      listWithPagination(this.page, this.size, { read: false })
+      listWithPagination(this.page, this.size, { sort: ['read', 'createTime,desc'] })
         .then(res => {
           this.data = res.data.content
           /** 转换为时间格式 */
