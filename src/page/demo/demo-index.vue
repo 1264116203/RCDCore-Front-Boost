@@ -13,7 +13,7 @@
           </router-link>
         </a-menu-item>
         <a-menu-item>
-          <router-link to="/demo/horizontalForm">
+          <router-link to="/demo/horizontal-form">
             纵向表单示例
           </router-link>
         </a-menu-item>

@@ -40,6 +40,16 @@ export default {
       get() {
         return this.$store.state.notification.detailsId
       }
+    },
+    detailsContent: {
+      get() {
+        return this.$store.state.notification.detailsContent
+      }
+    }
+  },
+  watch: {
+    detailsContent: function () {
+      this.fetchNotificationData()
     }
   },
   created () {

@@ -1,5 +1,6 @@
 import { setStore, getStore } from '@/util/browser-storage'
-import { getNotificationCount } from '@/api/notification/notification'
+import { getNotificationCount, getDetailsNotification } from '@/api/notification/notification'
+import moment from 'moment'
 
 export default {
   namespaced: true,
@@ -11,13 +12,28 @@ export default {
     // 是否显示详细信息组件
     detailsGrantVisible: false,
     // 详细信息ID
-    detailsId: ''
+    detailsId: '',
+    // 详细信息内容
+    detailsContent: []
   },
   actions: {
     getCount({ commit }) {
       return getNotificationCount({ read: false })
         .then(res => {
           commit('SET_NEWS_TOTAL', res.data)
+        })
+        .catch(err => console.error(err))
+    },
+    getDetailsContent({ state, commit }) {
+      return getDetailsNotification(state.detailsId)
+        .then(res => {
+          let detailsData = []
+          detailsData.push(res.data)
+          /** 转换为时间格式 */
+          detailsData.map(item => {
+            item.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+          })
+          commit('SET_DETAILS_CONTENT', detailsData)
         })
         .catch(err => console.error(err))
     }
@@ -35,6 +51,10 @@ export default {
     },
     SET_DETAILS_ID: (state, detailsId) => {
       state.detailsId = detailsId
+    },
+    SET_DETAILS_CONTENT: (state, detailsContent) => {
+      state.detailsContent = detailsContent
+      setStore('detailsContent', state.detailsContent)
     }
   }
 }

@@ -184,7 +184,7 @@ export default {
         timeStart: null,
         timeEnd: null
       }
-      this.fetchTableData()
+      this.fetchNotificationData()
     },
     /** 批量已读 */
     handleBatchRead() {

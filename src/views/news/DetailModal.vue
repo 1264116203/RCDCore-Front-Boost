@@ -6,7 +6,7 @@
     @cancel="cancel"
   >
     <a-spin :spinning="spinning">
-      <a-list item-layout="vertical" size="large" :data-source="detailsData">
+      <a-list item-layout="vertical" size="large" :data-source="detailsContent">
         <a-list-item slot="renderItem" key="item.title" slot-scope="item">
           <template slot="actions">
             <span>
@@ -16,7 +16,7 @@
               发送时间：{{ item.createTime }}
             </span>
           </template>
-          <a-list-item-meta :description="item.summary">
+          <a-list-item-meta>
             <a slot="title">{{ item.title }}</a>
             <a-avatar slot="avatar" style="backgroundColor:#87d068">
               <a-icon slot="icon" type="mail" />
@@ -36,22 +36,26 @@
 </template>
 
 <script>
-import { readNotification, getDetailsNotification } from '@/api/notification/notification'
-import moment from 'moment'
+import { readNotification } from '@/api/notification/notification'
 
 export default {
-  props: {
-    id: {
-      type: String,
-      default: ''
-    }
-  },
   data: function() {
     return {
       // 详情数据
       spinning: false,
-      detailsData: [],
       modelVisible: false
+    }
+  },
+  computed: {
+    detailsContent: {
+      get() {
+        return this.$store.state.notification.detailsContent
+      }
+    },
+    detailsId: {
+      get() {
+        return this.$store.state.notification.detailsId
+      }
     }
   },
   created() {
@@ -60,31 +64,21 @@ export default {
   },
   methods: {
     getDetails() {
-      this.detailsData = []
       this.detailsGrantVisible = true
       this.spinning = true
-      getDetailsNotification(this.id)
-        .then(res => {
-          this.detailsData.push(res.data)
-          /** 转换为时间格式 */
-          this.detailsData.map(item => {
-            item.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')
-          })
-          console.log(this.detailsData)
-        })
-        .catch(err => console.error(err))
+      this.$store.dispatch('notification/getDetailsContent')
         .finally(() => {
           this.spinning = false
         })
     },
     doHandleNotice() {
-      console.log(this.id)
+      console.log(this.detailsId)
     },
     cancel() {
       this.modelVisible = false
       this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', false)
       // 查看详情关闭后标记已读
-      readNotification(this.id)
+      readNotification(this.detailsId)
         .then(() => {
           this.$store.dispatch('notification/getCount')
         })

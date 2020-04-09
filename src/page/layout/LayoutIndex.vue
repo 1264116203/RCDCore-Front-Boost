@@ -28,7 +28,7 @@
       </a-layout-content>
       <layout-footer v-if="showFooter" />
     </a-layout>
-    <detail-modal v-if="detailsGrantVisible" :id="detailsId" />
+    <detail-modal v-if="detailsGrantVisible" />
   </a-layout>
 </template>
 
@@ -74,11 +74,6 @@ export default {
       get() {
         return this.$store.state.notification.detailsGrantVisible
       }
-    },
-    detailsId: {
-      get() {
-        return this.$store.state.notification.detailsId
-      }
     }
   },
   mounted() {
@@ -92,9 +87,12 @@ export default {
   methods: {
     onNewsData(data) {
       let obj = JSON.parse(data)
-      this.$store.dispatch('notification/getCount')
-      this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', true)
-      this.$store.commit('notification/SET_DETAILS_ID', obj.payload.id)
+      if (obj.messageType === 'pushing_notification') {
+        this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', true)
+        this.$store.dispatch('notification/getCount')
+        this.$store.commit('notification/SET_DETAILS_ID', obj.payload.id)
+        this.$store.dispatch('notification/getDetailsContent')
+      }
     }
   }
 }

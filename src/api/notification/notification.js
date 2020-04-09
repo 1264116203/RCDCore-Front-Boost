@@ -1,11 +1,4 @@
 import noticeAxios from './noticeAxios'
-// const store = () => import('@/store')
-
-// const noticeAxios = axios.create({
-//   baseURL: 'http://' + website.notificationGatewayHost + '/message',
-//   timeout: 10000,
-//   headers: { 'Authorization': store.getters.token }
-// })
 
 /** 标记消息通知的状态为已完成 */
 export const completeNotification = (id) => {

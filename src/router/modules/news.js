@@ -1,14 +1,14 @@
 const news = [
   {
-    path: '/news/NoticeTable',
-    name: '公告',
+    path: '/news/notice',
+    name: '通知公告',
     meta: {
       isTab: true,
       isAuth: true
     },
     component: () => import(/* webpackChunkName: "news" */ '@/views/news/NoticeTable.vue')
   }, {
-    path: '/news/sendNotice',
+    path: '/news/send-notice',
     name: '测试消息发送',
     meta: {
       isTab: true,

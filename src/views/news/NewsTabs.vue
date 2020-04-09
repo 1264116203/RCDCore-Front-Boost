@@ -24,9 +24,6 @@
       <!--      </a-button>-->
     </a-tabs>
     <div class="news-list-footer">
-      <div class="news-list-btn news-list-btn-border">
-        清空 {{ title[activeKey] }}
-      </div>
       <div class="news-list-btn" @click="goMorelist">
         查看更多
       </div>
@@ -60,7 +57,7 @@ export default {
     goMorelist() {
       this.$store.commit('notification/SET_NEWS_DROPDOWN', false)
       this.navTo({
-        path: '/news/NoticeTable'
+        path: '/news/notice'
       })
     },
     closeTab() {
