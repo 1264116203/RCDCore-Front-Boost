@@ -44,9 +44,9 @@
         </a-tooltip>
       </div>
       <div>
-        <a-dropdown :trigger="['click']">
-          <a-button type="link" class="right-button" disabled="false">
-            <a-badge dot>
+        <a-dropdown :visible="showNewsDropdown">
+          <a-button type="link" class="right-button" @click="changeMenu">
+            <a-badge :count="newsTotal" :offset="[&quot;0&quot;,&quot;-7&quot;]">
               <a-icon type="mail" />
             </a-badge>
           </a-button>
@@ -113,6 +113,16 @@ export default {
       get() {
         return this.$store.state.websocket.webSocketMsg
       }
+    },
+    showNewsDropdown: {
+      get() {
+        return this.$store.state.notification.showNewsDropdown
+      }
+    },
+    newsTotal: {
+      get() {
+        return this.$store.state.notification.newsTotal
+      }
     }
   },
   mounted() {
@@ -157,6 +167,9 @@ export default {
           isTab: true
         }
       })
+    },
+    changeMenu() {
+      this.$store.commit('notification/SET_NEWS_DROPDOWN', !this.showNewsDropdown)
     }
   }
 }

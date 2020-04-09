@@ -21,10 +21,10 @@
     </a-form-model-item>
     <a-form-model-item label="接收者">
       <a-checkbox-group v-model="form.receivers">
-        <a-checkbox value="1" name="type">
+        <a-checkbox value="1123598821738675201" name="type">
           张三
         </a-checkbox>
-        <a-checkbox value="2" name="type">
+        <a-checkbox value="1123598821738675202" name="type">
           李四
         </a-checkbox>
       </a-checkbox-group>

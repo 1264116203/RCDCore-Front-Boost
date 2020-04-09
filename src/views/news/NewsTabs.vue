@@ -19,6 +19,9 @@
         </span>
         <backlog-list />
       </a-tab-pane>
+      <a-button slot="tabBarExtraContent" type="link" @click="closeTab">
+        <a-icon type="close" />
+      </a-button>
     </a-tabs>
     <div class="news-list-footer">
       <div class="news-list-btn news-list-btn-border">
@@ -55,9 +58,13 @@ export default {
       this.activeKey = activeKey
     },
     goMorelist() {
+      this.$store.commit('notification/SET_NEWS_DROPDOWN', false)
       this.navTo({
-        path: '/news/notice'
+        path: '/news/NoticeTable'
       })
+    },
+    closeTab() {
+      this.$store.commit('notification/SET_NEWS_DROPDOWN', false)
     }
   }
 

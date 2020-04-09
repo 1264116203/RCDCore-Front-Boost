@@ -10,6 +10,7 @@ import dept from './modules/dept'
 import role from './modules/role'
 import resource from './modules/resource'
 import websocket from './modules/websocket'
+import notification from './modules/notification'
 import getters from '../store/getters'
 
 Vue.use(Vuex)
@@ -24,7 +25,8 @@ const store = new Vuex.Store({
     dept,
     role,
     resource,
-    websocket
+    websocket,
+    notification
   },
   getters
 })

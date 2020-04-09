@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import WebSocketConnection from '@/webSocket/web-socket'
 import website from '@/config/website'
-// import store from '@/store'
+import store from '@/store'
 
 const bus = new Vue()
 Vue.prototype.$eventBus = bus
@@ -13,8 +13,7 @@ export function initConnection () {
   if (sconn == null) {
     sconn = new WebSocketConnection({
       url: wsUrl,
-      token: 'abc',
-      // token: store.getters.token,
+      token: store.getters.token,
       messageHandler: (data) => {
         bus.$emit('getNewsData', data)
       }

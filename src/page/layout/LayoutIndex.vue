@@ -28,6 +28,7 @@
       </a-layout-content>
       <layout-footer v-if="showFooter" />
     </a-layout>
+    <detail-modal v-if="detailsGrantVisible" :id="detailsId" />
   </a-layout>
 </template>
 
@@ -39,10 +40,11 @@ import TopLogo from '@/page/layout/side-menu/TopLogo'
 import Tabs from '@/page/layout/tabs/Tabs'
 import { mapState } from 'vuex'
 import IframeComponents from '@/components/iframe/Iframe'
+import DetailModal from '@/views/news/DetailModal.vue'
 
 export default {
   name: 'LayoutIndex',
-  components: { TopLogo, TopBanner, SideMenu, LayoutFooter, Tabs, IframeComponents },
+  components: { TopLogo, TopBanner, SideMenu, LayoutFooter, Tabs, IframeComponents, DetailModal },
   computed: {
     ...mapState('common', ['showFooter']),
     isIframeShow: {
@@ -62,6 +64,37 @@ export default {
           this.$store.commit('common/TOGGLE_COLLAPSE')
         }
       }
+    },
+    newsTotal: {
+      get() {
+        return this.$store.state.notification.newsTotal
+      }
+    },
+    detailsGrantVisible: {
+      get() {
+        return this.$store.state.notification.detailsGrantVisible
+      }
+    },
+    detailsId: {
+      get() {
+        return this.$store.state.notification.detailsId
+      }
+    }
+  },
+  mounted() {
+    this.$eventBus.$on('getNewsData', this.onNewsData)
+  },
+  created () {
+    setInterval(() => {
+      this.$store.dispatch('notification/getCount')
+    }, 30000)
+  },
+  methods: {
+    onNewsData(data) {
+      let obj = JSON.parse(data)
+      this.$store.dispatch('notification/getCount')
+      this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', true)
+      this.$store.commit('notification/SET_DETAILS_ID', obj.payload.id)
     }
   }
 }
