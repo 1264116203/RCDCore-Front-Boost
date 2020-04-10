@@ -6,13 +6,13 @@ import store from '@/store'
 const bus = new Vue()
 Vue.prototype.$eventBus = bus
 
-let sconn = null
-const { wsUrl } = website
+let wsConn = null
+const { notificationGatewayHost } = website
 
 export function initConnection () {
-  if (sconn == null) {
-    sconn = new WebSocketConnection({
-      url: wsUrl,
+  if (wsConn == null) {
+    wsConn = new WebSocketConnection({
+      url: `ws://${notificationGatewayHost}/websocket/messaging`,
       token: store.getters.token,
       messageHandler: (data) => {
         bus.$emit('getNewsData', data)
@@ -21,10 +21,10 @@ export function initConnection () {
   }
 }
 
-export function beforeDestory () {
-  if (sconn) {
-    sconn.destroy()
-    sconn = null
+export function beforeDestroy () {
+  if (wsConn) {
+    wsConn.destroy()
+    wsConn = null
   }
 }
 
