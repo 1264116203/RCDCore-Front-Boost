@@ -45,7 +45,7 @@
       </div>
       <div>
         <a-dropdown v-model="showNewsDropdown">
-          <a-button type="link" class="right-button" @click="changeMenu">
+          <a-button type="link" class="right-button">
             <a-badge :count="newsTotal" :offset="[0, -7]">
               <a-icon type="mail" />
             </a-badge>
@@ -170,9 +170,6 @@ export default {
           isTab: true
         }
       })
-    },
-    changeMenu() {
-      this.$store.commit('notification/SET_NEWS_DROPDOWN', !this.showNewsDropdown)
     }
   }
 }

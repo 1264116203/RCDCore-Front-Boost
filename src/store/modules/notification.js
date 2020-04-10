@@ -19,7 +19,9 @@ export default {
     getCount({ commit }) {
       return getNotificationCount({ read: false })
         .then(res => {
-          commit('SET_NEWS_TOTAL', res.data)
+          if (res.data) {
+            commit('SET_NEWS_TOTAL', res.data)
+          }
         })
         .catch(err => console.error(err))
     },
