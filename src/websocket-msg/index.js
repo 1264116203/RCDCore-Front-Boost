@@ -1,32 +1,25 @@
 import store from '@/store'
 export default class WebSocketConnection {
-  websocketInstance = null
-
-  url = null
-  token = null
-
-  lockReconnect = false
-
-  reconnectTimerId = null
-
-  messageHandler = function (data) {
-  }
-
   constructor(option) {
+    this.websocketInstance = null
+
     this.url = option.url
     this.token = option.token
 
-    this.messageHandler = option.messageHandler
+    this.reconnectTimerId = null
+    this.lockReconnect = false
+
+    this.messageHandler = option.messageHandler ? option.messageHandler : function (data) {}
 
     this.establishConnection()
   }
 
   establishConnection() {
     try {
-      const wsurl = `${this.url}?token=${this.token}`
+      const wsUrl = `${this.url}?token=${this.token}`
       store.commit('websocket/SET_WEB_SOCKET_STATE', false)
       store.commit('websocket/SET_WEB_SOCKET_MSG', '正在连接消息服务...')
-      this.websocketInstance = new WebSocket(wsurl)
+      this.websocketInstance = new WebSocket(wsUrl)
     } catch (e) {
       this.reconnect()
     }
