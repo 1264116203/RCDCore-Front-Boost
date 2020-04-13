@@ -28,4 +28,10 @@ export function beforeDestroy () {
   }
 }
 
+export function beforeReceipt () {
+  if (wsConn) {
+    wsConn.receiptMessage()
+  }
+}
+
 export default bus
