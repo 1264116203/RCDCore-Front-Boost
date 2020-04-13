@@ -57,7 +57,7 @@
       </div>
 
       <div>
-        <a-tooltip>
+        <a-tooltip placement="bottom">
           <template slot="title">
             {{ webSocketMsg }}
           </template>

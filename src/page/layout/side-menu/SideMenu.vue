@@ -67,7 +67,7 @@ export default {
             path: '/myiframe/urlPath',
             meta: menuItem.meta,
             query: {
-              name: menuItem.name,
+              tabName: menuItem.name,
               src: menuItem.path
             },
             params: menuItem.params
