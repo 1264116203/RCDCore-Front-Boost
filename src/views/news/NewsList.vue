@@ -23,17 +23,6 @@ export default {
       data: [],
       isLoading: false
     }
-  },
-  mounted() {
-    this.$eventBus.$on('getNewsData', this.onNewsData)
-  },
-  destroyed() {
-    this.$eventBus.$off('getNewsData', this.onNewsData)
-  },
-  methods: {
-    onNewsData(data) {
-      this.$message.info(data)
-    }
   }
 }
 </script>

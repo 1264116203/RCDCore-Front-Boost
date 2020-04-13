@@ -41,6 +41,7 @@ import Tabs from '@/page/layout/tabs/Tabs'
 import { mapState } from 'vuex'
 import IframeComponents from '@/components/iframe/Iframe'
 import DetailModal from '@/views/news/DetailModal.vue'
+import { handle as handleWsMessage } from '@/websocket-msg/callback-router'
 
 export default {
   name: 'LayoutIndex',
@@ -77,7 +78,7 @@ export default {
     }
   },
   mounted() {
-    this.$eventBus.$on('getNewsData', this.onNewsData)
+    this.$wsEventBus.$on('messageComes', this.onWsMessageComes)
   },
   created () {
     const that = this
@@ -89,14 +90,19 @@ export default {
 
     fetchNotificationCount()
   },
+  destroyed() {
+    this.$wsEventBus.$off('messageComes', this.onWsMessageComes)
+  },
   methods: {
-    onNewsData(data) {
-      let obj = JSON.parse(data)
-      if (obj.messageType === 'pushing_notification') {
-        this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', true)
-        this.$store.dispatch('notification/getCount')
-        this.$store.commit('notification/SET_DETAILS_ID', obj.payload.id)
-        this.$store.dispatch('notification/getDetailsContent')
+    onWsMessageComes(data) {
+      try {
+        let obj = JSON.parse(data)
+        handleWsMessage(obj)
+      } catch (e) {
+        this.$notification.error({
+          message: '处理收到的WS消息时发生了异常！'
+        })
+        console.error(e)
       }
     }
   }

@@ -4,7 +4,7 @@ import { deepClone } from '@/util/util'
 import website from '@/config/website'
 import { login, getUserInfo, logout, refreshToken, listCurrentUserButtons } from '@/api/common'
 import { getTopMenu, listCurrentUserMenuWithTree } from '@/api/system/menu'
-import { initConnection, beforeDestroy } from '@/util/eventBus.js'
+import { initConnection, beforeDestroy } from '@/websocket-msg/event-bus.js'
 
 function addPath(ele, first = false) {
   // 设置图标，如果不存在则使用默认图标

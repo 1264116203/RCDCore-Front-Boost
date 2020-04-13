@@ -2,7 +2,7 @@
   <a-spin :tip="tip" size="large">
     <div class="fullscreen"></div>
     <template slot="indicator">
-      <a-icon v-if="!gotError" type="loading" style="font-size: 24px" spin />
+      <a-icon v-if="!gotError" type="loading" style="font-size: 24px" :spin="true" />
       <a-icon v-else type="info-circle" style="font-size: 24px" />
     </template>
   </a-spin>
@@ -10,7 +10,7 @@
 
 <script>
 import { checkAuthenticate } from '@/api/common'
-import { initConnection } from '@/util/eventBus.js'
+import { initConnection } from '@/websocket-msg/event-bus'
 
 export default {
   name: 'InitialPage',
