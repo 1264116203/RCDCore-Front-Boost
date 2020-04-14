@@ -28,9 +28,9 @@ export function beforeDestroy () {
   }
 }
 
-export function beforeReceipt () {
+export function beforeReceipt (obj) {
   if (wsConn) {
-    wsConn.receiptMessage()
+    wsConn.receiptMessage(obj)
   }
 }
 

@@ -76,7 +76,7 @@ export default class WebSocketConnection {
   }
 
   /** 消息回执 */
-  receiptMessage() {
-    this.websocketInstance.send('浏览器收到消息')
+  receiptMessage(obj) {
+    this.websocketInstance.send(obj)
   }
 }

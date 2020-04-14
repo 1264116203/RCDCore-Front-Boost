@@ -6,5 +6,10 @@ export default function (obj) {
   store.commit('notification/SET_DETAILS_ID', obj.payload.id)
   store.dispatch('notification/getCount')
   store.dispatch('notification/getDetailsContent')
-  beforeReceipt()
+  let receiptContent = {
+    'messageType': 'notification_receipt',
+    'contentType': 'json',
+    'payload': store.state.notification.detailsId
+  }
+  beforeReceipt(JSON.stringify(receiptContent))
 }
