@@ -37,7 +37,7 @@ router.beforeEach((to, from, next) => {
   }
 
   const value = to.query.src || to.fullPath
-  const label = to.query.name || to.name
+  const label = to.query.tabName || to.name
   // 如果路由meta信息中isTab不为false，则将其加入标签页中
   if (meta.isTab && !validateNull(value) && !validateNull(label)) {
     store.commit('tabs/SWITCH_TAB', {
