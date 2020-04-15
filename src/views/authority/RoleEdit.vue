@@ -23,7 +23,10 @@
 
         <a-form-item label="角色别名">
           <a-input
-            v-decorator="['roleAlias', { rules: [{ required: true, message: '请输入角色别名' }] }]"
+            v-decorator="['roleAlias', { rules: [
+              { required: true, message: '请输入角色别名' },
+              { pattern:/^[a-zA-Z]{5,10}$/, message: '只能是5-10个英文字符' }
+            ] }]"
             placeholder="请输入角色别名"
             :disabled="isDisable"
           />

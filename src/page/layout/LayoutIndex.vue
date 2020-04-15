@@ -84,7 +84,9 @@ export default {
     const that = this
     function fetchNotificationCount() {
       that.$store.dispatch('notification/getCount').then(() => {
-        setTimeout(fetchNotificationCount, 30 * 1000)
+        if (!window.notificationCountTimer) {
+          window.notificationCountTimer = setTimeout(fetchNotificationCount, 30 * 1000)
+        }
       })
     }
 

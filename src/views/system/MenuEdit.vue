@@ -24,7 +24,7 @@
 
           <a-form-item label="路由地址">
             <a-input
-              v-decorator="['path', { rules: [{ required: true, message: '请输入路由地址' }] }]"
+              v-decorator="['path']"
               placeholder="请输入路由地址"
               :disabled="isDisable"
             />
@@ -46,7 +46,10 @@
 
           <a-form-item label="菜单别名">
             <a-input
-              v-decorator="['alias',{ rules: [{required: true,message: '请输入菜单别名'}] }]"
+              v-decorator="['alias',{ rules: [
+                {required: true,message: '请输入菜单别名'},
+                { pattern:/^[a-zA-Z]{5,10}$/, message: '只能是5-10个英文字符' }
+              ] }]"
               placeholder="请输入菜单别名"
               :disabled="isDisable"
             />

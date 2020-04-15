@@ -31,6 +31,9 @@ export default {
     },
     lastPageBeforeLogin () {
       return this.$store.state.user.lastPageBeforeLogin
+    },
+    token () {
+      return this.$store.state.user.token
     }
   },
   created () {
@@ -42,6 +45,9 @@ export default {
           this.$router.push('/login')
         } else {
           this.authenticated = 'yes'
+          if (!this.token) {
+            this.$store.commit('user/SET_TOKEN', response.data)
+          }
           if (this.lastPageBeforeLogin) {
             // 初始webSocket连接
             initConnection()
