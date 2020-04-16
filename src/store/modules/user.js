@@ -35,6 +35,8 @@ const user = {
     roleList: [],
     // 菜单列表
     menuList: getStore('menuList') || [],
+    // 当前选中的顶部菜单ID
+    currentMenuId: getStore('currentMenuId') || '',
     // 令牌
     token: getStore('token') || '',
     // 刷新令牌
@@ -160,6 +162,10 @@ const user = {
     SET_MENU_LIST: (state, list) => {
       state.menuList = list
       setStore('menuList', state.menuList)
+    },
+    SET_CURRENT_MENU_ID: (state, val) => {
+      state.currentMenuId = val
+      setStore('currentMenuId', state.currentMenuId)
     },
     SET_ROLE_LIST: (state, roles) => {
       state.roleList = roles

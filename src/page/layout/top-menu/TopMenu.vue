@@ -19,6 +19,13 @@ export default {
       showTopMenu: true
     }
   },
+  computed: {
+    currentMenuId: {
+      get() {
+        return this.$store.state.user.currentMenuId
+      }
+    }
+  },
   created() {
     TopMenulist().then(res => {
       this.topMenuList = res.data
@@ -31,7 +38,12 @@ export default {
         this.showTopMenu = false
       } else {
         this.showTopMenu = true
-        let firstId = this.topMenuList[0].id
+        let firstId = ''
+        if (this.currentMenuId) {
+          firstId = this.currentMenuId
+        } else {
+          firstId = this.topMenuList[0].id
+        }
         this.current.push(firstId)
         listCurrentUserMenuWithTree(firstId).then(res => {
           this.$store.commit('user/SET_MENU_LIST', res.data)
@@ -41,6 +53,7 @@ export default {
   },
   methods: {
     onClick(item) {
+      this.$store.commit('user/SET_CURRENT_MENU_ID', item.key)
       listCurrentUserMenuWithTree(item.key).then(res => {
         this.$store.commit('user/SET_MENU_LIST', res.data)
       })
