@@ -28,13 +28,7 @@ export const getUserInfo = () => axios.get('/api/user/selfInfo')
 
 export const sendLogs = (list) => axios.post('/api/user/logout', list)
 
-// TODO 这里的请求是假的，是Mock的，事实上压根没有退出登录请求发出
-export const logout = () => Promise.resolve()
-
-// export const logout = () => request({
-//   url: baseUrl + '/user/logout',
-//   method: 'get'
-// })
+export const logout = () => axios.post('/api/current-user/logout')
 
 export const updatePassword = (oldPassword, newPassword) => {
   return axios.put('/api/user/update-password', {

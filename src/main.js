@@ -14,7 +14,7 @@ import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
 
 // mock
-import '@/mockApi/news/news-mock.js'
+import '@/mock-api/news/news-mock.js'
 import { NoHalfTree } from '@/components/rcore'
 
 Vue.use(contentmenu)
