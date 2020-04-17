@@ -71,7 +71,7 @@ rcdAxios.interceptors.response.use(res => {
   // 如果是401则跳转到登录页面
   if (status === 401) {
     // 只有在token换取机制也失效后，再跳到登录页
-    if (res.data === 'invalid refresh token') {
+    if (res.data && res.data.refreshToken === 'invalid refresh token') {
       return store.dispatch('user/logout')
         .then(() => router.push({ path: '/login' }))
     } else {

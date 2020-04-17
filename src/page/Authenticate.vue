@@ -40,18 +40,19 @@ export default {
   created () {
     const doCheck = () => {
       return checkAuthenticate()
-        .then((response) => {
-          const status = response.status
+        .then((res) => {
+          const status = res.status
           if (status === 401) {
-            if (response.data !== 'invalid refresh token') {
+            if (res.data && res.data.refreshToken !== 'invalid refresh token') {
               return store.dispatch('user/refreshToken').then(doCheck)
+            } else {
+              this.authenticated = 'no'
+              this.$router.push('/login')
             }
-            this.authenticated = 'no'
-            this.$router.push('/login')
           } else {
             this.authenticated = 'yes'
             if (!this.token) {
-              this.$store.commit('user/SET_TOKEN', response.data)
+              this.$store.commit('user/SET_TOKEN', res.data)
             }
             if (this.lastPageBeforeLogin) {
               this.$router.push(this.lastPageBeforeLogin)
