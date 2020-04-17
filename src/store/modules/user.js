@@ -2,7 +2,7 @@ import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
 import { deepClone } from '@/util/util'
 import website from '@/config/website'
-import { login, getUserInfo, logout, refreshToken, listCurrentUserButtons } from '@/api/common'
+import { login, getUserInfo, logout, refreshToken as requestRefreshToken, listCurrentUserButtons } from '@/api/common'
 import { getTopMenu, listCurrentUserMenuWithTree } from '@/api/system/menu'
 import { initConnection, beforeDestroy } from '@/websocket-msg/event-bus.js'
 
@@ -57,8 +57,9 @@ const user = {
           } else {
             // commit('SET_TOKEN', data.access_token)
             commit('SET_TOKEN', data.token)
-            // commit('SET_REFRESH_TOKEN', data.refresh_token)
-            // commit('SET_TENANT_ID', data.tenant_id)
+            commit('SET_REFRESH_TOKEN', data.refreshToken)
+            delete data.token
+            delete data.refreshToken
             commit('SET_USER_INFO', data)
             commit('SET_AUTHENTICATED', 'yes')
             commit('tabs/CLOSE_ALL', null, { root: true })
@@ -92,11 +93,10 @@ const user = {
     },
     // 刷新token
     refreshToken({ state, commit }) {
-      console.log('handle refresh token')
-      return refreshToken(state.refreshToken, state.tenantId).then(res => {
+      return requestRefreshToken(state.refreshToken).then(res => {
         const data = res.data
-        commit('SET_TOKEN', data.access_token)
-        commit('SET_REFRESH_TOKEN', data.refresh_token)
+        commit('SET_TOKEN', data.token)
+        commit('SET_REFRESH_TOKEN', data.refreshToken)
       })
     },
     // 登出

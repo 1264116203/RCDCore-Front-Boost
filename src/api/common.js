@@ -10,17 +10,9 @@ export const checkAuthenticate = () => axios.get('/api/login-status/check', {
   }
 })
 
-export const refreshToken = (refreshToken, tenantId) => axios.post('/api/blade-auth/oauth/token', {
-  headers: {
-    'Tenant-Id': tenantId
-  },
-  params: {
-    tenantId,
-    refresh_token: refreshToken,
-    grant_type: 'refresh_token',
-    scope: 'all'
-  }
-})
+export const refreshToken = (refreshToken) => (
+  axios.post('/api/authenticate/refresh-token', { refreshToken })
+)
 
 export const listCurrentUserButtons = () => axios.get('/api/authority/current-user/buttons')
 

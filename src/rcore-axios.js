@@ -15,6 +15,7 @@ import router from '@/router'
 import { serialize } from '@/util/util'
 import { getCsrfToken, getToken } from '@/util/auth'
 import { baseUrl } from '@/config/env'
+import { getMessageFromHttpStatusCode } from '@/util/http-status-message'
 
 axios.defaults.timeout = 10000
 // 返回其他状态码
@@ -69,37 +70,23 @@ rcdAxios.interceptors.response.use(res => {
 
   // 如果是401则跳转到登录页面
   if (status === 401) {
-    store.dispatch('user/clearAllAuthInfos')
-      .then(() => router.push({ path: '/login' }))
+    // 只有在token换取机制也失效后，再跳到登录页
+    if (res.data === 'invalid refresh token') {
+      return store.dispatch('user/logout')
+        .then(() => router.push({ path: '/login' }))
+    } else {
+      return store.dispatch('user/refreshToken').then(() => {
+        return rcdAxios.request(res.config)
+      })
+    }
   }
 
   if (!message) {
-    switch (status) {
-      case 400:
-        message = '请求参数有误。'
-        break
-      case 401:
-        message = '令牌已失效，请重新登录。'
-        break
-      case 403:
-        message = '请求被拒绝，请检查用户权限。'
-        break
-      case 404:
-        message = '要访问的记录不存在或服务器变更了请求路径。'
-        break
-      case 405:
-        message = '请求方法不正确。'
-        break
-      case 500:
-        message = '服务器内部错误。'
-        break
-      default:
-        message = '请求异常，但服务器未给出错误信息。'
-    }
+    message = getMessageFromHttpStatusCode(status)
   }
   // 如果请求为非200则默认统一处理
   if (status !== 200) {
-    Vue.prototype.$message.error(message)
+    Vue.prototype.$message.error({ content: message, key: 'error_message' })
     return Promise.reject(new Error(message))
   }
   return Promise.reject(new Error(error))

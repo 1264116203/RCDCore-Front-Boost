@@ -11,6 +11,7 @@
 <script>
 import { checkAuthenticate } from '@/api/common'
 import { initConnection } from '@/websocket-msg/event-bus'
+import store from '@/store'
 
 export default {
   name: 'InitialPage',
@@ -37,33 +38,36 @@ export default {
     }
   },
   created () {
-    checkAuthenticate()
-      .then((response) => {
-        const status = response.status
-        if (status === 401) {
-          this.authenticated = 'no'
-          this.$router.push('/login')
-        } else {
-          this.authenticated = 'yes'
-          if (!this.token) {
-            this.$store.commit('user/SET_TOKEN', response.data)
-          }
-          if (this.lastPageBeforeLogin) {
+    const doCheck = () => {
+      return checkAuthenticate()
+        .then((response) => {
+          const status = response.status
+          if (status === 401) {
+            if (response.data !== 'invalid refresh token') {
+              return store.dispatch('user/refreshToken').then(doCheck)
+            }
+            this.authenticated = 'no'
+            this.$router.push('/login')
+          } else {
+            this.authenticated = 'yes'
+            if (!this.token) {
+              this.$store.commit('user/SET_TOKEN', response.data)
+            }
+            if (this.lastPageBeforeLogin) {
+              this.$router.push(this.lastPageBeforeLogin)
+            } else {
+              this.$router.push('/login')
+            }
             // 初始webSocket连接
             initConnection()
-            this.$router.push(this.lastPageBeforeLogin)
-          } else {
-            this.$router.push('/login')
           }
-        }
-      })
-      .catch(() => {
-        this.gotError = true
-        // this.$notification.error({
-        //   description: '鉴定用户身份时发生了未知异常！'
-        // })
-        this.tip = '鉴定用户身份时发生了未知异常，似乎没能连接至后端服务！'
-      })
+        })
+        .catch(() => {
+          this.gotError = true
+          this.tip = '鉴定用户身份时发生了未知异常，似乎没能连接至后端服务！'
+        })
+    }
+    doCheck()
   }
 }
 </script>
