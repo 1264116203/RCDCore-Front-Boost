@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import website from '@/config/website'
 
 const devUsername = process.env.NODE_ENV === 'development' ? 'admin' : ''
@@ -67,7 +67,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['homepageTab'])
+    ...mapGetters(['homepageTab']),
+    ...mapState('user', ['lastPageBeforeLogin'])
   },
   created() {
   },
@@ -83,7 +84,11 @@ export default {
       this.spinning = true
       this.$store.dispatch('user/loginByUsername', this.loginForm)
         .then(() => {
-          this.$router.push({ path: this.homepageTab.path })
+          debugger
+          this.$router.push(this.lastPageBeforeLogin ? this.lastPageBeforeLogin : { path: this.homepageTab.path })
+            .then(() => {
+              this.$store.commit('user/SET_LAST_PAGE_BEFORE_LOGIN', null)
+            })
         })
         .catch(err => {
           console.log(err)

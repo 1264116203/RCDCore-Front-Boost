@@ -3,10 +3,10 @@
           :default-selected-keys="selectedKeys"
           @select="menuSelected"
   >
-    <a-menu-item key="/main/home">
+    <!-- <a-menu-item key="/main/home">
       <a-icon type="home" />
       <span>首页</span>
-    </a-menu-item>
+    </a-menu-item>-->
     <template v-for="item in menuList">
       <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
         <a-icon :type="item.icon ? item.icon : iconDefault" />
@@ -56,28 +56,22 @@ export default {
       if (!menuItem) {
         this.navTo({
           path: '/main/home',
-          meta: {
-            isAuth: true,
-            isTab: true
-          }
+          name: '首页'
         })
       } else {
         if (menuItem.path.indexOf('http') === 0) {
           this.navTo({
             path: '/myiframe/urlPath',
-            meta: menuItem.meta,
+            name: menuItem.name,
             query: {
               tabName: menuItem.name,
               src: menuItem.path
-            },
-            params: menuItem.params
+            }
           })
         } else {
           this.navTo({
             path: menuItem.path,
-            meta: menuItem.meta,
-            query: menuItem.query,
-            params: menuItem.params
+            name: menuItem.name
           })
         }
       }

@@ -15,7 +15,7 @@ import store from '@/store'
 
 export default {
   name: 'InitialPage',
-  data () {
+  data() {
     return {
       tip: '正在验证用户令牌…',
       gotError: false
@@ -23,21 +23,21 @@ export default {
   },
   computed: {
     authenticated: {
-      get () {
+      get() {
         return this.$store.getters.authenticated
       },
-      set (val) {
+      set(val) {
         this.$store.commit('user/SET_AUTHENTICATED', val)
       }
     },
-    lastPageBeforeLogin () {
+    lastPageBeforeLogin() {
       return this.$store.state.user.lastPageBeforeLogin
     },
-    token () {
+    token() {
       return this.$store.state.user.token
     }
   },
-  created () {
+  created() {
     const doCheck = () => {
       return checkAuthenticate()
         .then((res) => {
@@ -56,6 +56,9 @@ export default {
             }
             if (this.lastPageBeforeLogin) {
               this.$router.push(this.lastPageBeforeLogin)
+                .then(() => {
+                  this.$store.commit('user/SET_LAST_PAGE_BEFORE_LOGIN', null)
+                })
             } else {
               this.$router.push('/login')
             }

@@ -139,6 +139,25 @@ const user = {
         dispatch('getButtons')
         return Promise.resolve(menu)
       })
+    },
+    getMenuItemByPath({ state }, path) {
+      function deepSearch(list, key) {
+        const found = list.find(val => val.path === key)
+        if (!found) {
+          for (let i = 0; i < list.length; i++) {
+            if (list[i].children) {
+              let result = deepSearch(list[i].children, key)
+              if (result) {
+                return result
+              }
+            }
+          }
+        }
+        return found
+      }
+      const found = deepSearch(state.menuList, path)
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return found ? Promise.resolve(found) : Promise.reject()
     }
   },
   mutations: {

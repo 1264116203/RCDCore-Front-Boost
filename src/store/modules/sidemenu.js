@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    selectedKeys: ['/main/about']
+    selectedKeys: ['/main/home']
   },
   mutations: {
     UPDATE_MENU_PATH: (state, path) => {

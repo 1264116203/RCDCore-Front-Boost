@@ -46,8 +46,8 @@ function handleTabCloseable(list) {
 function tabDiff(tab1, tab2) {
   // const name = tab1.label === tab2.label
   const path = tab1.path === tab2.path
-  const params = diff(tab1.query, tab2.query)
-  const query = diff(tab1.query, tab2.query)
+  const params = diff(tab1.params || {}, tab2.params || {})
+  const query = diff(tab1.query || {}, tab2.query || {})
   // const meta = diff(tab1.meta, tab2.meta)
 
   return path && params && query
@@ -74,15 +74,12 @@ const tabs = {
       if (!tabElem) {
         tabElem = state.homepageTab
       }
-
       router.push({
         path: tabElem.path,
         params: tabElem.params,
-        query: tabElem.query,
-        meta: tabElem.meta
+        query: tabElem.query
       })
-        .then(() => {
-          commit('sidemenu/UPDATE_MENU_PATH', tabElem.path, { root: true })
+        .then((route) => {
           commit('UPDATE_IS_IFRAME_SHOW', tabElem.path.indexOf('/myiframe') === 0)
         })
         .catch(reason => {
@@ -91,6 +88,11 @@ const tabs = {
             console.error(reason)
           }
         })
+    },
+    getTabItem({ state }, tabElem) {
+      const found = state.tabList.find(val => tabDiff(tabElem, val))
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return found ? Promise.resolve(found) : Promise.reject()
     }
   },
   mutations: {
