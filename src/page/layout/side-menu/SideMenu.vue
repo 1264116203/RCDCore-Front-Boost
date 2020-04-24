@@ -1,12 +1,12 @@
 <template>
   <a-menu v-model="selectedKeys" theme="dark" mode="inline"
           :default-selected-keys="selectedKeys"
-          @select="menuSelected"
+          @click="menuSelected"
   >
-    <!-- <a-menu-item key="/main/home">
+    <a-menu-item key="/main/home">
       <a-icon type="home" />
       <span>首页</span>
-    </a-menu-item>-->
+    </a-menu-item>
     <template v-for="item in menuList">
       <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
         <a-icon :type="item.icon ? item.icon : iconDefault" />
@@ -56,7 +56,11 @@ export default {
       if (!menuItem) {
         this.navTo({
           path: '/main/home',
-          name: '首页'
+          name: '首页',
+          meta: {
+            isAuth: true,
+            isTab: true
+          }
         })
       } else {
         if (menuItem.path.indexOf('http') === 0) {
