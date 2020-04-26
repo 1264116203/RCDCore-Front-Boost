@@ -26,6 +26,9 @@ export function beforeDestroy () {
     wsConn.destroy()
     wsConn = null
   }
+  if (window.notificationCountTimer) {
+    clearTimeout(window.notificationCountTimer)
+  }
 }
 
 export function beforeReceipt (obj) {

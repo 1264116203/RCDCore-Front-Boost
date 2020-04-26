@@ -116,9 +116,6 @@ const user = {
       commit('tabs/CLOSE_ALL', null, { root: true })
       commit('common/UNLOCK', null, { root: true })
       commit('sidemenu/UPDATE_SELECTED_KEYS', [], { root: true })
-      if (window.notificationCountTimer) {
-        clearTimeout(window.notificationCountTimer)
-      }
     },
     // 获取顶部菜单
     getTopMenu() {

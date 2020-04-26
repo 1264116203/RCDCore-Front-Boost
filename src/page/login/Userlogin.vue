@@ -84,7 +84,6 @@ export default {
       this.spinning = true
       this.$store.dispatch('user/loginByUsername', this.loginForm)
         .then(() => {
-          debugger
           this.$router.push(this.lastPageBeforeLogin ? this.lastPageBeforeLogin : { path: this.homepageTab.path })
             .then(() => {
               this.$store.commit('user/SET_LAST_PAGE_BEFORE_LOGIN', null)

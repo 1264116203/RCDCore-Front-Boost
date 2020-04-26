@@ -20,7 +20,11 @@ export const getUserInfo = () => axios.get('/api/user/selfInfo')
 
 export const sendLogs = (list) => axios.post('/api/user/logout', list)
 
-export const logout = () => axios.post('/api/current-user/logout')
+export const logout = () => axios.post('/api/current-user/logout', null, {
+  validateStatus (status) {
+    return (status >= 200 && status < 300) || status === 401
+  }
+})
 
 export const updatePassword = (oldPassword, newPassword) => {
   return axios.put('/api/user/update-password', {
