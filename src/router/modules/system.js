@@ -54,7 +54,7 @@ const system = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "system" */ '@/views/authority/Role.vue')
+    component: () => import(/* webpackChunkName: "system" */ '@/views/system/Role.vue')
   }
 ]
 export default system

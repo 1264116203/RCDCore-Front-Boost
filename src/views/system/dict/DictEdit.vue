@@ -10,10 +10,10 @@
       @ok="onOk"
     >
       <a-form ref="form" :form="form" class="d2-col-form"
-              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
+              :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }"
               @submit="onSubmit"
       >
-        <a-form-item label="字典名称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="字典名称" style="width: 100%" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
           <a-input
             v-decorator="['name', { rules: [{ required: true, message: '请输入字典名称' }] }]"
             placeholder="请输入字典名称"
@@ -38,11 +38,11 @@
           />
         </a-form-item>
 
-        <a-form-item label="字典备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="字典备注" style="width: 100%" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
           <a-textarea
             v-decorator="['remark']"
             placeholder="请输入字典备注"
-            :autosize="{ minRows: 2, maxRows: 6 }"
+            :auto-size="{ minRows: 2, maxRows: 6 }"
             :disabled="isDisable"
           />
         </a-form-item>

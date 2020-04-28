@@ -30,27 +30,21 @@
             />
           </a-form-item>
 
-          <a-form-item label="菜单编码">
+          <a-form-item>
+            <template slot="label">
+              <a-tooltip>
+                <template slot="title">
+                  菜单编码应为英文且唯一值。
+                </template>
+                <label>菜单编码</label>
+              </a-tooltip>
+            </template>
             <a-input
-              v-decorator="[
-                'code',
-                { rules: [{
-                  required: true,
-                  message: '请输入菜单编码'
-                }] },
-              ]"
-              placeholder="请输入菜单编码"
-              :disabled="isDisable"
-            />
-          </a-form-item>
-
-          <a-form-item label="菜单别名">
-            <a-input
-              v-decorator="['alias',{ rules: [
-                {required: true,message: '请输入菜单别名'},
-                { pattern:/^[a-zA-Z]{5,10}$/, message: '只能是5-10个英文字符' }
+              v-decorator="['code',{ rules: [
+                {required: true,message: '请输入菜单编码'},
+                { pattern:/^[a-zA-Z]{3,10}$/, message: '只能是3-10个英文字符' }
               ] }]"
-              placeholder="请输入菜单别名"
+              placeholder="请输入菜单编码"
               :disabled="isDisable"
             />
           </a-form-item>
@@ -93,8 +87,9 @@
           </a-form-item>
 
           <a-form-item label="菜单类型">
-            <a-radio-group v-decorator="['category',{ rules: [{required: true,message: '请选择菜单类型'}] }]"
+            <a-radio-group v-decorator="['category',{ rules: [{required: true, message: '请选择菜单类型'}] }]"
                            :disabled="isDisable"
+                           @change="onCategoryChange"
             >
               <a-radio :value="1">
                 菜单
@@ -105,11 +100,18 @@
             </a-radio-group>
           </a-form-item>
 
+          <a-form-item label="默认展开">
+            <a-switch v-decorator="['isDefaultExpanded', { valuePropName: 'checked' }]"
+                      :disabled="!isDefaultExpandedEnabled"
+                      checked-children="开" un-checked-children="关"
+            />
+          </a-form-item>
+
           <a-form-item label="菜单备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
             <a-textarea
               v-decorator="['remark']"
               placeholder="请输入菜单备注"
-              :autosize="{ minRows: 2, maxRows: 6 }"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
               :disabled="isDisable"
             />
           </a-form-item>
@@ -143,16 +145,18 @@ import { ModelMixin } from '@/components/mixins/ModelMixin'
 import { cloneDeep } from 'lodash'
 import { disabledNode } from '@/util/tree'
 
-const EmptyFormData = {
-  path: '',
-  name: '',
-  code: '',
-  icon: 'check-circle',
-  category: 1,
-  alias: '',
-  sort: '100',
-  remark: '',
-  parentId: '0'
+function EmptyFormData() {
+  return {
+    path: '',
+    name: '',
+    icon: 'check-circle',
+    category: 1,
+    code: '',
+    sort: '100',
+    remark: '',
+    parentId: '0',
+    isDefaultExpanded: false
+  }
 }
 
 export default {
@@ -164,7 +168,9 @@ export default {
       menuIconList: menuIconList,
       MenuParentData: [],
       /** 原始数据的深拷贝，上级菜单选择时设置当前节点的disable状态 */
-      clonedMenuTreeData: []
+      clonedMenuTreeData: [],
+
+      isDefaultExpandedEnabled: true
     }
   },
   computed: {
@@ -188,18 +194,20 @@ export default {
         getById(id).then(res => {
           const requestData = res.data
 
-          const formData = {}
+          const formData = EmptyFormData()
 
-          Object.keys(EmptyFormData).forEach(key => {
+          Object.keys(formData).forEach(key => {
             formData[key] = requestData[key]
           })
 
           this.form.setFieldsValue(formData)
+          this.isDefaultExpandedEnabled = !this.isDisable && this.form.getFieldValue('category') === 1
         })
       } else {
         this.$nextTick(() => {
           this.clonedMenuTreeData = this.transformTreeData(cloneDeep(this.resourceList))
-          this.form.setFieldsValue({ ...EmptyFormData })
+          this.form.setFieldsValue(EmptyFormData())
+          this.isDefaultExpandedEnabled = !this.isDisable && this.form.getFieldValue('category') === 1
         })
       }
     },
@@ -235,6 +243,9 @@ export default {
     onChangeMenu(v) {
       this.form.setFieldsValue({ icon: v })
       this.menuVisible = false
+    },
+    onCategoryChange(e) {
+      this.isDefaultExpandedEnabled = !this.isDisable && e.target.value === 1
     },
     /** Tree 下拉选的数据格式 */
     transformTreeData(data) {

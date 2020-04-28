@@ -10,7 +10,7 @@
       @ok="onOk"
     >
       <a-form ref="form" :form="form" class="d2-col-form"
-              :label-col="{ span: 6 }" :wrapper-col="{ span: 14 }"
+              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
               @submit="onSubmit"
       >
         <a-form-item label="角色名称">
@@ -21,13 +21,21 @@
           />
         </a-form-item>
 
-        <a-form-item label="角色别名">
+        <a-form-item>
+          <template slot="label">
+            <a-tooltip>
+              <template slot="title">
+                角色编码应为英文且唯一值。
+              </template>
+              <label>角色编码</label>
+            </a-tooltip>
+          </template>
           <a-input
             v-decorator="['roleAlias', { rules: [
-              { required: true, message: '请输入角色别名' },
-              { pattern:/^[a-zA-Z]{5,10}$/, message: '只能是5-10个英文字符' }
+              { required: true, message: '请输入角色编码' },
+              { pattern:/^[a-zA-Z]{3,10}$/, message: '只能是3-10个英文字符' }
             ] }]"
-            placeholder="请输入角色别名"
+            placeholder="请输入角色编码"
             :disabled="isDisable"
           />
         </a-form-item>

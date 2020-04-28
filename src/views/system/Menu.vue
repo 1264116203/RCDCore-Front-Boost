@@ -86,10 +86,6 @@ const columns = [
     scopedSlots: { customRender: 'MenuIcon' }
   },
   {
-    title: '菜单别名',
-    dataIndex: 'alias'
-  },
-  {
     title: '菜单排序',
     dataIndex: 'sort'
   },

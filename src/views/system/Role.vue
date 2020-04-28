@@ -4,8 +4,8 @@
       <a-form-item label="角色名称">
         <a-input v-model="searchInfo.roleName" placeholder="角色名称" />
       </a-form-item>
-      <a-form-item label="角色别名">
-        <a-input v-model="searchInfo.roleAlias" placeholder="角色别名" />
+      <a-form-item label="角色编码">
+        <a-input v-model="searchInfo.roleAlias" placeholder="角色编码" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="onSearch">
@@ -126,7 +126,7 @@ const columns = [
     dataIndex: 'roleName'
   },
   {
-    title: '角色别名',
+    title: '角色编码',
     dataIndex: 'roleAlias'
   },
   {
@@ -146,7 +146,7 @@ export default {
   mixins: [myMixin],
   data() {
     return {
-      /** 搜索的条件  角色名称 角色别名 */
+      /** 搜索的条件  角色名称 角色编码 */
       searchInfo: {
         roleName: '',
         roleAlias: ''

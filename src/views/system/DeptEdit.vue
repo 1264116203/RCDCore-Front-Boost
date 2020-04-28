@@ -63,7 +63,7 @@
           <a-textarea
             v-decorator="['remark']"
             placeholder="请输入备注"
-            :autosize="{ minRows: 2, maxRows: 6 }"
+            :auto-size="{ minRows: 2, maxRows: 6 }"
             :disabled="isDisable"
           />
         </a-form-item>
