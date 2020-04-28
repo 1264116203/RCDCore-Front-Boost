@@ -48,7 +48,8 @@ const user = {
   },
   actions: {
     // 根据用户名登录
-    loginByUsername({ commit }, userInfo) {
+    loginByUsername({ commit, dispatch }, userInfo) {
+      dispatch('clearAllAuthInfos')
       return login(userInfo.username, userInfo.password, userInfo.rememberMe, userInfo.pwdEncoded)
         .then(res => {
           const data = res.data
