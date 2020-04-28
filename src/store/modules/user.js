@@ -48,7 +48,8 @@ const user = {
   },
   actions: {
     // 根据用户名登录
-    loginByUsername({ commit }, userInfo) {
+    loginByUsername({ commit, dispatch }, userInfo) {
+      dispatch('clearAllAuthInfos')
       return login(userInfo.username, userInfo.password, userInfo.rememberMe)
         .then(res => {
           const data = res.data
@@ -110,6 +111,7 @@ const user = {
     // 注销session
     clearAllAuthInfos({ commit }) {
       commit('SET_TOKEN', '')
+      commit('SET_REFRESH_TOKEN', '')
       commit('SET_MENU_LIST', [])
       commit('SET_ROLE_LIST', [])
       commit('SET_AUTHENTICATED', 'no')
