@@ -75,9 +75,12 @@ rcdAxios.interceptors.response.use(res => {
       return store.dispatch('user/logout')
         .then(() => router.push({ path: '/login' }))
     } else {
-      return store.dispatch('user/refreshToken').then(() => {
-        return rcdAxios.request(res.config)
-      })
+      // 只有存在refreshToken时，再提交令牌重刷
+      if (store.getters.refreshToken) {
+        return store.dispatch('user/refreshToken').then(() => {
+          return rcdAxios.request(res.config)
+        })
+      }
     }
   }
 

@@ -110,6 +110,7 @@ const user = {
     // 注销session
     clearAllAuthInfos({ commit }) {
       commit('SET_TOKEN', '')
+      commit('SET_REFRESH_TOKEN', '')
       commit('SET_MENU_LIST', [])
       commit('SET_ROLE_LIST', [])
       commit('SET_AUTHENTICATED', 'no')

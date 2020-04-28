@@ -44,9 +44,7 @@ export default {
     }
   },
   created() {
-    this.getMenu().then(data => {
-
-    })
+    this.getMenu()
   },
   methods: {
     ...mapActions('user', ['getMenu']),
