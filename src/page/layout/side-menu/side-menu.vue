@@ -1,22 +1,24 @@
 <template>
-  <a-menu v-model="selectedKeys" theme="dark" mode="inline"
-          :default-selected-keys="selectedKeys"
-          :open-keys="openKeys"
-          @click="menuSelected"
-          @openChange="onOpenChange"
-  >
-    <a-menu-item key="/main/home">
-      <a-icon type="home" />
-      <span>首页</span>
-    </a-menu-item>
-    <template v-for="item in menuList">
-      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
-        <a-icon :type="item.icon ? item.icon : iconDefault" />
-        <span>{{ item.name }}</span>
+  <a-spin class="warp" :spinning="isLoading">
+    <a-menu v-model="selectedKeys" theme="dark" mode="inline"
+            :default-selected-keys="selectedKeys"
+            :open-keys="openKeys"
+            @click="menuSelected"
+            @openChange="onOpenChange"
+    >
+      <a-menu-item key="/main/home">
+        <a-icon type="home" />
+        <span>首页</span>
       </a-menu-item>
-      <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="iconDefault" />
-    </template>
-  </a-menu>
+      <template v-for="item in menuList">
+        <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
+          <a-icon :type="item.icon ? item.icon : iconDefault" />
+          <span>{{ item.name }}</span>
+        </a-menu-item>
+        <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="iconDefault" />
+      </template>
+    </a-menu>
+  </a-spin>
 </template>
 
 <script>
@@ -31,6 +33,7 @@ export default {
   components: { MySubMenu },
   data() {
     return {
+      isLoading: false,
       iconDefault,
       openKeys: []
     }
@@ -47,8 +50,15 @@ export default {
     }
   },
   created() {
+    this.isLoading = true
     this.getMenu()
-    this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+      .then(res => {
+        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+      })
+      .catch(err => console.error(err))
+      .finally(() => {
+        this.isLoading = false
+      })
   },
   methods: {
     ...mapActions('user', ['getMenu']),
