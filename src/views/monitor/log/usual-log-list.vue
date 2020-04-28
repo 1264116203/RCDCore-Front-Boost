@@ -41,7 +41,7 @@
 </template>
 <script>
 import {
-  getUsualList
+  listUsualLogWithPagination
 } from '@/api/logs'
 import UsualEdit from './usual-log-edit'
 import { MainMixin } from '@/components/mixins/monitor/main-mixin'
@@ -109,7 +109,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getUsualList(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
+      listUsualLogWithPagination(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
           this.pagination.total = res.data.totalElements

@@ -41,7 +41,7 @@
 </template>
 <script>
 import {
-  getErrorList
+  listErrorLogWithPagination
 } from '@/api/logs'
 import ErrorEdit from './error-log-edit'
 import { MainMixin } from '@/components/mixins/monitor/main-mixin'
@@ -105,7 +105,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getErrorList(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
+      listErrorLogWithPagination(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
           this.pagination.total = res.data.totalElements

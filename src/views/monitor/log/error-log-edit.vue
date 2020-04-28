@@ -91,7 +91,7 @@
 
 <script>
 import {
-  getErrorLogs
+  getErrorLogById
 } from '@/api/logs'
 import { ModelMixin } from '@/components/mixins/monitor/model-mixin'
 import moment from 'moment'
@@ -114,7 +114,7 @@ export default {
   methods: {
     open(id) {
       this.formVisible = true
-      getErrorLogs(id).then(res => {
+      getErrorLogById(id).then(res => {
         const requestData = res.data
         requestData.createTime = moment(requestData.createTime).format('YYYY-MM-DD HH:mm:ss')
         const formData = {}

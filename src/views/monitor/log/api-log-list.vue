@@ -41,7 +41,7 @@
 </template>
 <script>
 import {
-  getApiList
+  listApiLogWithPagination
 } from '@/api/logs'
 import ApiEdit from './api-log-edit'
 import { MainMixin } from '@/components/mixins/monitor/main-mixin'
@@ -109,7 +109,7 @@ export default {
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true
-      getApiList(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
+      listApiLogWithPagination(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
           this.pagination.total = res.data.totalElements

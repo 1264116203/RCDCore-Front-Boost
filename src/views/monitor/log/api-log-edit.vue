@@ -91,7 +91,7 @@
 
 <script>
 import {
-  getApiLogs
+  getApiLogById
 } from '@/api/logs'
 import { ModelMixin } from '@/components/mixins/monitor/model-mixin'
 const EmptyFormData = {
@@ -111,7 +111,7 @@ export default {
   mixins: [ModelMixin],
   methods: {
     open(id) {
-      getApiLogs(id).then(res => {
+      getApiLogById(id).then(res => {
         const requestData = res.data
         const formData = {}
 
