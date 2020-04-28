@@ -141,6 +141,10 @@ export default {
   created() {
     listWithTree().then(res => {
       this.menuTree = res.data
+      /** 数据依据store从小到大排序 */
+      this.menuTree.sort(function(a, b) {
+        return a.sort - b.sort
+      })
     })
   },
   methods: {
