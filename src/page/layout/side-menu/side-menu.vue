@@ -1,7 +1,9 @@
 <template>
   <a-menu v-model="selectedKeys" theme="dark" mode="inline"
           :default-selected-keys="selectedKeys"
+          :open-keys="openKeys"
           @click="menuSelected"
+          @openChange="onOpenChange"
   >
     <a-menu-item key="/main/home">
       <a-icon type="home" />
@@ -29,7 +31,8 @@ export default {
   components: { MySubMenu },
   data() {
     return {
-      iconDefault
+      iconDefault,
+      openKeys: []
     }
   },
   computed: {
@@ -45,6 +48,7 @@ export default {
   },
   created() {
     this.getMenu()
+    this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
   },
   methods: {
     ...mapActions('user', ['getMenu']),
@@ -77,6 +81,9 @@ export default {
           })
         }
       }
+    },
+    onOpenChange(val) {
+      this.openKeys = val
     }
   }
 }
