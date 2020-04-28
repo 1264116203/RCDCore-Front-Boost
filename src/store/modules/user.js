@@ -34,7 +34,7 @@ const user = {
     // 角色列表
     roleList: [],
     // 菜单列表
-    menuList: getStore('menuList') || [],
+    menuList: [],
     // 当前选中的顶部菜单ID
     currentMenuId: getStore('currentMenuId') || '',
     // 令牌
