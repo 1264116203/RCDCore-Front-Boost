@@ -1,7 +1,7 @@
 import axios from '@/rcore-axios'
 
-export const login = (username, password, rememberMe) => (
-  axios.post('/api/authenticate', { username, password, rememberMe })
+export const login = (username, password, rememberMe, pwdEncoded) => (
+  axios.post('/api/authenticate', { username, password, rememberMe, pwdEncoded })
 )
 
 export const checkAuthenticate = () => axios.get('/api/login-status/check', {

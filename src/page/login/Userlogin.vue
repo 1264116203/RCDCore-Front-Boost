@@ -49,7 +49,8 @@ export default {
       loginForm: {
         rememberMe: false,
         username: devUsername,
-        password: devPassword
+        password: devPassword,
+        pwdEncoded: true
       },
       loginRules: {
         tenantId: [
@@ -82,7 +83,11 @@ export default {
     },
     handleLogin() {
       this.spinning = true
-      this.$store.dispatch('user/loginByUsername', this.loginForm)
+      let loginData = {
+        ...this.loginForm
+      }
+      loginData.password = window.btoa(loginData.password)
+      this.$store.dispatch('user/loginByUsername', loginData)
         .then(() => {
           this.$router.push(this.lastPageBeforeLogin ? this.lastPageBeforeLogin : { path: this.homepageTab.path })
             .then(() => {

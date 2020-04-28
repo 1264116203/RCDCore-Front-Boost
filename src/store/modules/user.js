@@ -49,7 +49,7 @@ const user = {
   actions: {
     // 根据用户名登录
     loginByUsername({ commit }, userInfo) {
-      return login(userInfo.username, userInfo.password, userInfo.rememberMe)
+      return login(userInfo.username, userInfo.password, userInfo.rememberMe, userInfo.pwdEncoded)
         .then(res => {
           const data = res.data
           if (data.error_description) {
