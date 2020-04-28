@@ -42,9 +42,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import TopBanner from '@/page/layout/top-banner/TopBanner'
-import LayoutFooter from '../layout/Footer'
-import TopLogo from '@/page/layout/side-menu/TopLogo'
+import TopBanner from '@/page/layout/top-banner/top-banner'
+import LayoutFooter from '../layout/layout-footer'
+import TopLogo from '@/page/layout/side-menu/top-logo'
 
 export default {
   name: 'DemoIndex',

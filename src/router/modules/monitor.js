@@ -6,7 +6,7 @@ const monitor = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "monitor" */ '@/views/monitor/log/Usual.vue')
+    component: () => import(/* webpackChunkName: "monitor" */ '@/views/monitor/log/usual-log-list')
   }, {
     path: '/monitor/log/api',
     name: '接口日志',
@@ -14,7 +14,7 @@ const monitor = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "monitor" */ '@/views/monitor/log/Api.vue')
+    component: () => import(/* webpackChunkName: "monitor" */ '@/views/monitor/log/api-log-list')
   }, {
     path: '/monitor/log/error',
     name: '错误日志',
@@ -22,7 +22,7 @@ const monitor = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "monitor" */ '@/views/monitor/log/Error.vue')
+    component: () => import(/* webpackChunkName: "monitor" */ '@/views/monitor/log/error-log-list')
   }
 ]
 export default monitor

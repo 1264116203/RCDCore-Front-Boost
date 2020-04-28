@@ -1,5 +1,5 @@
 import { setStore, getStore } from '@/util/browser-storage'
-import { listCurrentUserMenuWithTree } from '@/api/system/menu'
+import { listCurrentUserMenuWithTree } from '@/api/system/authority'
 const resource = {
   namespaced: true,
   state: {

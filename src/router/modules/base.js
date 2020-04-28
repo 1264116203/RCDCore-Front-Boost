@@ -6,15 +6,15 @@ const base = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "base" */ '@/views/Home.vue')
+    component: () => import(/* webpackChunkName: "base" */ '@/views/home.vue')
   }, {
-    path: '/myiframe/urlPath',
+    path: '/myiframe/url-path',
     name: 'iframe',
     meta: {
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "base" */ '@/components/iframe/RouterIframe.vue')
+    component: () => import(/* webpackChunkName: "base" */ '@/components/iframe/router-iframe.vue')
   }, {
     path: '/user/info',
     name: '个人信息',
@@ -22,7 +22,7 @@ const base = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "base" */ '@/views/userInfo/Info.vue')
+    component: () => import(/* webpackChunkName: "base" */ '@/views/user-info/user-info.vue')
   }
 ]
 export default base

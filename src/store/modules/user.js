@@ -2,8 +2,8 @@ import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
 import { deepClone } from '@/util/util'
 import website from '@/config/website'
-import { login, getUserInfo, logout, refreshToken as requestRefreshToken, listCurrentUserButtons } from '@/api/common'
-import { getTopMenu, listCurrentUserMenuWithTree } from '@/api/system/menu'
+import { login, getUserInfo, logout, refreshToken as requestRefreshToken, listCurrentUserButtons } from '@/api/user-account'
+import { listCurrentUserMenuWithTree } from '@/api/system/authority'
 import { initConnection, beforeDestroy } from '@/websocket-msg/event-bus.js'
 
 function addPath(ele, first = false) {
@@ -118,13 +118,6 @@ const user = {
       commit('tabs/CLOSE_ALL', null, { root: true })
       commit('common/UNLOCK', null, { root: true })
       commit('sidemenu/UPDATE_SELECTED_KEYS', [], { root: true })
-    },
-    // 获取顶部菜单
-    getTopMenu() {
-      return getTopMenu().then((res) => {
-        const data = res.data.data || []
-        return Promise.resolve(data)
-      })
     },
     // 获取系统菜单
     getMenu({ commit, dispatch }, topMenuId) {

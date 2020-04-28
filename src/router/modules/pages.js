@@ -1,5 +1,5 @@
-import LoginIndex from '@/page/login/LoginIndex'
-import AuthenticatePage from '@/page/Authenticate'
+import LoginIndex from '@/page/login/login-index'
+import AuthenticatePage from '@/page/authenticate'
 
 const pages = [
   {
@@ -8,16 +8,16 @@ const pages = [
     redirect: '/main'
   }, {
     path: '/login',
-    name: 'loginPage',
+    name: '登录页',
     component: LoginIndex
   }, {
     path: '/authenticate',
-    name: 'authenticatePage',
+    name: '权限鉴定页',
     component: AuthenticatePage
   }, {
     path: '/test',
-    name: 'test',
-    component: () => import(/* webpackChunkName: "test" */ '@/views/TestPage')
+    name: '测试页',
+    component: () => import(/* webpackChunkName: "test" */ '@/views/test-page')
   }, {
     path: '/exception/403',
     name: '403',

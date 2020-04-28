@@ -29,7 +29,7 @@ routes.push({
   meta: {
     isTab: false
   },
-  component: () => import(/* webpackChunkName: "base" */ '@/page/layout/LayoutIndex'),
+  component: () => import(/* webpackChunkName: "base" */ '@/page/layout/layout-index'),
   children: layoutChildrenRoutes
 })
 // 添加其他页面到总路由表

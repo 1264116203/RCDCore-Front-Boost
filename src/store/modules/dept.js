@@ -1,5 +1,5 @@
 import { setStore, getStore } from '@/util/browser-storage'
-import { getDeptTree } from '@/api/system/dept'
+import { listWithTree } from '@/api/system/dept'
 const dept = {
   namespaced: true,
   state: {
@@ -7,7 +7,7 @@ const dept = {
   },
   actions: {
     getDeptData({ commit }) {
-      return getDeptTree().then(res => {
+      return listWithTree().then(res => {
         const deptData = [{
           value: '0',
           key: '0',

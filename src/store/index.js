@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import common from './modules/common'
-import dict from './modules/dict'
-import logs from './modules/logs'
-import sidemenu from './modules/sidemenu'
+import sidemenu from './modules/side-menu'
 import tabs from './modules/tabs'
 import user from './modules/user'
 import dept from './modules/dept'
@@ -17,8 +15,6 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
     common,
-    dict,
-    logs,
     sidemenu,
     tabs,
     user,

@@ -6,7 +6,7 @@ const news = [
       isTab: true,
       isAuth: true
     },
-    component: () => import(/* webpackChunkName: "news" */ '@/views/news/NoticeTable.vue')
+    component: () => import(/* webpackChunkName: "news" */ '@/views/news/notice-table')
   }, {
     path: '/news/send-notice',
     name: '测试消息发送',

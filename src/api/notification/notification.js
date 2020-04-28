@@ -1,4 +1,4 @@
-import noticeAxios from './noticeAxios'
+import noticeAxios from './notice-axios'
 
 /** 标记消息通知的状态为已完成 */
 export const completeNotification = (id) => {

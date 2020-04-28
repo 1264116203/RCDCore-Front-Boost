@@ -1,5 +1,5 @@
 import { setStore, getStore } from '@/util/browser-storage'
-import { getRoleTree } from '@/api/system/role'
+import { listAllWithTree } from '@/api/system/role'
 const role = {
   namespaced: true,
   state: {
@@ -7,7 +7,7 @@ const role = {
   },
   actions: {
     getTree({ commit }) {
-      return getRoleTree().then(res => {
+      return listAllWithTree().then(res => {
         const roleTreeData = [{
           value: '0',
           key: '0',
