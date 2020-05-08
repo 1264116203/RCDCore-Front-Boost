@@ -1,57 +1,10 @@
 import { setStore, getStore } from '@/util/browser-storage'
 import website from '@/config/website'
 import router from '@/router'
-import { diff, guid } from '@/util/util'
+import { guid } from '@/util/util'
+import { handleTabCloseable, tabDiff } from '@/util/tabs-util'
 
 const { firstPageCloseable, homepageTab } = website
-
-// eslint-disable-next-line no-unused-vars
-class Tab {
-  // tab的主键
-  key = ''
-  // 标题名称
-  label = ''
-  // 标题的路径
-  path = ''
-  // 标题的路径参数
-  params = {}
-  // 标题的请求参数
-  query = {}
-  // 额外参数
-  meta = {}
-  // 分组
-  group = []
-  // 是否可关闭
-  closeable = true
-}
-
-/**
- * 处理首个标签
- * @param list {[Tab]}
- */
-function handleTabCloseable(list) {
-  if (list.length === 1) {
-    list[0].closeable = false
-  } else {
-    list.forEach(ele => {
-      if (firstPageCloseable) {
-        ele.closeable = true
-      } else {
-        ele.closeable = !(ele.path === homepageTab.path)
-      }
-    })
-  }
-}
-
-function tabDiff(tab1, tab2) {
-  // const name = tab1.label === tab2.label
-  const path = tab1.path === tab2.path
-  const params = diff(tab1.params || {}, tab2.params || {})
-  const query = diff(tab1.query || {}, tab2.query || {})
-  // const meta = diff(tab1.meta, tab2.meta)
-
-  return path && params && query
-}
 
 const tabs = {
   namespaced: true,
@@ -94,6 +47,9 @@ const tabs = {
       // eslint-disable-next-line prefer-promise-reject-errors
       return found ? Promise.resolve(found) : Promise.reject()
     }
+  },
+  getters: {
+    activeTab: state => state.tabList.find(val => val.key === state.activeTabKey)
   },
   mutations: {
     SWITCH_TAB: (state, tab) => {

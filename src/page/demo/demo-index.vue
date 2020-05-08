@@ -17,6 +17,11 @@
             纵向表单示例
           </router-link>
         </a-menu-item>
+        <a-menu-item>
+          <router-link to="/news/send-notice">
+            消息发送示例
+          </router-link>
+        </a-menu-item>
         <a-sub-menu title="子菜单">
           <a-menu-item>子菜单项</a-menu-item>
         </a-sub-menu>

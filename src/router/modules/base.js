@@ -16,6 +16,10 @@ const base = [
     },
     component: () => import(/* webpackChunkName: "base" */ '@/components/iframe/router-iframe.vue')
   }, {
+    path: '/hot-refresh',
+    name: '热刷新',
+    component: () => import(/* webpackChunkName: "base" */ '@/page/hot-refresh')
+  }, {
     path: '/user/info',
     name: '个人信息',
     meta: {
