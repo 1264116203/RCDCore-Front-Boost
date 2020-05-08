@@ -107,6 +107,19 @@
             />
           </a-form-item>
 
+          <a-form-item label="是否打开新标签页面" style="width: 100%" :label-col="{ span: 7 }" :wrapper-col="{ span: 17 }">
+            <a-radio-group v-decorator="['isOpen']"
+                           :disabled="isDisable"
+            >
+              <a-radio :value="true">
+                是
+              </a-radio>
+              <a-radio :value="false">
+                否
+              </a-radio>
+            </a-radio-group>
+          </a-form-item>
+
           <a-form-item label="菜单备注" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
             <a-textarea
               v-decorator="['remark']"
@@ -147,6 +160,7 @@ function EmptyFormData() {
     name: '',
     icon: 'check-circle',
     category: 1,
+    isOpen: false,
     code: '',
     sort: '100',
     remark: '',
