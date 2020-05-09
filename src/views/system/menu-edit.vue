@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model="formVisible"
-      width="600px"
+      width="900px"
       :title="title"
       :mask-closable="false"
       :ok-button-props="{ props: {disabled: isDisable} }"
@@ -86,7 +86,21 @@
             />
           </a-form-item>
 
-          <a-form-item label="菜单类型">
+          <a-form-item label="默认展开">
+            <a-switch v-decorator="['isDefaultExpanded', { valuePropName: 'checked' }]"
+                      :disabled="!isDefaultExpandedEnabled"
+                      checked-children="是" un-checked-children="否"
+            />
+          </a-form-item>
+
+          <a-form-item label="新标签页打开">
+            <a-switch v-decorator="['isOpen', { valuePropName: 'checked' }]"
+                      :disabled="isDisable"
+                      checked-children="是" un-checked-children="否"
+            />
+          </a-form-item>
+
+          <a-form-item label="菜单类型" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
             <a-radio-group v-decorator="['category',{ rules: [{required: true, message: '请选择菜单类型'}] }]"
                            :disabled="isDisable"
                            @change="onCategoryChange"
@@ -96,26 +110,6 @@
               </a-radio>
               <a-radio :value="2">
                 按钮
-              </a-radio>
-            </a-radio-group>
-          </a-form-item>
-
-          <a-form-item label="默认展开">
-            <a-switch v-decorator="['isDefaultExpanded', { valuePropName: 'checked' }]"
-                      :disabled="!isDefaultExpandedEnabled"
-                      checked-children="开" un-checked-children="关"
-            />
-          </a-form-item>
-
-          <a-form-item label="是否打开新标签页面" style="width: 100%" :label-col="{ span: 7 }" :wrapper-col="{ span: 17 }">
-            <a-radio-group v-decorator="['isOpen']"
-                           :disabled="isDisable"
-            >
-              <a-radio :value="true">
-                是
-              </a-radio>
-              <a-radio :value="false">
-                否
               </a-radio>
             </a-radio-group>
           </a-form-item>
