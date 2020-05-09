@@ -69,8 +69,10 @@ export default {
       if (menuItem.isOpen) {
         if (menuItem.path.indexOf('http') === 0) {
           window.open(menuItem.path)
+          return
         }
-        window.open('/#' + menuItem.path)
+        let path = window.location.href.substring(0, window.location.href.indexOf('#'))
+        window.open(path + '#' + menuItem.path)
         return
       }
       let tabElem
