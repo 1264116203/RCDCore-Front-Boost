@@ -24,6 +24,8 @@ import { mapActions, mapGetters } from 'vuex'
 import MySubMenu from '@/page/layout/side-menu/my-sub-menu'
 import website from '@/config/website'
 import { tabDiff } from '@/util/tabs-util'
+import { deepSearch } from '@/util/tree'
+import { componentDestroy } from '@/util/component-destroy-util'
 import router from '@/router'
 
 const iconDefault = website.menu.iconDefault
@@ -104,29 +106,7 @@ export default {
       }
       // 如果待切换Tab和当前Tab是同一个，则刷新
       if (tabDiff(this.$store.getters['tabs/activeTab'], tabElem)) {
-        const component = router.currentRoute.matched[router.currentRoute.matched.length - 1].instances['default']
-        if (component && component.$vnode && component.$vnode.parent && component.$vnode.parent.componentInstance &&
-          component.$vnode.parent.componentInstance.cache) {
-          if (component.$vnode.componentOptions) {
-            const key = component.$vnode.key == null
-              ? component.$vnode.componentOptions.Ctor.cid +
-              (component.$vnode.componentOptions.tag ? `::${component.$vnode.componentOptions.tag}` : '')
-              : component.$vnode.key
-            const cache = component.$vnode.parent.componentInstance.cache
-            const keys = component.$vnode.parent.componentInstance.keys
-            if (cache[key]) {
-              if (keys.length) {
-                const index = keys.indexOf(key)
-                if (index > -1) {
-                  keys.splice(index, 1)
-                }
-              }
-              console.log(`正在刷新路由组件，key：${key}`)
-              cache[key].componentInstance.$destroy()
-              delete cache[key]
-            }
-          }
-        }
+        componentDestroy()
         router.replace('/hot-refresh')
       } else {
         this.navTo(tabElem)
@@ -136,21 +116,6 @@ export default {
       this.openKeys = val
     }
   }
-}
-
-function deepSearch(list, key) {
-  const found = list.find(val => val.path === key)
-  if (!found) {
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].children) {
-        let result = deepSearch(list[i].children, key)
-        if (result) {
-          return result
-        }
-      }
-    }
-  }
-  return found
 }
 </script>
 

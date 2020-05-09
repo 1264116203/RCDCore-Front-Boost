@@ -1,6 +1,7 @@
 import { setStore, getStore } from '@/util/browser-storage'
 import { validateNull } from '@/util/validate'
 import { deepClone } from '@/util/util'
+import { deepSearch } from '@/util/tree'
 import website from '@/config/website'
 import { login, getUserInfo, logout, refreshToken as requestRefreshToken, listCurrentUserButtons } from '@/api/user-account'
 import { listCurrentUserMenuWithTree } from '@/api/system/authority'
@@ -133,20 +134,6 @@ const user = {
       })
     },
     getMenuItemByPath({ state }, path) {
-      function deepSearch(list, key) {
-        const found = list.find(val => val.path === key)
-        if (!found) {
-          for (let i = 0; i < list.length; i++) {
-            if (list[i].children) {
-              let result = deepSearch(list[i].children, key)
-              if (result) {
-                return result
-              }
-            }
-          }
-        }
-        return found
-      }
       const found = deepSearch(state.menuList, path)
       // eslint-disable-next-line prefer-promise-reject-errors
       return found ? Promise.resolve(found) : Promise.reject()

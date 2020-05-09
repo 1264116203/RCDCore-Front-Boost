@@ -117,3 +117,19 @@ export function _parentsChecked(node, allSelectIds, tableDataList) {
     _parentsChecked(parentNode, allSelectIds, tableDataList)
   }
 }
+
+/** 在树形结构中根据key查到对应的节点数据 */
+export function deepSearch(list, key) {
+  const found = list.find(val => val.path === key)
+  if (!found) {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].children) {
+        let result = deepSearch(list[i].children, key)
+        if (result) {
+          return result
+        }
+      }
+    }
+  }
+  return found
+}
