@@ -8,34 +8,9 @@
                 @click="toggleCollapsed"
         />
       </span>
-      <!-- <div class="quick-action">
-        <a-dropdown>
-          <span class="pointer"> <a-icon type="block" /> 快捷操作</span>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">1st menu item</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">2nd menu item</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">3rd menu item</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-      </div>-->
       <top-menu />
     </div>
     <div class="top-banner-right">
-      <!--
-      <div>
-        <a-tooltip placement="bottom" title="锁屏">
-          <a-button type="link" class="right-button">
-            <a-icon type="lock" theme="filled" />
-          </a-button>
-        </a-tooltip>
-      </div>
-      -->
       <div>
         <a-tooltip placement="bottom" title="全屏切换">
           <a-button type="link" class="right-button" @click="toggleFullScreenClicked">
@@ -44,16 +19,14 @@
         </a-tooltip>
       </div>
       <div>
-        <a-dropdown v-model="showNewsDropdown">
+        <a-popover v-model="showNewsDropdown" placement="bottomRight">
           <a-button type="link" class="right-button">
             <a-badge :count="newsTotal" :offset="[0, -7]">
               <a-icon type="mail" />
             </a-badge>
           </a-button>
-          <a-menu slot="overlay">
-            <news-tabs />
-          </a-menu>
-        </a-dropdown>
+          <notice-popup slot="content" style="width: 600px;" />
+        </a-popover>
       </div>
 
       <div>
@@ -96,11 +69,11 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { fullscreenListener, toggleFullscreen } from '@/util/util'
 import TopMenu from '@/page/layout/top-menu/top-menu'
-import NewsTabs from '@/views/news/news-tabs'
+import NoticePopup from '@/views/news/notice-popup'
 
 export default {
   name: 'TopBanner',
-  components: { TopMenu, NewsTabs },
+  components: { TopMenu, NoticePopup },
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
     ...mapGetters(['isFullScreen', 'userInfo']),
@@ -116,15 +89,15 @@ export default {
     },
     showNewsDropdown: {
       get() {
-        return this.$store.state.notification.showNewsDropdown
+        return this.$store.state.notification.dropdownVisible
       },
       set (val) {
-        this.$store.commit('notification/SET_NEWS_DROPDOWN', val)
+        this.$store.commit('notification/SET_DROPDOWN_VISIBLE', val)
       }
     },
     newsTotal: {
       get() {
-        return this.$store.state.notification.newsTotal
+        return this.$store.state.notification.total
       }
     }
   },

@@ -29,12 +29,6 @@ const getters = {
   menuList: state => state.user.menuList,
   permission: state => state.user.permission,
 
-  logList: state => state.logs.logList,
-  logListLength: state => state.logs.logList.length || 0,
-  logFlag: (state, getters) => getters.logListLength === 0,
-
-  flowRoutes: state => state.dict.flowRoutes,
-
   deptList: state => state.dept.deptData,
   roleList: state => state.role.roleTreeData,
   resourceList: state => state.resource.resourceTreeData

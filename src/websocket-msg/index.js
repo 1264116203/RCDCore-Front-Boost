@@ -36,15 +36,21 @@ export default class WebSocketConnection {
       }
     }
 
-    this.websocketInstance.onerror = () => {
+    // TODO 没有考虑到token已过期而此时尚未进行refreshToken导致重连失败的问题
+    // TODO 没有考虑到token不合法导致无限重连的问题
+    this.websocketInstance.onerror = (event) => {
       store.commit('websocket/SET_WEB_SOCKET_STATE', false)
       store.commit('websocket/SET_WEB_SOCKET_MSG', '发生异常了')
-      this.reconnect() // 重连
+      setTimeout(() => {
+        this.reconnect() // 重连
+      }, 5000)
     }
     this.websocketInstance.onclose = (event) => {
       store.commit('websocket/SET_WEB_SOCKET_STATE', false)
       store.commit('websocket/SET_WEB_SOCKET_MSG', '消息服务连接断开，正在重连')
-      this.reconnect() // 重连
+      setTimeout(() => {
+        this.reconnect() // 重连
+      }, 5000)
     }
   }
 

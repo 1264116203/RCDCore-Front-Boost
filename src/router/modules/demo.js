@@ -14,5 +14,13 @@ export default [{
     path: 'horizontal-form',
     name: '纵向表单示例页',
     component: () => import(/* webpackChunkName: "demo" */ '@/page/demo/views/horizontal-form')
+  }, {
+    path: 'notification/send',
+    name: '测试消息发送',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "news" */ '@/page/demo/views/notification-send')
   }]
 }]

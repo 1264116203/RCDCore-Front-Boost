@@ -18,7 +18,7 @@
           </router-link>
         </a-menu-item>
         <a-menu-item>
-          <router-link to="/news/send-notice">
+          <router-link to="/demo/notification/send">
             消息发送示例
           </router-link>
         </a-menu-item>

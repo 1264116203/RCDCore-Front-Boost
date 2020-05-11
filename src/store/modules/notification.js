@@ -5,55 +5,54 @@ export default {
   namespaced: true,
   state: {
     // 是否显示消息组件
-    showNewsDropdown: false,
+    dropdownVisible: false,
     // 消息总数
-    newsTotal: 0,
+    total: 0,
+
     // 是否显示详细信息组件
-    detailsGrantVisible: false,
-    // 详细信息ID
-    detailsId: '',
+    modalVisible: false,
+    modalLoading: false,
+
     // 详细信息内容
-    detailsContent: []
+    content: {}
   },
   actions: {
     getCount({ commit }) {
       return getNotificationCount({ read: false })
         .then(res => {
           if (res.data !== undefined) {
-            commit('SET_NEWS_TOTAL', res.data)
+            commit('SET_TOTAL', res.data)
           }
         })
         .catch(err => console.error(err))
     },
-    getDetailsContent({ state, commit }) {
-      return getDetailsNotification(state.detailsId)
+    getDetailsContent({ state, commit }, id) {
+      commit('SET_MODAL_LOADING', true)
+      return getDetailsNotification(id)
         .then(res => {
-          let detailsData = []
-          detailsData.push(res.data)
-          /** 转换为时间格式 */
-          detailsData.map(item => {
-            item.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')
-          })
-          commit('SET_DETAILS_CONTENT', detailsData)
+          const data = res.data
+          data.createTime = moment(data.createTime).format('YYYY-MM-DD HH:mm:ss')
+          commit('SET_CONTENT', data)
         })
         .catch(err => console.error(err))
+        .finally(() => { commit('SET_MODAL_LOADING', false) })
     }
   },
   mutations: {
-    SET_NEWS_DROPDOWN: (state, showNewsDropdown) => {
-      state.showNewsDropdown = showNewsDropdown
+    SET_DROPDOWN_VISIBLE: (state, visible) => {
+      state.dropdownVisible = visible
     },
-    SET_NEWS_TOTAL: (state, newsTotal) => {
-      state.newsTotal = newsTotal
+    SET_TOTAL: (state, total) => {
+      state.total = total
     },
-    SET_DETAILS_GRANT_VISIBLE: (state, detailsGrantVisible) => {
-      state.detailsGrantVisible = detailsGrantVisible
+    SET_MODAL_VISIBLE: (state, visible) => {
+      state.modalVisible = visible
     },
-    SET_DETAILS_ID: (state, detailsId) => {
-      state.detailsId = detailsId
+    SET_MODAL_LOADING: (state, loading) => {
+      state.modalLoading = loading
     },
-    SET_DETAILS_CONTENT: (state, detailsContent) => {
-      state.detailsContent = detailsContent
+    SET_CONTENT: (state, content) => {
+      state.content = content
     }
   }
 }

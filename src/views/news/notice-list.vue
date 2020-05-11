@@ -2,16 +2,21 @@
   <a-spin :spinning="isLoading" class="news-list">
     <a-list item-layout="horizontal" :data-source="data">
       <a-list-item slot="renderItem" slot-scope="item">
-        <a slot="actions" @click="getDetails(item)">详情</a>
-        <a-list-item-meta
-          :description="item.summary"
-        >
-          <a slot="title">{{ item.title }}<a-tag v-if="!item.read" color="red">未读</a-tag></a>
-          <a-avatar slot="avatar" style="backgroundColor:#87d068">
+        <a-list-item-meta>
+          <template #description>
+            <div style="width: 600px;word-wrap:break-word;">
+              {{ item.summary }}
+            </div>
+          </template>
+          <a slot="title">{{ item.title }}
+            <a-tag v-if="!item.read" color="red">未读</a-tag>
+          </a>
+          <a-avatar slot="avatar" style="background-color:#87d068">
             <a-icon slot="icon" type="mail" />
           </a-avatar>
         </a-list-item-meta>
         {{ item.createTime }}
+        <a slot="actions" @click="openDetailModel(item)">详情</a>
       </a-list-item>
     </a-list>
   </a-spin>
@@ -33,41 +38,34 @@ export default {
   computed: {
     detailsGrantVisible: {
       get() {
-        return this.$store.state.notification.detailsGrantVisible
+        return this.$store.state.notification.modalVisible
       }
     },
-    showNewsDropdown: {
+    dropdownVisible: {
       get() {
-        return this.$store.state.notification.showNewsDropdown
+        return this.$store.state.notification.dropdownVisible
       },
-      set (val) {
-        this.$store.commit('notification/SET_NEWS_DROPDOWN', val)
+      set(val) {
+        this.$store.commit('notification/SET_DROPDOWN_VISIBLE', val)
       }
     },
-    detailsId: {
-      get() {
-        return this.$store.state.notification.detailsId
-      }
-    },
-    detailsContent: {
-      get() {
-        return this.$store.state.notification.detailsContent
-      }
+    detailsContent() {
+      return this.$store.state.notification.content
     }
   },
   watch: {
-    showNewsDropdown: function (val) {
+    dropdownVisible: function (val) {
       if (val) {
         this.fetchNotificationData()
       }
     }
   },
-  created () {
+  created() {
     this.fetchNotificationData()
   },
   methods: {
     /** 列表数据 */
-    fetchNotificationData () {
+    fetchNotificationData() {
       this.isLoading = true
       listWithPagination(this.page, this.size, { sort: ['read', 'createTime,desc'] })
         .then(res => {
@@ -82,22 +80,23 @@ export default {
           this.isLoading = false
         })
     },
-    getDetails(item) {
-      this.$store.commit('notification/SET_NEWS_DROPDOWN', false)
-      this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', true)
-      this.$store.commit('notification/SET_DETAILS_ID', item.id)
+    async openDetailModel(item) {
+      await this.$store.dispatch('notification/getDetailsContent', item.id)
+      this.$store.commit('notification/SET_DROPDOWN_VISIBLE', false)
+      this.$store.commit('notification/SET_MODAL_VISIBLE', true)
     }
   }
 }
 </script>
 <style lang="less">
-.news-list{
-  .ant-list-split{
-    max-height: 260px;
-    overflow-y: scroll;
-    .ant-list-item{
-    padding: 12px;
+  .news-list {
+    .ant-list-split {
+      max-height: 260px;
+      overflow-y: scroll;
+
+      .ant-list-item {
+        padding: 12px;
+      }
     }
   }
-}
 </style>

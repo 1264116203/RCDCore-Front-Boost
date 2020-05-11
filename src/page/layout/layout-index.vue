@@ -28,7 +28,7 @@
       </a-layout-content>
       <layout-footer v-if="showFooter" />
     </a-layout>
-    <detail-modal v-if="detailsGrantVisible" />
+    <detail-modal />
   </a-layout>
 </template>
 
@@ -69,11 +69,6 @@ export default {
     newsTotal: {
       get() {
         return this.$store.state.notification.newsTotal
-      }
-    },
-    detailsGrantVisible: {
-      get() {
-        return this.$store.state.notification.detailsGrantVisible
       }
     }
   },
