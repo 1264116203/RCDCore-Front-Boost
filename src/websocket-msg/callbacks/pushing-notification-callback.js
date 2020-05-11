@@ -2,13 +2,14 @@ import store from '@/store'
 import { beforeReceipt } from '@/websocket-msg/event-bus.js'
 
 export default async function (obj) {
+  debugger
   store.commit('notification/SET_MODAL_VISIBLE', true)
   await store.dispatch('notification/getCount')
-  await store.dispatch('notification/getDetailsContent', obj.id)
+  await store.dispatch('notification/getDetailsContent', obj.payload.id)
   let receiptContent = {
     'messageType': 'notification_receipt',
     'contentType': 'json',
-    'payload': store.state.notification.detailsId
+    'payload': obj.payload.id
   }
   beforeReceipt(JSON.stringify(receiptContent))
 }
