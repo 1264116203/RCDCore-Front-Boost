@@ -128,7 +128,7 @@ export default {
   computed: {
     detailsGrantVisible: {
       get() {
-        return this.$store.state.notification.detailsGrantVisible
+        return this.$store.state.notification.notificationModalVisible
       }
     },
     detailsId: {

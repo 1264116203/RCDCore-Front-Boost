@@ -68,13 +68,13 @@ export default {
     ...mapActions('tabs', ['navTo']),
     menuSelected(item) {
       const menuItem = deepSearch(this.menuList, item.key)
-      if (menuItem.isOpen) {
+      if (menuItem && menuItem.isOpen) {
         if (menuItem.path.indexOf('http') === 0) {
           window.open(menuItem.path)
-          return
+        } else {
+          let path = window.location.href.substring(0, window.location.href.indexOf('#'))
+          window.open(path + '#' + menuItem.path)
         }
-        let path = window.location.href.substring(0, window.location.href.indexOf('#'))
-        window.open(path + '#' + menuItem.path)
         return
       }
       let tabElem

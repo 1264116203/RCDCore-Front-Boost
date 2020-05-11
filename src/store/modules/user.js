@@ -39,7 +39,7 @@ const user = {
     // 当前选中的顶部菜单ID
     currentMenuId: getStore('currentMenuId') || '',
     // 令牌
-    token: getStore('token') || '',
+    token: '',
     // 刷新令牌
     refreshToken: getStore('refreshToken') || '',
     // 是否已鉴权

@@ -19,5 +19,13 @@ export default [{
     path: 'printing',
     name: '打印',
     component: () => import(/* webpackChunkName: "demo" */ '@/page/demo/views/printing')
+  }, {
+    path: 'notification/send',
+    name: '测试消息发送',
+    meta: {
+      isTab: true,
+      isAuth: true
+    },
+    component: () => import(/* webpackChunkName: "news" */ '@/page/demo/views/notification-send')
   }]
 }]

@@ -51,9 +51,7 @@ export default {
             }
           } else {
             this.authenticated = 'yes'
-            if (!this.token) {
-              this.$store.commit('user/SET_TOKEN', res.data)
-            }
+            this.$store.commit('user/SET_TOKEN', res.data)
             if (this.lastPageBeforeLogin) {
               this.$router.push(this.lastPageBeforeLogin)
                 .then(() => {

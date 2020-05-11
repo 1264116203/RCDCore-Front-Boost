@@ -5,7 +5,7 @@ import pages from './modules/pages'
 import base from './modules/base'
 import system from './modules/system'
 import monitor from './modules/monitor'
-import news from './modules/news'
+import notification from './modules/notification'
 import demos from './modules/demo'
 
 Vue.use(VueRouter)
@@ -19,7 +19,7 @@ const layoutChildrenRoutes = []
 layoutChildrenRoutes.push(...base)
 layoutChildrenRoutes.push(...system)
 layoutChildrenRoutes.push(...monitor)
-layoutChildrenRoutes.push(...news)
+layoutChildrenRoutes.push(...notification)
 
 // 添加主框架页面到总路由表
 routes.push({

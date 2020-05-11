@@ -28,7 +28,7 @@
       </a-layout-content>
       <layout-footer v-if="showFooter" />
     </a-layout>
-    <detail-modal v-if="detailsGrantVisible" />
+    <detail-modal />
   </a-layout>
 </template>
 
@@ -40,7 +40,7 @@ import TopLogo from '@/page/layout/side-menu/top-logo'
 import Tabs from '@/page/layout/tabs/tabs'
 import { mapState } from 'vuex'
 import IframeComponents from '@/components/iframe/iframe-component'
-import DetailModal from '@/views/news/detail-modal'
+import DetailModal from '@/views/notification/detail-modal'
 import { handle as handleWsMessage } from '@/websocket-msg/callback-router'
 
 export default {
@@ -69,11 +69,6 @@ export default {
     newsTotal: {
       get() {
         return this.$store.state.notification.newsTotal
-      }
-    },
-    detailsGrantVisible: {
-      get() {
-        return this.$store.state.notification.detailsGrantVisible
       }
     }
   },
