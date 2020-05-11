@@ -169,7 +169,7 @@ export default {
     /** 详情 */
     async openDetailModal (id) {
       await this.$store.dispatch('notification/getDetailsContent', id)
-      this.$store.commit('notification/SET_DETAILS_GRANT_VISIBLE', true)
+      this.$store.commit('notification/SET_MODAL_VISIBLE', true)
     },
     /** 搜索按钮事件 */
     onSearch () {
