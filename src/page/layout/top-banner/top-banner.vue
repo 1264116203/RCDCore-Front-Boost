@@ -69,7 +69,7 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { fullscreenListener, toggleFullscreen } from '@/util/util'
 import TopMenu from '@/page/layout/top-menu/top-menu'
-import NoticePopup from '@/views/news/notice-popup'
+import NoticePopup from '@/views/notification/notice-popup'
 
 export default {
   name: 'TopBanner',
