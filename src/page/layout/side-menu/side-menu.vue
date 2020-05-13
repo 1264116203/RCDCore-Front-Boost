@@ -41,7 +41,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['menuList']),
+    ...mapGetters(['menuList', 'isCollapse']),
     selectedKeys: {
       get() {
         return this.$store.state.sidemenu.selectedKeys
@@ -53,7 +53,16 @@ export default {
   },
   watch: {
     menuList: function () {
-      this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+      if (!this.isCollapse) {
+        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+      }
+    },
+    isCollapse: function (collapse) {
+      if (collapse) {
+        this.openKeys = []
+      } else {
+        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+      }
     }
   },
   created() {
