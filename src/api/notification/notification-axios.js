@@ -7,13 +7,13 @@ import * as qs from 'qs'
 import router from '@/router'
 import { getMessageFromHttpStatusCode } from '@/util/http-status-message'
 
-const noticeAxios = axios.create({
+const notificationAxios = axios.create({
   baseURL: 'http://' + website.notificationGatewayHost + '/message',
   timeout: 10000
 })
 
 // HTTP request拦截
-noticeAxios.interceptors.request.use(config => {
+notificationAxios.interceptors.request.use(config => {
   NProgress.start() // start progress bar
 
   if (store && store.getters && store.getters.token) {
@@ -32,7 +32,7 @@ noticeAxios.interceptors.request.use(config => {
 })
 
 // HTTP response拦截
-noticeAxios.interceptors.response.use(res => {
+notificationAxios.interceptors.response.use(res => {
   NProgress.done()
   return res
 }, (error) => {
@@ -47,14 +47,22 @@ noticeAxios.interceptors.response.use(res => {
 
   // 如果是401则跳转到登录页面
   if (status === 401) {
-    // 只有在token换取机制也失效后，再跳到登录页
+    // 如果返回内容为"invalid refresh token"，说明此时已经执行过刷新令牌重请求了
+    // 但因为刷新令牌已失效，故只能跳回登录页
     if (res.data && res.data.refreshToken === 'invalid refresh token') {
+      // 如果刷新token已失效，则跳转到登录页面
       return store.dispatch('user/logout')
         .then(() => router.push({ path: '/login' }))
     } else {
-      return store.dispatch('user/refreshToken').then(() => {
-        return noticeAxios.request(res.config)
-      })
+      // 其他情况下，说明还没开始换取refreshToken
+      // 如果返回体内容为"invalid jwt token"，则说明服务器认定JWT令牌已失效，此时应发请求换取新的JWT令牌
+      // 只有存在refreshToken时，再提交令牌重刷
+      const refreshToken = store.state.user.refreshToken
+      if (res.data && res.data === 'invalid jwt token' && refreshToken) {
+        return store.dispatch('user/refreshToken').then(() => {
+          return notificationAxios.request(res.config)
+        })
+      }
     }
   }
 
@@ -69,4 +77,4 @@ noticeAxios.interceptors.response.use(res => {
   return Promise.reject(new Error(error))
 })
 
-export default noticeAxios
+export default notificationAxios

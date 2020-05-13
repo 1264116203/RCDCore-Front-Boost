@@ -79,7 +79,8 @@ rcdAxios.interceptors.response.use(res => {
       // 其他情况下，说明还没开始换取refreshToken
       // 如果返回体内容为"invalid jwt token"，则说明服务器认定JWT令牌已失效，此时应发请求换取新的JWT令牌
       // 只有存在refreshToken时，再提交令牌重刷
-      if (res.data && res.data === 'invalid jwt token' && store.getters.refreshToken) {
+      const refreshToken = store.state.user.refreshToken
+      if (res.data && res.data === 'invalid jwt token' && refreshToken) {
         return store.dispatch('user/refreshToken').then(() => {
           return rcdAxios.request(res.config)
         })
