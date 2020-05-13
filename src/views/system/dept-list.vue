@@ -34,10 +34,7 @@
       :pagination="false"
       default-expand-all-rows
     >
-      <template
-        slot="operation"
-        slot-scope="text, record"
-      >
+      <template #operation="text, record">
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
             <a-icon type="eye" />查看
@@ -73,6 +70,10 @@ const columns = [
   {
     title: '部门全称',
     dataIndex: 'fullName'
+  },
+  {
+    title: '部门类别',
+    dataIndex: 'category'
   },
   {
     title: '操作',

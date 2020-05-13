@@ -15,7 +15,9 @@
       >
         <a-form-item label="部门名称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
-            v-decorator="['deptName',{ rules: [{required: true,message: '请输入部门名称'}] }]"
+            v-decorator="['deptName', { rules: [
+              { required: true, message: '请输入部门名称'}
+            ] }]"
             placeholder="请输入部门名称"
             :disabled="isDisable"
           />
@@ -23,15 +25,29 @@
 
         <a-form-item label="部门全称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-input
-            v-decorator="['fullName', { rules: [{ required: true, message: '请输入部门全称' },{whitespace:true,message:'用户昵称不能为空'}] }]"
+            v-decorator="['fullName', { rules: [
+              { required: true, message: '请输入部门全称' },
+              { whitespace:true, message:'部门全称不能为空' }
+            ] }]"
             placeholder="请输入部门全称"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+
+        <a-form-item label="部门类别" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+          <a-input
+            v-decorator="['deptCategory', { rules: [
+              { required: true, message: '请输入部门类别' },
+              { whitespace:true, message:'部门类别不能为空' }
+            ] }]"
+            placeholder="请输入部门类别"
             :disabled="isDisable"
           />
         </a-form-item>
 
         <a-form-item label="上级部门">
           <a-tree-select
-            v-decorator="['parentId', {rules: [{required: true, message: '请选择上级部门节点'}]}]"
+            v-decorator="['parentId', { rules: [{ required: true, message: '请选择上级部门节点' }] }]"
             tree-default-expand-all
             placeholder="请选择上级部门，留空则为顶级父节点"
             :tree-data="clonedDeptTreeData"
@@ -43,16 +59,10 @@
 
         <a-form-item label="排序">
           <a-input-number
-            v-decorator="[
-              'sort',
-              { rules: [{
-                required: true,
-                message: '请输入排序'
-              },{
-                pattern:/\d/,
-                message: '请输入数字'
-              }] },
-            ]"
+            v-decorator="['sort', { rules: [
+              { required: true, message: '请输入排序' },
+              { pattern:/\d/, message: '请输入数字'}
+            ] }]"
             placeholder="请输入数字"
             :disabled="isDisable"
             style="width: 100%"
@@ -81,6 +91,7 @@ import { add, getById, update } from '@/api/system/dept'
 
 const EmptyFormData = {
   deptName: '',
+  deptCategory: '',
   fullName: '',
   sort: '100',
   remark: '',
