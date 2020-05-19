@@ -26,6 +26,13 @@ import { listWithPagination } from '@/api/notification/notification'
 import moment from 'moment'
 
 export default {
+  name: 'NoticeList',
+  props: {
+    type: {
+      type: String,
+      default: () => ''
+    }
+  },
   data() {
     return {
       data: [],
@@ -58,6 +65,11 @@ export default {
       if (val) {
         this.fetchNotificationData()
       }
+    },
+    type: function (val) {
+      if (val) {
+        this.fetchNotificationData()
+      }
     }
   },
   created() {
@@ -67,7 +79,7 @@ export default {
     /** 列表数据 */
     fetchNotificationData() {
       this.isLoading = true
-      listWithPagination(this.page, this.size, { sort: ['read', 'createTime,desc'] })
+      listWithPagination(this.page, this.size, { sort: ['read', 'createTime,desc'], type: this.type })
         .then(res => {
           this.data = res.data.content
           /** 转换为时间格式 */

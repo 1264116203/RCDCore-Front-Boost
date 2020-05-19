@@ -25,7 +25,7 @@
               <a-icon type="mail" />
             </a-badge>
           </a-button>
-          <notice-popup slot="content" style="width: 600px;" />
+          <notice-popup slot="content" style="width: 700px;" />
         </a-popover>
       </div>
 
