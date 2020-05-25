@@ -1,19 +1,23 @@
 <template>
   <div class="news-tabs-warp">
-    <a-tabs default-active-key="notice" @change="onTabChange">
+    <a-tabs :default-active-key="activeKey" @change="onTabChange">
       <a-tab-pane key="notice">
         <span slot="tab">
           通知
         </span>
-        <notice-list :type="type" />
       </a-tab-pane>
-      <a-tab-pane key="news">
+      <a-tab-pane key="message">
         <span slot="tab">
           消息
         </span>
-        <notice-list :type="type" />
+      </a-tab-pane>
+      <a-tab-pane key="all">
+        <span slot="tab">
+          所有
+        </span>
       </a-tab-pane>
     </a-tabs>
+    <notice-list :type="type" />
     <div class="news-list-footer">
       <div class="news-list-btn" @click="moreNotifications">
         查看更多
@@ -31,7 +35,7 @@ export default {
   components: { NoticeList },
   data() {
     return {
-      activeKey: 'notice',
+      activeKey: 'all',
       type: ''
     }
   },
@@ -49,10 +53,11 @@ export default {
     ...mapActions('tabs', ['navTo']),
     onTabChange(activeKey) {
       this.activeKey = activeKey
-      if (this.activeKey === 'notice') {
-        this.type = '2'
+
+      if (this.activeKey === 'all') {
+        this.type = ''
       } else {
-        this.type = 'cd-cmd'
+        this.type = this.activeKey
       }
     },
     moreNotifications() {

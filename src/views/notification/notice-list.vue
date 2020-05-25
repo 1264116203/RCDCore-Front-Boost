@@ -67,9 +67,7 @@ export default {
       }
     },
     type: function (val) {
-      if (val) {
-        this.fetchNotificationData()
-      }
+      this.fetchNotificationData()
     }
   },
   created() {
