@@ -1,14 +1,19 @@
 import store from '@/store'
 import Vue from 'vue'
+import { readNotification } from '@/api/notification/notification'
 
-export default function defaultHandler(notification) {
+export default async function defaultHandler(notification) {
   // 默认行为，关闭通知对话框
   store.commit('notification/SET_MODAL_VISIBLE', false)
+  // 查看详情关闭后标记已读
+  await readNotification(this.notificationDetail.id)
+  // 刷新已读
+  await store.dispatch('notification/getCount')
 }
 
-export function handleDemoMessage(notification) {
+export async function handleDemoMessage(notification) {
   Vue.prototype.$message.info(`id = ${notification.id}, 该消息已被处理。`)
-  defaultHandler(notification)
+  await defaultHandler(notification)
 }
 
 export async function handleDemoCmdMessage(notification) {
@@ -21,5 +26,5 @@ export async function handleDemoCmdMessage(notification) {
       isTab: true
     }
   })
-  defaultHandler(notification)
+  await defaultHandler(notification)
 }
