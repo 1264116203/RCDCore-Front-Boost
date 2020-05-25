@@ -11,6 +11,9 @@
       <top-menu />
     </div>
     <div class="top-banner-right">
+      <div v-if="isDev">
+        <demo-menu />
+      </div>
       <div>
         <a-tooltip placement="bottom" title="全屏切换">
           <a-button type="link" class="right-button" @click="toggleFullScreenClicked">
@@ -70,10 +73,13 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { fullscreenListener, toggleFullscreen } from '@/util/util'
 import TopMenu from '@/page/layout/top-menu/top-menu'
 import NoticePopup from '@/views/notification/notice-popup'
+import DemoMenu from '@/page/demo/demo-menu'
+
+const isDev = process.env.NODE_ENV === 'development'
 
 export default {
   name: 'TopBanner',
-  components: { TopMenu, NoticePopup },
+  components: { DemoMenu, TopMenu, NoticePopup },
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
     ...mapGetters(['isFullScreen', 'userInfo']),
@@ -81,6 +87,9 @@ export default {
       get () {
         return this.$store.state.websocket.webSocketState
       }
+    },
+    isDev () {
+      return isDev
     },
     webSocketMsg: {
       get() {

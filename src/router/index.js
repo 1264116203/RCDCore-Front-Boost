@@ -20,6 +20,7 @@ layoutChildrenRoutes.push(...base)
 layoutChildrenRoutes.push(...system)
 layoutChildrenRoutes.push(...monitor)
 layoutChildrenRoutes.push(...notification)
+layoutChildrenRoutes.push(...demos)
 
 // 添加主框架页面到总路由表
 routes.push({
@@ -34,7 +35,6 @@ routes.push({
 })
 // 添加其他页面到总路由表
 routes.push(...pages)
-routes.push(...demos)
 // 将该匹配放到最后，使不存在路由导航至404
 routes.push({
   path: '*',
