@@ -1,4 +1,4 @@
-import { getNotificationCount, getDetailsNotification } from '@/api/notification/notification'
+import { getNotificationCount, getDetailsNotification, readNotification } from '@/api/notification/notification'
 import moment from 'moment'
 
 export default {
@@ -36,6 +36,9 @@ export default {
         })
         .catch(err => console.error(err))
         .finally(() => { commit('SET_MODAL_LOADING', false) })
+    },
+    readNotification({ state, commit }, id) {
+      return readNotification(id)
     }
   },
   mutations: {

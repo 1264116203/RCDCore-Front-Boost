@@ -1,12 +1,11 @@
 import store from '@/store'
 import Vue from 'vue'
-import { readNotification } from '@/api/notification/notification'
 
 export default async function defaultHandler(notification) {
   // 默认行为，关闭通知对话框
   store.commit('notification/SET_MODAL_VISIBLE', false)
   // 查看详情关闭后标记已读
-  await readNotification(this.notificationDetail.id)
+  await store.dispatch('notification/readNotification', notification.id)
   // 刷新已读
   await store.dispatch('notification/getCount')
 }
