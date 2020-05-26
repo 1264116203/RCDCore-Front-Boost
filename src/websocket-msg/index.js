@@ -4,7 +4,6 @@ export default class WebSocketConnection {
     this.websocketInstance = null
 
     this.url = option.url
-    this.token = option.token
 
     this.reconnectTimerId = null
     this.lockReconnect = false
@@ -16,7 +15,7 @@ export default class WebSocketConnection {
 
   establishConnection() {
     try {
-      const wsUrl = `${this.url}?token=${this.token}`
+      const wsUrl = `${this.url}?token=${store.getters.token}`
       store.commit('websocket/SET_WEB_SOCKET_STATE', false)
       store.commit('websocket/SET_WEB_SOCKET_MSG', '正在连接消息服务...')
       this.websocketInstance = new WebSocket(wsUrl)

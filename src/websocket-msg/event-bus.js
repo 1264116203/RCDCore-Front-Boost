@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import website from '@/config/website'
-import store from '@/store'
 import WebSocketConnection from '@/websocket-msg'
 
 const bus = new Vue()
@@ -13,7 +12,6 @@ export function initConnection () {
   if (wsConn == null) {
     wsConn = new WebSocketConnection({
       url: `ws://${notificationGatewayHost}/websocket/messaging`,
-      token: store.getters.token,
       messageHandler: (data) => {
         bus.$emit('messageComes', data)
       }
