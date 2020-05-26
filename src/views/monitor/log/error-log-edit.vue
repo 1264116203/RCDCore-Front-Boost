@@ -80,7 +80,7 @@
         <a-form-item label="堆栈信息" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-textarea
             v-decorator="['stackTrace']"
-            :auto-size="{ minRows: 5, maxRows: 15 }"
+            rows="15"
             :disabled="isDisable"
           />
         </a-form-item>

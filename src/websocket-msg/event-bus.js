@@ -20,7 +20,6 @@ export function initConnection () {
 }
 
 export function beforeDestroy () {
-  debugger
   if (wsConn) {
     wsConn.destroy()
     wsConn = null
