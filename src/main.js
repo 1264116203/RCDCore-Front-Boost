@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import './plugins/ant-design-vue.js'
 import { baseUrl } from '@/config/env'
+import moment from 'moment'
 import axios from '@/rcore-axios'
 import store from './store'
 
@@ -31,6 +32,12 @@ Vue.filter('textClip', function (value, clipNum) {
     return value
   }
   return value.substring(0, clipNum) + '...'
+})
+
+Vue.filter('momentTime', function (value, pattern = 'YYYY-MM-DD') {
+  if (!value) return ''
+
+  return moment(value).format(pattern)
 })
 
 Vue.prototype.$http = axios
