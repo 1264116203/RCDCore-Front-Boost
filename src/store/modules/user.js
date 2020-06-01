@@ -67,7 +67,9 @@ const user = {
             commit('tabs/CLOSE_ALL', null, { root: true })
             commit('common/UNLOCK', null, { root: true })
             // 初始webSocket连接
-            initConnection()
+            if (website.wsNotificationEnabled) {
+              initConnection()
+            }
           }
         })
     },

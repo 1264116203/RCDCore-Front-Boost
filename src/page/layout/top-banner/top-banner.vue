@@ -21,7 +21,7 @@
           </a-button>
         </a-tooltip>
       </div>
-      <div>
+      <div v-if="wsNotificationEnabled">
         <a-popover v-model="showNewsDropdown" placement="bottomRight">
           <a-button type="link" class="right-button">
             <a-badge :count="newsTotal" :offset="[0, -7]">
@@ -32,7 +32,7 @@
         </a-popover>
       </div>
 
-      <div>
+      <div v-if="wsNotificationEnabled">
         <a-tooltip placement="bottom">
           <template slot="title">
             {{ webSocketMsg }}
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import website from '@/config/website'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { fullscreenListener, toggleFullscreen } from '@/util/util'
 import TopMenu from '@/page/layout/top-menu/top-menu'
@@ -83,6 +84,9 @@ export default {
   computed: {
     ...mapState('common', ['isCollapse', 'showCollapse']),
     ...mapGetters(['isFullScreen', 'userInfo']),
+    wsNotificationEnabled() {
+      return website.wsNotificationEnabled
+    },
     webSocketState: {
       get () {
         return this.$store.state.websocket.webSocketState

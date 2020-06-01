@@ -28,11 +28,12 @@
       </a-layout-content>
       <layout-footer v-if="showFooter" />
     </a-layout>
-    <detail-modal />
+    <detail-modal v-if="wsNotificationEnabled" />
   </a-layout>
 </template>
 
 <script>
+import website from '@/config/website'
 import SideMenu from '@/page/layout/side-menu/side-menu'
 import LayoutFooter from './layout-footer'
 import TopBanner from '@/page/layout/top-banner/top-banner'
@@ -48,6 +49,9 @@ export default {
   components: { TopLogo, TopBanner, SideMenu, LayoutFooter, Tabs, IframeComponents, DetailModal },
   computed: {
     ...mapState('common', ['showFooter']),
+    wsNotificationEnabled() {
+      return website.wsNotificationEnabled
+    },
     isIframeShow: {
       get () {
         return this.$store.state.tabs.isIframeShow
@@ -85,8 +89,9 @@ export default {
         window.notificationCountTimer = setTimeout(fetchNotificationCount, 30 * 1000)
       })
     }
-
-    fetchNotificationCount()
+    if (website.wsNotificationEnabled) {
+      fetchNotificationCount()
+    }
   },
   destroyed() {
     this.$wsEventBus.$off('messageComes', this.onWsMessageComes)

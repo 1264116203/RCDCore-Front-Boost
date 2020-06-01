@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import website from '@/config/website'
 import { checkAuthenticate } from '@/api/user-account'
 import { initConnection } from '@/websocket-msg/event-bus'
 import store from '@/store'
@@ -61,7 +62,9 @@ export default {
               this.$router.push('/login')
             }
             // 初始webSocket连接
-            initConnection()
+            if (website.wsNotificationEnabled) {
+              initConnection()
+            }
           }
         })
         .catch(() => {

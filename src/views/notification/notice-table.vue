@@ -109,9 +109,13 @@ export default {
       tableDataList: [],
       columns,
       // 分页
-      pagination: {},
-      page: 0,
-      size: 20,
+      pagination: {
+        total: 200,
+        current: 1,
+        pageSize: 10,
+        showQuickJumper: true,
+        showSizeChanger: true
+      },
       isLoading: false,
       // 全选
       selectedRowKeys: [],
@@ -153,9 +157,10 @@ export default {
         sort: ['createTime,desc']
       }
 
-      listWithPagination(this.page, this.size, searchInfo)
+      listWithPagination(this.pagination.current - 1, this.pagination.pageSize, searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
+          this.pagination.total = res.data.totalElements
           /** 转换为时间格式 */
           this.tableDataList.map(item => {
             item.createTime = moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')

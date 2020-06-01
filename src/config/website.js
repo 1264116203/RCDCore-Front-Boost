@@ -37,6 +37,8 @@ export default {
   },
   // 流程设计器地址
   flowDesignUrl: 'http://localhost:9999',
+  // 是否启用WebSocket消息
+  wsNotificationEnabled: false,
   // 消息网关host
   notificationGatewayHost: '172.25.34.241:8088'
 }
