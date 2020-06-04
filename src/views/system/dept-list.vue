@@ -72,6 +72,10 @@ const columns = [
     dataIndex: 'fullName'
   },
   {
+    title: '部门编码',
+    dataIndex: 'alias'
+  },
+  {
     title: '部门类别',
     dataIndex: 'category'
   },

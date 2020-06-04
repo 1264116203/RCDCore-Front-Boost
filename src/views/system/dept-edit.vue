@@ -34,13 +34,32 @@
           />
         </a-form-item>
 
-        <a-form-item label="部门类别" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="部门类别">
           <a-input
             v-decorator="['deptCategory', { rules: [
               { required: true, message: '请输入部门类别' },
               { whitespace:true, message:'部门类别不能为空' }
             ] }]"
             placeholder="请输入部门类别"
+            :disabled="isDisable"
+          />
+        </a-form-item>
+        <a-form-item>
+          <template slot="label">
+            <a-tooltip>
+              <template slot="title">
+                编码应为英文且唯一值。
+              </template>
+              <label>部门编码</label>
+            </a-tooltip>
+          </template>
+          <a-input
+            v-decorator="['alias', { rules: [
+              { required: true, message: '请输入部门编码' },
+              { whitespace:true, message:'部门类别不能为空' },
+              { pattern: /^[a-zA-Z0-9\-]{3,10}$/, message: '只能是3-10个英文字符、数字或连字符' }
+            ] }]"
+            placeholder="请输入部门编码"
             :disabled="isDisable"
           />
         </a-form-item>
@@ -94,6 +113,7 @@ const EmptyFormData = {
   deptCategory: '',
   fullName: '',
   sort: '100',
+  alias: '',
   remark: '',
   parentId: '0'
 }

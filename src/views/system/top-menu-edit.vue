@@ -15,7 +15,7 @@
       >
         <a-form-item label="菜单名称">
           <a-input
-            v-decorator="['name',{ rules: [{required: true,message: '请输入菜单名称'}] }]"
+            v-decorator="['name', { rules: [{required: true,message: '请输入菜单名称'}] }]"
             placeholder="请输入菜单名称"
             :disabled="isDisable"
           />
@@ -23,13 +23,11 @@
 
         <a-form-item label="菜单编码">
           <a-input
-            v-decorator="[
-              'code',
-              { rules: [{
-                required: true,
-                message: '请输入菜单编码'
-              }] },
-            ]"
+            v-decorator="['code', {
+              rules: [
+                { required: true, message: '请输入菜单编码' },
+                { pattern: /^[a-zA-Z0-9\-]{3,10}$/, message: '只能是3-10个英文字符、数字或连字符' }
+              ] }]"
             placeholder="请输入菜单编码"
             :disabled="isDisable"
           />
