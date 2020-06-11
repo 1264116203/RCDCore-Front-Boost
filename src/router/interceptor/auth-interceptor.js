@@ -11,26 +11,22 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.isAuth) {
     if (to.path === '/login') {
       if (authenticated === 'yes') {
-        next({ path: '/' })
-        return
+        return next({ path: '/' })
       }
     }
-    next()
-    return
+    return next()
   }
 
   // 如果尚未鉴定权限且目标路由需要权限，则跳转至鉴权页面
   if (authenticated === 'not-yet') {
     store.commit('user/SET_LAST_PAGE_BEFORE_LOGIN', to)
-    next({
+    return next({
       path: '/authenticate'
     })
-    return
   }
   // 如果权限鉴定失败，则跳转至登录页
   if (authenticated === 'no') {
-    next('/login')
-    return
+    return next('/login')
   }
 
   next()

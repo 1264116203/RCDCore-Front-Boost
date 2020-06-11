@@ -20,7 +20,9 @@ const tabs = {
     /** 首页标签 */
     homepageTab: homepageTab,
     /** 当前显示的是否为iframe */
-    isIframeShow: false
+    isIframeShow: false,
+    /** 供layout-index使用的，路由页面keep-alive的include列表 */
+    keepAliveComponentNames: []
   },
   actions: {
     navTo({ commit, state }, tabElem) {
@@ -100,6 +102,9 @@ const tabs = {
     },
     UPDATE_IS_IFRAME_SHOW: (state, payload) => {
       state.isIframeShow = payload
+    },
+    UPDATE_KEEP_ALIVE_COMPONENT_NAMES: (state, payload) => {
+      state.keepAliveComponentNames = payload
     }
   }
 }

@@ -19,8 +19,8 @@
       <a-layout-content style="min-height: auto;">
         <div id="main-content" class="main-content padding-content">
           <div v-show="!isIframeShow">
-            <keep-alive>
-              <router-view :key="$route.fullPath" class="router-view" />
+            <keep-alive :include="keepAliveComponentNames">
+              <router-view class="router-view" />
             </keep-alive>
           </div>
           <iframe-components v-show="isIframeShow" ref="iframeComponentRef" />
@@ -74,10 +74,10 @@ export default {
       get() {
         return this.$store.state.notification.newsTotal
       }
+    },
+    keepAliveComponentNames() {
+      return this.$store.state.tabs.keepAliveComponentNames
     }
-  },
-  mounted() {
-    this.$wsEventBus.$on('messageComes', this.onWsMessageComes)
   },
   created () {
     const that = this
@@ -92,6 +92,9 @@ export default {
     if (website.wsNotificationEnabled) {
       fetchNotificationCount()
     }
+  },
+  mounted() {
+    this.$wsEventBus.$on('messageComes', this.onWsMessageComes)
   },
   destroyed() {
     this.$wsEventBus.$off('messageComes', this.onWsMessageComes)

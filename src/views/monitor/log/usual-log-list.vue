@@ -87,6 +87,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'UsualLogList',
   components: {
     UsualEdit
   },

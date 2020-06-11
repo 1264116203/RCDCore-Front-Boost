@@ -6,10 +6,10 @@ import NProgress from 'nprogress'
 import store from '@/store'
 import { validateNull } from '@/util/validate'
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const meta = Object.assign({ isAuth: false, isTab: false }, (to.meta || {}))
-
   let path = ''
+
   // 针对iframe组件的特殊处理
   if (to.name === 'iframe') {
     path = to.query.src
@@ -17,57 +17,58 @@ router.beforeEach((to, from, next) => {
     path = to.fullPath
   }
 
-  // 在菜单列表里找不到，再查tabList
-  store.dispatch('tabs/getTabItem', {
-    path,
-    query: to.query,
-    params: to.params
-  })
-    .then(() => {
+  if (validateNull(path)) {
+    return next()
+  }
+
+  try {
+    // 根据路径、参数，查找tabs列表，如果找到，直接切换过去
+    await store.dispatch('tabs/getTabItem', {
+      path,
+      query: to.query,
+      params: to.params
+    })
+    store.commit('tabs/SWITCH_TAB', {
+      path,
+      params: to.params,
+      query: to.query
+    })
+  } catch (e) {
+    try {
+      // 如果tab列表找不到，去左侧菜单列表查找
+      const menuItem = await store.dispatch('user/getMenuItemByPath', path)
       store.commit('tabs/SWITCH_TAB', {
         path,
         params: to.params,
-        query: to.query
+        query: to.query,
+        // 直接使用左侧菜单的标签名，而非路由表中的标签名
+        label: menuItem.name,
+        meta: {
+          ...meta,
+          isIframe: path.indexOf('http') === 0
+        },
+        group: []
       })
-    })
-    .catch(() => {
-      store.dispatch('user/getMenuItemByPath', path)
-        // 如果能在左侧菜单列表中拿到，则说明该页面是个标签页，则将其加入标签页列表中
-        .then((menuItem) => {
-          if (!validateNull(path)) {
-            store.commit('tabs/SWITCH_TAB', {
-              path,
-              params: to.params,
-              query: to.query,
-              label: menuItem.name,
-              meta: {
-                ...meta,
-                isIframe: path.indexOf('http') === 0
-              },
-              group: []
-            })
-          }
+    } catch (e) {
+      // 如果左侧菜单也找不到，而且这个路由的确是Tab页形式的路由
+      if (to.meta && to.meta.isTab) {
+        store.commit('tabs/SWITCH_TAB', {
+          path,
+          params: to.params,
+          query: to.query,
+          // 标签名直接使用路由表中的name
+          label: to.name,
+          meta: {
+            ...meta,
+            isIframe: path.indexOf('http') === 0
+          },
+          group: []
         })
-        .catch(() => {
-          if (to.meta && to.meta.isTab) {
-            store.commit('tabs/SWITCH_TAB', {
-              path,
-              params: to.params,
-              query: to.query,
-              label: to.name,
-              meta: {
-                ...meta,
-                isIframe: path.indexOf('http') === 0
-              },
-              group: []
-            })
-          }
-        })
-    })
-    .finally(() => {
-      store.commit('sidemenu/UPDATE_MENU_PATH', path)
-      next()
-    })
+      }
+    }
+  }
+  store.commit('sidemenu/UPDATE_MENU_PATH', path)
+  next()
 })
 
 router.afterEach((to, from) => {

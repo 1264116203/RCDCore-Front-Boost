@@ -83,6 +83,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'ErrorLogList',
   components: {
     ErrorEdit
   },
