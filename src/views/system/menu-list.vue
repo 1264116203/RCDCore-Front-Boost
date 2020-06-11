@@ -120,7 +120,8 @@ export default {
       this.isLoading = true
       queryWithTree(this.searchInfo)
         .then(res => {
-          this.tableDataList = deepSort(res.data, (a, b) => a.sort - b.sort)
+          deepSort(res.data, (a, b) => a.sort - b.sort)
+          this.tableDataList = res.data
         })
         .catch(err => console.error(err))
         .finally(() => {
