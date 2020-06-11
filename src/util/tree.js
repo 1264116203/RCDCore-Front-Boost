@@ -133,3 +133,32 @@ export function deepSearch(list, key) {
   }
   return found
 }
+
+/**
+ * 遍历树形节点的每个节点（包含子节点）
+ * @param list { Array } 树形数组（森林）
+ * @param fun { Function } 遍历方法
+ */
+export function deepForEach(list, fun) {
+  function subFun(elem) {
+    if (elem.children && elem.children.length) {
+      elem.children.forEach(subFun)
+    }
+    fun(elem)
+  }
+  list.forEach(subFun)
+}
+
+/**
+ * 遍历按等级实现树形排序
+ * @param list { Array } 树形数组（森林）
+ * @param sortFun { Function } 排序方法
+ */
+export function deepSort(list, sortFun) {
+  deepForEach(list, (elem) => {
+    if (elem.children && elem.children.length) {
+      elem.children.sort(sortFun)
+    }
+  })
+  list.sort(sortFun)
+}
