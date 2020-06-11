@@ -119,6 +119,7 @@ import RoleEdit from './role-edit'
 import { myMixin } from '@/components/mixins/main-mixin'
 import { listAllWithTree as listAllMenuWithTree, listMenuByRoleIdWithTree } from '@/api/system/authority'
 import { listWithTreeByRoleId, listAllWithTree as listAllTopMenuWithTree } from '@/api/system/top-menu'
+import { deepSort } from '@/util/tree'
 
 const columns = [
   {
@@ -182,25 +183,8 @@ export default {
       this.isLoading = true
       queryWithTree(this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data
           /** 表格数据从小到大排序 */
-          this.tableDataList.sort(function(a, b) {
-            return a.sort - b.sort
-          })
-          this.tableDataList.forEach(item => {
-            if (item.children) {
-              item.children.sort(function(a, b) {
-                return a.sort - b.sort
-              })
-              item.children.forEach(value => {
-                if (value.children) {
-                  value.children.sort(function(a, b) {
-                    return a.sort - b.sort
-                  })
-                }
-              })
-            }
-          })
+          this.tableDataList = deepSort(res.data, (a, b) => a.sort - b.sort)
         })
         .catch(err => console.error(err))
         .finally(() => {
