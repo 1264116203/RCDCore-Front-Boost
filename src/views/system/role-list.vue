@@ -184,7 +184,8 @@ export default {
       queryWithTree(this.searchInfo)
         .then(res => {
           /** 表格数据从小到大排序 */
-          this.tableDataList = deepSort(res.data, (a, b) => a.sort - b.sort)
+          deepSort(res.data, (a, b) => a.sort - b.sort)
+          this.tableDataList = res.data
         })
         .catch(err => console.error(err))
         .finally(() => {

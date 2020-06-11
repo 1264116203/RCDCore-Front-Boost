@@ -5,6 +5,7 @@
 <script>
 import ExceptionPage from './exception-page'
 export default {
+  name: 'Error403',
   components: {
     ExceptionPage
   }

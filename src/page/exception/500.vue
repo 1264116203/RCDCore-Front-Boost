@@ -5,6 +5,7 @@
 <script>
 import ExceptionPage from './exception-page'
 export default {
+  name: 'Error500',
   components: {
     ExceptionPage
   }
