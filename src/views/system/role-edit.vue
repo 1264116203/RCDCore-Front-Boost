@@ -33,7 +33,7 @@
           <a-input
             v-decorator="['roleAlias', { rules: [
               { required: true, message: '请输入角色编码' },
-              { pattern: /^[a-zA-Z0-9\-]{3,10}$/, message: '只能是3-10个英文字符、数字或连字符' }
+              { pattern: /^[a-zA-Z0-9\-]{3,64}$/, message: '只能是3-64个英文字符、数字或连字符' }
             ] }]"
             placeholder="请输入角色编码"
             :disabled="isDisable"

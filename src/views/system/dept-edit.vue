@@ -57,7 +57,7 @@
             v-decorator="['alias', { rules: [
               { required: true, message: '请输入部门编码' },
               { whitespace:true, message:'部门类别不能为空' },
-              { pattern: /^[a-zA-Z0-9\-]{3,10}$/, message: '只能是3-10个英文字符、数字或连字符' }
+              { pattern: /^[a-zA-Z0-9\-]{3,64}$/, message: '只能是3-64个英文字符、数字或连字符' }
             ] }]"
             placeholder="请输入部门编码"
             :disabled="isDisable"
