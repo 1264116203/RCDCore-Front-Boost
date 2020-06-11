@@ -84,6 +84,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'ParamList',
   components: {
     ParamEdit
   },

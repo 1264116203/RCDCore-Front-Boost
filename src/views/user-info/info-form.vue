@@ -61,6 +61,7 @@ import { getUserInfo, updateUserInfo } from '@/api/user-account'
 import UploadAvatar from '@/components/upload-avatar/upload-avatar'
 
 export default {
+  name: 'InfoForm',
   components: {
     UploadAvatar
   },

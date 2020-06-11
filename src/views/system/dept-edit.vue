@@ -119,6 +119,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'DeptEdit',
   mixins: [ModelMixin],
   data() {
     return {

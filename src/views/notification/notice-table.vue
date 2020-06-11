@@ -104,6 +104,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'NoticeTable',
   data () {
     return {
       tableDataList: [],

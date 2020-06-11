@@ -12,6 +12,7 @@ import { listCurrentUserMenuWithTree } from '@/api/system/authority'
 import { listForCurrentWithTree } from '@/api/system/top-menu'
 
 export default {
+  name: 'TopMenu',
   data() {
     return {
       current: [],

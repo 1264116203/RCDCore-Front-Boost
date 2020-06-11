@@ -96,7 +96,7 @@ const columns = [
   }
 ]
 export default {
-  name: 'MenuView',
+  name: 'MenuList',
   components: {
     MenuEdit
   },

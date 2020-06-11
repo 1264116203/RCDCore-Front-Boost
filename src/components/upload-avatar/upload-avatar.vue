@@ -29,6 +29,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  name: 'UploadAvatar',
   props: {
     action: {
       type: String,

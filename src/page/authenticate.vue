@@ -15,7 +15,7 @@ import { initConnection } from '@/websocket-msg/event-bus'
 import store from '@/store'
 
 export default {
-  name: 'InitialPage',
+  name: 'Authenticate',
   data() {
     return {
       tip: '正在验证用户令牌…',

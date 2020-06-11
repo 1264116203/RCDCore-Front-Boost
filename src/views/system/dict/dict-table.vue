@@ -72,6 +72,7 @@ const EmptyFormData = {
   remark: ''
 }
 export default {
+  name: 'DictTable',
   props: {
     columns: {
       type: Array,

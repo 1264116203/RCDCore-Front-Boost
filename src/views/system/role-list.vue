@@ -140,6 +140,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'RoleList',
   components: {
     RoleEdit
   },

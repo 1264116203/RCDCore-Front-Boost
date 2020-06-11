@@ -108,6 +108,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'UsualLogEdit',
   mixins: [ModelMixin],
   methods: {
     open(id) {

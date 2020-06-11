@@ -147,6 +147,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'UserEdit',
   mixins: [ModelMixin],
   data() {
     const validatePass = (rule, value, callback) => {

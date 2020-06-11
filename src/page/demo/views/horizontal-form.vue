@@ -154,7 +154,7 @@
 
 <script>
 export default {
-  name: 'Forms',
+  name: 'HorizontalForm',
   data: function () {
     return {
       formWidth: 400,

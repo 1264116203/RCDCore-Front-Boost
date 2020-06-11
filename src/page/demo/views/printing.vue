@@ -95,7 +95,7 @@ const data = [
   }
 ]
 export default {
-  name: 'About',
+  name: 'Printing',
   data() {
     return {
       data,

@@ -128,6 +128,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'UserList',
   components: {
     LimitedTags,
     UserEdit

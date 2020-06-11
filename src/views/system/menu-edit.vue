@@ -164,6 +164,7 @@ function EmptyFormData() {
 }
 
 export default {
+  name: 'MenuEdit',
   mixins: [ModelMixin],
   data() {
     return {

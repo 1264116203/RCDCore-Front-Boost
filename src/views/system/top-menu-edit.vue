@@ -91,6 +91,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'TopMenuEdit',
   mixins: [ModelMixin],
   data() {
     return {

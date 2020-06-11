@@ -116,6 +116,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'TopMenuList',
   components: {
     TopMenuEdit
   },

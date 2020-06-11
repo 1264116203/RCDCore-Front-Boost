@@ -43,6 +43,7 @@ import { updatePassword } from '@/api/user-account'
 import { mapActions } from 'vuex'
 
 export default {
+  name: 'PasswordForm',
   data() {
     const validatePass = (rule, value, callback) => {
       if (!value) {

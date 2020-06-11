@@ -62,6 +62,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'ParamEdit',
   mixins: [ModelMixin],
   data() {
     return {

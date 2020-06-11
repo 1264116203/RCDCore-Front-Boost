@@ -86,6 +86,7 @@ const columns = [
   }
 ]
 export default {
+  name: 'DeptList',
   components: {
     DeptEdit
   },

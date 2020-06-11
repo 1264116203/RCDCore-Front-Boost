@@ -85,6 +85,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'RoleEdit',
   mixins: [ModelMixin],
   data() {
     return {

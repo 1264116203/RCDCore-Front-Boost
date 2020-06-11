@@ -117,6 +117,7 @@ const innerColumns = [
   }
 ]
 export default {
+  name: 'DictList',
   components: {
     DictEdit
   },

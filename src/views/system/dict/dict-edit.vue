@@ -98,6 +98,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'DictEdit',
   components: { DictTable },
   mixins: [ModelMixin],
   data() {

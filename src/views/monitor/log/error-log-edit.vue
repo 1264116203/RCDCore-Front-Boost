@@ -110,6 +110,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'ErrorLogEdit',
   mixins: [ModelMixin],
   methods: {
     open(id) {

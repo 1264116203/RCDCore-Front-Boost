@@ -43,6 +43,7 @@
 import { sendNotification } from '@/api/notification/notification'
 
 export default {
+  name: 'NotificationSend',
   data() {
     return {
       labelCol: { span: 4 },

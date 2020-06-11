@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'About',
+  name: 'TestPage',
   data() {
     return {
       toggleType: false

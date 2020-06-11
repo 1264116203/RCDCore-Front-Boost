@@ -18,6 +18,7 @@ import InfoForm from './info-form'
 import PasswordForm from './password-form'
 
 export default {
+  name: 'UserInfo',
   components: {
     InfoForm,
     PasswordForm

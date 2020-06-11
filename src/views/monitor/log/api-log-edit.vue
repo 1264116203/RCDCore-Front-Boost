@@ -108,6 +108,7 @@ const EmptyFormData = {
 }
 
 export default {
+  name: 'ApiLogEdit',
   mixins: [ModelMixin],
   methods: {
     open(id) {
