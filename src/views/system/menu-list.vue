@@ -119,12 +119,25 @@ export default {
       this.isLoading = true
       queryWithTree(this.searchInfo)
         .then(res => {
-          const tableDataList = res.data
+          this.tableDataList = res.data
           /** 表格数据从小到大排序 */
-          tableDataList.sort(function(a, b) {
+          this.tableDataList.sort(function(a, b) {
             return a.sort - b.sort
           })
-          this.tableDataList = tableDataList
+          this.tableDataList.forEach(item => {
+            if (item.children) {
+              item.children.sort(function(a, b) {
+                return a.sort - b.sort
+              })
+              item.children.forEach(value => {
+                if (value.children) {
+                  value.children.sort(function(a, b) {
+                    return a.sort - b.sort
+                  })
+                }
+              })
+            }
+          })
         })
         .catch(err => console.error(err))
         .finally(() => {
