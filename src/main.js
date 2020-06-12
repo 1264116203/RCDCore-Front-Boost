@@ -13,6 +13,8 @@ import App from './App.vue'
 import BasicContainer from '@/components/basic-container/basic-container'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
+import '@/assets/styles/custom-styles.less'
+import '@/assets/styles/rcdcore-form.less'
 
 // mock
 import '@/mock-api/news/news-mock.js'

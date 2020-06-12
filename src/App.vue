@@ -26,7 +26,6 @@ export default {
 </script>
 
 <style lang="less">
-@import './assets/styles/rcdcore-form.less';
 #app {
   font-family: 'PingFang SC', 'Microsoft YaHei', '微软雅黑', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
