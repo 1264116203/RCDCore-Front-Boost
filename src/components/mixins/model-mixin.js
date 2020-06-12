@@ -57,7 +57,7 @@ export const ModelMixin = {
           this.formVisible = false
           this.reset()
         })
-        .catch(error => { console.log(error) })
+        .catch(error => { console.error(error) })
         .finally(() => { this.spinning = false })
     },
     /** 修改信息 */
@@ -72,7 +72,7 @@ export const ModelMixin = {
           this.formVisible = false
           this.reset()
         })
-        .catch(error => { console.log(error) })
+        .catch(error => { console.error(error) })
         .finally(() => { this.spinning = false })
     },
     reset() {

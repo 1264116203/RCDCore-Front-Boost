@@ -202,7 +202,7 @@ export default {
             this.$set(this.innerData, id, innerData)
           }
         })
-        .catch(error => { console.log(error) })
+        .catch(error => { console.error(error) })
         .finally(() => { this.spinning = false })
     }
   }

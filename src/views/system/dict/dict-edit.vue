@@ -163,7 +163,7 @@ export default {
           this.reset()
         })
         .catch(error => {
-          console.log(error)
+          console.error(error)
         })
         .finally(() => {
           this.spinning = false
@@ -182,7 +182,7 @@ export default {
           this.reset()
         })
         .catch(error => {
-          console.log(error)
+          console.error(error)
         })
         .finally(() => {
           this.spinning = false

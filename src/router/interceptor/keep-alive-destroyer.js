@@ -11,8 +11,6 @@ router.beforeEach(async (to, from, next) => {
   // 只处理组件有名字的情况。没有名字的不管。
   const toName = await getComponentNameFromRoute(to)
   if (toName) {
-    console.log(`检查到新Tab路由组件${toName}，正在将其加入keep-alive表。`)
-
     const keepAliveComponentNames = store.state.tabs.keepAliveComponentNames
     if (keepAliveComponentNames.indexOf(toName) === -1) {
       store.commit('tabs/UPDATE_KEEP_ALIVE_COMPONENT_NAMES', [...keepAliveComponentNames, toName])
@@ -29,8 +27,6 @@ router.afterEach(async (to, from) => {
     // componentDestroy()
     const toName = await getComponentNameFromRoute(from)
     if (toName) {
-      console.log(`检查到Tab路由组件${toName}已不再存在，正在将其移除keep-alive表。`)
-
       const keepAliveComponentNames = [...store.state.tabs.keepAliveComponentNames]
       const index = keepAliveComponentNames.indexOf(toName)
       // 如果列表里有该组件的名字，则将其删除
