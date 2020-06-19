@@ -11,6 +11,7 @@ import '@/router/interceptor/tab-switching-interceptor'
 import '@/router/interceptor/keep-alive-destroyer'
 import App from './App.vue'
 import BasicContainer from '@/components/basic-container/basic-container'
+import { NoHalfTree } from '@/components/rcore'
 import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css'
 import '@/assets/styles/custom-styles.less'
@@ -18,7 +19,6 @@ import '@/assets/styles/rcdcore-form.less'
 
 // mock
 import '@/mock-api/news/news-mock.js'
-import { NoHalfTree } from '@/components/rcore'
 
 Vue.use(contentmenu)
 

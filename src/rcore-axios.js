@@ -94,9 +94,8 @@ rcdAxios.interceptors.response.use(res => {
   // 如果请求为非200则默认统一处理
   if (status !== 200) {
     Vue.prototype.$message.error({ content: message, key: 'error_message' })
-    return Promise.reject(new Error(message))
   }
-  return Promise.reject(new Error(error))
+  return Promise.reject(error)
 })
 
 export default rcdAxios

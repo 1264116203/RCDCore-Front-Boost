@@ -10,11 +10,11 @@
       <span>首页</span>
     </a-menu-item>
     <template v-for="item in menuList">
-      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
+      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path || item.code">
         <a-icon :type="item.icon ? item.icon : iconDefault" />
         <span>{{ item.name }}</span>
       </a-menu-item>
-      <my-sub-menu v-else :key="item.path" :menu-info="item" :default-icon="iconDefault" />
+      <my-sub-menu v-else :key="item.path || item.code" :menu-info="item" :default-icon="iconDefault" />
     </template>
   </a-menu>
 </template>
@@ -54,14 +54,14 @@ export default {
   watch: {
     menuList: function () {
       if (!this.isCollapse) {
-        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path || item.code)
       }
     },
     isCollapse: function (collapse) {
       if (collapse) {
         this.openKeys = []
       } else {
-        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path)
+        this.openKeys = this.menuList.filter(item => item.isDefaultExpanded).map(item => item.path || item.code)
       }
     }
   },
@@ -76,7 +76,7 @@ export default {
     ...mapActions('user', ['getMenu']),
     ...mapActions('tabs', ['navTo']),
     menuSelected(item) {
-      const menuItem = deepSearch(this.menuList, item.key)
+      const menuItem = deepSearch(this.menuList, item.key, 'path')
       if (menuItem && menuItem.isOpen) {
         if (menuItem.path.indexOf('http') === 0) {
           window.open(menuItem.path)

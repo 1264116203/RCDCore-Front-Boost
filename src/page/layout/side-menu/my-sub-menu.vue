@@ -4,11 +4,11 @@
       <a-icon :type="menuInfo.icon ? menuInfo.icon : defaultIcon" /><span>{{ menuInfo.name }}</span>
     </span>
     <template v-for="item in menuInfo.children">
-      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path">
+      <a-menu-item v-if="!item.children || item.children.length === 0" :key="item.path || item.code">
         <a-icon :type="item.icon ? item.icon : defaultIcon" />
         <span>{{ item.name }}</span>
       </a-menu-item>
-      <sub-menu v-else :key="item.path" :menu-info="item" :default-icon="defaultIcon" />
+      <sub-menu v-else :key="item.path || item.code" :menu-info="item" :default-icon="defaultIcon" />
     </template>
   </a-sub-menu>
 </template>

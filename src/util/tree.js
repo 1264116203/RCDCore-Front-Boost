@@ -118,13 +118,19 @@ export function _parentsChecked(node, allSelectIds, tableDataList) {
   }
 }
 
-/** 在树形结构中根据key查到对应的节点数据 */
-export function deepSearch(list, key) {
-  const found = list.find(val => val.path === key)
+/**
+ * 在树形结构中递归查找某个key对应的节点数据
+ *
+ * @param list 要查询的森林数组
+ * @param value 作为查询的值
+ * @param key 作为查询的属性名
+ */
+export function deepSearch(list, value, key = 'id') {
+  const found = list.find(val => val[key] === value)
   if (!found) {
     for (let i = 0; i < list.length; i++) {
       if (list[i].children) {
-        let result = deepSearch(list[i].children, key)
+        let result = deepSearch(list[i].children, value, key)
         if (result) {
           return result
         }
