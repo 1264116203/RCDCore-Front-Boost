@@ -44,6 +44,9 @@ rcdAxios.interceptors.request.use(config => {
   if (config.method !== 'get' && config.method !== 'option' && getCsrfToken()) {
     config.headers['XSRF-TOKEN'] = getCsrfToken()
   }
+  if (meta.doNotMessage) {
+    config.headers['X-DONT-MESSAGE'] = 'YES'
+  }
 
   // headers中配置serialize为true开启序列化
   if (config.method === 'post' && meta.isSerialize === true) {
@@ -60,6 +63,11 @@ rcdAxios.interceptors.response.use(res => {
   return res
 }, error => {
   NProgress.done()
+
+  if (!error.response) {
+    Vue.prototype.$message.error({ content: '请求失败，请检查网络连接！', key: 'error_message' })
+    return Promise.reject(error)
+  }
 
   const res = error.response
   const { status } = res
@@ -91,10 +99,10 @@ rcdAxios.interceptors.response.use(res => {
   if (!message) {
     message = getMessageFromHttpStatusCode(status)
   }
-  // 如果请求为非200则默认统一处理
-  if (status !== 200) {
+  if (error.config.headers['X-DONT-MESSAGE'] !== 'YES') {
     Vue.prototype.$message.error({ content: message, key: 'error_message' })
   }
+  error.parsedMessage = message
   return Promise.reject(error)
 })
 

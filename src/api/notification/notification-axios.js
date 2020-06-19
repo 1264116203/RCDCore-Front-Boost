@@ -15,6 +15,7 @@ const notificationAxios = axios.create({
 // HTTP request拦截
 notificationAxios.interceptors.request.use(config => {
   NProgress.start() // start progress bar
+  const meta = (config.meta || {})
 
   if (store && store.getters && store.getters.token) {
     config.headers['Authorization'] = 'Bearer ' + store.getters.token // 让每个请求携带token--['Authorization']为自定义key 请根据实际情况自行修改
@@ -24,6 +25,10 @@ notificationAxios.interceptors.request.use(config => {
     config.paramsSerializer = function(params) {
       return qs.stringify(params, { arrayFormat: 'repeat' })
     }
+  }
+
+  if (meta.doNotMessage) {
+    config.headers['X-DONT-MESSAGE'] = 'YES'
   }
 
   return config
@@ -37,6 +42,11 @@ notificationAxios.interceptors.response.use(res => {
   return res
 }, (error) => {
   NProgress.done()
+
+  if (!error.response) {
+    Vue.prototype.$message.error({ content: '请求失败，请检查网络连接！', key: 'error_message' })
+    return Promise.reject(error)
+  }
 
   const res = error.response
   const { status } = res
@@ -69,10 +79,10 @@ notificationAxios.interceptors.response.use(res => {
   if (!message) {
     message = getMessageFromHttpStatusCode(status)
   }
-  // 如果请求为非200则默认统一处理
-  if (status !== 200) {
+  if (error.config.headers['X-DONT-MESSAGE'] !== 'YES') {
     Vue.prototype.$message.error({ content: message, key: 'error_message' })
   }
+  error.parsedMessage = message
   return Promise.reject(error)
 })
 

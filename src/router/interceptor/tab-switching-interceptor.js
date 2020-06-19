@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.name === 'iframe') {
     path = to.query.src
   } else {
-    path = to.fullPath
+    path = to.path
   }
 
   if (validateNull(path)) {
