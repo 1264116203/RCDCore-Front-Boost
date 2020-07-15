@@ -1,9 +1,20 @@
 import { setStore, getStore } from '@/util/browser-storage'
 import { listWithTree } from '@/api/system/dept'
+import { deepForEach } from '@/util/tree'
+
 const dept = {
   namespaced: true,
   state: {
     deptData: getStore('deptData') || []
+  },
+  getters: {
+    deptIdNameMap: state => {
+      const map = new Map()
+      deepForEach(state.deptData, elem => {
+        map.set(elem.id, elem.title)
+      })
+      return map
+    }
   },
   actions: {
     getDeptData({ commit }) {
