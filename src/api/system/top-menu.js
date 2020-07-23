@@ -31,12 +31,12 @@ export const listWithPagination = (page, size, params) => {
 }
 
 /** 顶部菜单树形结构数据 */
-export const listForCurrentWithTree = () => {
+export const listForCurrent = () => {
   return request.get('/api/top-menu/list/current-user')
 }
 
 /** 根据角色ID获取菜单列表 */
-export const listWithTreeByRoleId = (roleId) => {
+export const listByRoleId = (roleId) => {
   return request.get('/api/top-menu/list/by-role/' + roleId)
 }
 
@@ -49,6 +49,6 @@ export const grant = (authorityIdList, topMenuIdList) => {
 }
 
 /** 获取所有顶部菜单记录 */
-export const listAllWithTree = () => {
+export const listAll = () => {
   return request.get('/api/top-menu/list')
 }

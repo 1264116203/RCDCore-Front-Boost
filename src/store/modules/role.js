@@ -1,9 +1,10 @@
-import { setStore, getStore } from '@/util/browser-storage'
 import { listAllWithTree } from '@/api/system/role'
-const role = {
+import { deepSort } from '@/util/tree'
+
+export default {
   namespaced: true,
   state: {
-    roleTreeData: getStore('roleTreeData') || []
+    roleTreeData: []
   },
   actions: {
     getTree({ commit }) {
@@ -14,6 +15,11 @@ const role = {
           title: '顶级角色',
           children: res.data
         }]
+        deepSort(roleTreeData, (a, b) => {
+          let sa = a.sort ? a.sort : 100
+          let sb = b.sort ? b.sort : 100
+          return sa - sb
+        })
         commit('SET_ROLE_DATA', roleTreeData)
       })
     }
@@ -21,9 +27,6 @@ const role = {
   mutations: {
     SET_ROLE_DATA: (state, roleTreeData) => {
       state.roleTreeData = roleTreeData
-      setStore('roleTreeData', state.roleTreeData)
     }
   }
 }
-
-export default role

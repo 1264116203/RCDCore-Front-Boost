@@ -181,20 +181,16 @@ export default {
   computed: {
     ...mapGetters(['resourceList'])
   },
-  created() {
-    this.loadParentData()
-  },
   methods: {
     open(type, id) {
       this.modelTitle(type)
 
+      const clonedTreeData = cloneDeep(this.resourceList)
       if (id) {
         this.id = id
 
-        const clonedTreeData = cloneDeep(this.resourceList)
         /** 上级菜单选择时设置当前节点是不可选 */
         disabledNode(this.id, clonedTreeData)
-        this.clonedMenuTreeData = this.transformTreeData(clonedTreeData)
 
         getById(id).then(res => {
           const requestData = res.data
@@ -210,27 +206,15 @@ export default {
         })
       } else {
         this.$nextTick(() => {
-          this.clonedMenuTreeData = this.transformTreeData(cloneDeep(this.resourceList))
+          this.clonedMenuTreeData = cloneDeep(this.resourceList)
           this.form.setFieldsValue(EmptyFormData())
           this.isDefaultExpandedEnabled = !this.isDisable && this.form.getFieldValue('category') === 1
         })
       }
+      this.clonedMenuTreeData = clonedTreeData
     },
     openMenuModal() {
       this.menuVisible = true
-    },
-    loadParentData() {
-      this.spinning = true
-      return this.$store.dispatch('resource/getTree')
-        .then(() => {
-          const clonedTreeData = cloneDeep(this.resourceList)
-          if (this.id) {
-            /** 上级菜单选择时设置当前节点是不可选 */
-            disabledNode(this.id, clonedTreeData)
-          }
-          this.clonedMenuTreeData = this.transformTreeData(clonedTreeData)
-        })
-        .finally(() => { this.spinning = false })
     },
     /** *添加信息 */
     onInsert() {
@@ -251,22 +235,6 @@ export default {
     },
     onCategoryChange(e) {
       this.isDefaultExpandedEnabled = !this.isDisable && e.target.value === 1
-    },
-    /** Tree 下拉选的数据格式 */
-    transformTreeData(data) {
-      function transform(data) {
-        if (data.children) {
-          data.children = data.children.map(transform)
-        }
-        return {
-          children: data.children,
-          title: data.name,
-          key: data.id,
-          value: data.id,
-          disabled: data.disabled
-        }
-      }
-      return data.map(transform)
     }
   }
 }

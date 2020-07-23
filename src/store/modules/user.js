@@ -23,7 +23,7 @@ function addPath(ele, first = false) {
   }
 }
 
-const user = {
+export default {
   namespaced: true,
   state: {
     // 租户ID
@@ -202,4 +202,3 @@ const user = {
   }
 
 }
-export default user

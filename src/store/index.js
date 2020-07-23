@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import common from './modules/common'
 import sidemenu from './modules/side-menu'
+import topmenu from './modules/top-menu'
 import tabs from './modules/tabs'
 import user from './modules/user'
 import dept from './modules/dept'
@@ -16,6 +17,7 @@ const store = new Vuex.Store({
   modules: {
     common,
     sidemenu,
+    topmenu,
     tabs,
     user,
     dept,

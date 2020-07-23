@@ -73,10 +73,10 @@
       @ok="onOk"
     >
       <a-spin :spinning="spinning">
-        <div style="height: 50vh;min-height: 300px;overflow-y: auto">
+        <div style="min-height: 100px; max-height: 60vh; overflow-y: auto">
           <no-half-tree
             v-model="authSelected"
-            :tree-data="menuTree"
+            :tree-data="menuSubTree"
           />
         </div>
       </a-spin>
@@ -89,15 +89,12 @@
       @ok="onSetMenuOk"
     >
       <a-spin :spinning="spinning">
-        <div style="height: 25vh;min-height: 100px;overflow-y: auto">
+        <div style="min-height: 100px; max-height: 75vh; overflow-y: auto">
           <a-tree
             checkable
             default-expand-all
-            :tree-data="menuIdTree"
-            :replace-fields="{
-              title:'name',
-              key:'id'
-            }"
+            :tree-data="topMenuList"
+            :replace-fields="{ title:'name', key:'id' }"
             :checked-keys="menuCheckedKeys"
             @check="onCheckMenu"
           />
@@ -117,9 +114,10 @@ import {
 import { ACTION_TYPE } from '@/config/env'
 import RoleEdit from './role-edit'
 import { myMixin } from '@/components/mixins/main-mixin'
-import { listAllWithTree as listAllMenuWithTree, listMenuByRoleIdWithTree } from '@/api/system/authority'
-import { listWithTreeByRoleId, listAllWithTree as listAllTopMenuWithTree } from '@/api/system/top-menu'
+import { listMenuByRoleIdWithTree } from '@/api/system/authority'
+import { listByRoleId } from '@/api/system/top-menu'
 import { deepSort } from '@/util/tree'
+import { mapActions, mapState } from 'vuex'
 
 const columns = [
   {
@@ -159,25 +157,34 @@ export default {
       /** 权限设置 */
       spinning: false,
       grantVisible: false,
-      menuTree: [],
       authSelected: [],
       nowId: [],
       /** 权限设置 */
-      menuIdTree: [],
       menuGrantVisible: false,
       menuCheckedKeys: [],
       menuNowId: []
     }
   },
+  computed: {
+    ...mapState('topmenu', ['topMenuList']),
+    ...mapState('resource', ['resourceTreeData']),
+    menuSubTree: {
+      get() {
+        if (this.resourceTreeData && this.resourceTreeData.length > 0) {
+          return this.resourceTreeData[0].children
+        } else {
+          return []
+        }
+      }
+    }
+  },
   created() {
-    listAllMenuWithTree().then(res => {
-      this.menuTree = res.data
-    })
-    listAllTopMenuWithTree().then(res => {
-      this.menuIdTree = res.data
-    })
+    this.listAllMenu()
+    this.listAllTopMenu()
   },
   methods: {
+    ...mapActions('topmenu', { listAllTopMenu: 'getList' }),
+    ...mapActions('resource', { listAllMenu: 'getTree' }),
     /** 表格数据 */
     fetchTableData() {
       this.isLoading = true
@@ -257,7 +264,7 @@ export default {
       this.spinning = true
       this.menuNowId = [id]
       this.menuGrantVisible = true
-      listWithTreeByRoleId(id).then(res => {
+      listByRoleId(id).then(res => {
         this.menuCheckedKeys = res.data.map(item => item.id)
       })
         .catch(err => console.error(err))

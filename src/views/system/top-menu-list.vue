@@ -72,7 +72,7 @@
         <div style="height: 50vh;min-height: 300px;overflow-y: auto">
           <no-half-tree
             v-model="menuSelected"
-            :tree-data="menuTree"
+            :tree-data="resourceList"
           />
         </div>
       </a-spin>
@@ -89,7 +89,8 @@ import {
 import { ACTION_TYPE } from '@/config/env'
 import TopMenuEdit from './top-menu-edit'
 import { myMixin } from '@/components/mixins/main-mixin'
-import { listAllMenuWithTree, listMenuByTopMenuIdWithTree } from '@/api/system/authority'
+import { listMenuByTopMenuIdWithTree } from '@/api/system/authority'
+import { mapGetters } from 'vuex'
 
 const columns = [
   {
@@ -134,19 +135,12 @@ export default {
       /** 权限设置 */
       spinning: false,
       grantVisible: false,
-      menuTree: [],
       menuSelected: [],
       nowId: []
     }
   },
-  created() {
-    listAllMenuWithTree().then(res => {
-      this.menuTree = res.data
-      /** 数据依据store从小到大排序 */
-      this.menuTree.sort(function(a, b) {
-        return a.sort - b.sort
-      })
-    })
+  computed: {
+    ...mapGetters(['resourceList'])
   },
   methods: {
     /** 表格数据 */

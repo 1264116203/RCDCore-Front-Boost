@@ -2,7 +2,7 @@
   <div>
     <a-modal
       v-model="formVisible"
-      width="600px"
+      width="65vw"
       :title="title"
       :mask-closable="false"
       :ok-button-props="{ props: {disabled: isDisable} }"
@@ -89,7 +89,7 @@
               tree-default-expand-all
               tree-checkable
               tree-check-strictly
-              :tree-data="roleData"
+              :tree-data="roleList[0].children"
               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
               :get-popup-container="getPopupContainer"
               :disabled="isDisable"
@@ -106,7 +106,7 @@
               tree-default-expand-all
               tree-checkable
               tree-check-strictly
-              :tree-data="deptData"
+              :tree-data="deptList[0].children"
               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
               :get-popup-container="getPopupContainer"
               :disabled="isDisable"
@@ -132,9 +132,8 @@
 
 <script>
 import { add, getById, update } from '@/api/system/user-management'
-import { listWithTree } from '@/api/system/dept'
-import { listAllWithTree } from '@/api/system/role'
 import { ModelMixin } from '@/components/mixins/model-mixin'
+import { mapGetters } from 'vuex'
 
 const EmptyFormData = {
   account: '',
@@ -168,17 +167,13 @@ export default {
       }
     }
     return {
-      deptData: [],
-      roleData: [],
-
       /** 验证密码 */
       validatePass,
       validatePass2
     }
   },
-  created() {
-    this.loadDeptTree()
-    this.loadRole()
+  computed: {
+    ...mapGetters(['deptList', 'roleList'])
   },
   methods: {
     open(type, id) {
@@ -215,16 +210,6 @@ export default {
           this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
-    },
-    loadDeptTree() {
-      listWithTree().then(res => {
-        this.deptData = res.data
-      })
-    },
-    loadRole() {
-      listAllWithTree().then(res => {
-        this.roleData = res.data
-      })
     },
     /** 添加信息 */
     onInsert() {

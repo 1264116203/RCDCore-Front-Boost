@@ -9,7 +9,7 @@
 </template>
 <script>
 import { listCurrentUserMenuWithTree } from '@/api/system/authority'
-import { listForCurrentWithTree } from '@/api/system/top-menu'
+import { listForCurrent } from '@/api/system/top-menu'
 
 export default {
   name: 'TopMenu',
@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    listForCurrentWithTree().then(res => {
+    listForCurrent().then(res => {
       this.topMenuList = res.data
       /** 数据从小到大排序 */
       this.topMenuList.sort(function(a, b) {

@@ -5,7 +5,7 @@ import {
 } from '@/util/browser-storage'
 import website from '@/config/website'
 
-const common = {
+export default {
   namespaced: true,
   state: {
     // 系统语言
@@ -82,4 +82,3 @@ const common = {
     }
   }
 }
-export default common

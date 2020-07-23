@@ -1,11 +1,10 @@
-import { setStore, getStore } from '@/util/browser-storage'
 import { listWithTree } from '@/api/system/dept'
-import { deepForEach } from '@/util/tree'
+import { deepForEach, deepSort } from '@/util/tree'
 
-const dept = {
+export default {
   namespaced: true,
   state: {
-    deptData: getStore('deptData') || []
+    deptData: []
   },
   getters: {
     deptIdNameMap: state => {
@@ -25,6 +24,11 @@ const dept = {
           title: '顶级部门',
           children: res.data
         }]
+        deepSort(deptData, (a, b) => {
+          let sa = a.sort ? a.sort : 100
+          let sb = b.sort ? b.sort : 100
+          return sa - sb
+        })
         commit('SET_DEPT_DATA', deptData)
       })
     }
@@ -32,9 +36,6 @@ const dept = {
   mutations: {
     SET_DEPT_DATA: (state, deptData) => {
       state.deptData = deptData
-      setStore('deptData', state.deptData)
     }
   }
 }
-
-export default dept

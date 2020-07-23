@@ -91,6 +91,7 @@ import UserEdit from './user-edit'
 import { ACTION_TYPE } from '@/config/env'
 import { myMixin } from '@/components/mixins/main-mixin'
 import { listWithPagination, batchRemove, removeById, resetPassword } from '@/api/system/user-management'
+import { mapActions } from 'vuex'
 
 const columns = [
   {
@@ -155,7 +156,13 @@ export default {
       newPassword: ''
     }
   },
+  created() {
+    this.getRoleTree()
+    this.getDeptData()
+  },
   methods: {
+    ...mapActions('role', { getRoleTree: 'getTree' }),
+    ...mapActions('dept', { getDeptData: 'getDeptData' }),
     /** 表格数据 */
     fetchTableData () {
       this.isLoading = true

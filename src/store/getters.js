@@ -1,4 +1,4 @@
-const getters = {
+export default {
   website: state => state.common.website,
   language: state => state.common.language,
   themeName: state => state.common.themeName,
@@ -33,5 +33,3 @@ const getters = {
   roleList: state => state.role.roleTreeData,
   resourceList: state => state.resource.resourceTreeData
 }
-
-export default getters

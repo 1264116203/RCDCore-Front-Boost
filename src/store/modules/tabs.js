@@ -6,7 +6,7 @@ import { handleTabCloseable, tabDiff } from '@/util/tabs-util'
 
 const { firstPageCloseable, homepageTab } = website
 
-const tabs = {
+export default {
   namespaced: true,
   state: {
     /** 标签列表 */
@@ -108,4 +108,3 @@ const tabs = {
     }
   }
 }
-export default tabs
