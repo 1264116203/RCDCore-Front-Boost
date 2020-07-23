@@ -130,9 +130,6 @@ export default {
   computed: {
     ...mapGetters(['deptList'])
   },
-  created() {
-    this.loadDeptTree()
-  },
   methods: {
     open(type, id) {
       this.clonedDeptTreeData = cloneDeep(this.deptList)
@@ -157,9 +154,6 @@ export default {
           this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
-    },
-    loadDeptTree() {
-      this.$store.dispatch('dept/getDeptData')
     },
     /** 添加信息 */
     onInsert() {

@@ -89,7 +89,7 @@
               tree-default-expand-all
               tree-checkable
               tree-check-strictly
-              :tree-data="roleList[0].children"
+              :tree-data="subRoleList"
               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
               :get-popup-container="getPopupContainer"
               :disabled="isDisable"
@@ -106,7 +106,7 @@
               tree-default-expand-all
               tree-checkable
               tree-check-strictly
-              :tree-data="deptList[0].children"
+              :tree-data="subDeptList"
               :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
               :get-popup-container="getPopupContainer"
               :disabled="isDisable"
@@ -173,7 +173,25 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['deptList', 'roleList'])
+    ...mapGetters(['deptList', 'roleList']),
+    subDeptList: {
+      get () {
+        if (this.deptList && this.deptList.length > 0) {
+          return this.deptList[0].children
+        } else {
+          return []
+        }
+      }
+    },
+    subRoleList: {
+      get() {
+        if (this.roleList && this.roleList.length > 0) {
+          return this.roleList[0].children
+        } else {
+          return []
+        }
+      }
+    }
   },
   methods: {
     open(type, id) {

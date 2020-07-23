@@ -142,6 +142,9 @@ export default {
   computed: {
     ...mapGetters(['resourceList'])
   },
+  created() {
+    this.$store.dispatch('resource/getTree')
+  },
   methods: {
     /** 表格数据 */
     fetchTableData () {

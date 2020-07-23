@@ -96,9 +96,6 @@ export default {
   computed: {
     ...mapGetters(['roleList'])
   },
-  created() {
-    this.loadParentData()
-  },
   methods: {
     open(type, id) {
       this.clonedRoleTreeData = cloneDeep(this.roleList)
@@ -124,9 +121,6 @@ export default {
           this.form.setFieldsValue({ ...EmptyFormData })
         })
       }
-    },
-    loadParentData() {
-      this.$store.dispatch('role/getTree')
     },
     /** 添加信息 */
     onInsert() {

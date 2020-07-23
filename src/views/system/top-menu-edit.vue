@@ -102,8 +102,6 @@ export default {
       menuIconList: menuIconList
     }
   },
-  created() {
-  },
   methods: {
     open(type, id) {
       this.modelTitle(type)

@@ -102,6 +102,9 @@ export default {
       pageSize: 10
     }
   },
+  created() {
+    this.$store.dispatch('dept/getDeptData')
+  },
   methods: {
     /** 表格数据 */
     fetchTableData () {

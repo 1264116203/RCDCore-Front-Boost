@@ -181,6 +181,7 @@ export default {
   created() {
     this.listAllMenu()
     this.listAllTopMenu()
+    this.$store.dispatch('role/getTree')
   },
   methods: {
     ...mapActions('topmenu', { listAllTopMenu: 'getList' }),
