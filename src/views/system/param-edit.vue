@@ -1,50 +1,49 @@
 <template>
-  <div>
-    <a-modal
-      v-model="formVisible"
-      width="600px"
-      :title="title"
-      :mask-closable="false"
-      :ok-button-props="{ props: {disabled: isDisable} }"
-      @cancel="onCancel"
-      @ok="onOk"
-    >
-      <a-form ref="form" :form="form" class="d2-col-form"
-              :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
-              @submit="onSubmit"
+  <a-modal
+    v-model="formVisible"
+    :title="title"
+    :mask-closable="false"
+    :after-close="reset"
+    @cancel="onCancel"
+    @ok="onOk"
+  >
+    <a-form-model ref="form" :model="formData" layout="vertical">
+      <a-form-model-item
+        label="参数名称" prop="paramName"
+        :rules="[{ required: true, message: '请输入参数名称' }]"
       >
-        <a-form-item label="参数名称" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-          <a-input
-            v-decorator="['paramName',{ rules: [{required: true,message: '请输入参数名称'}] }]"
-            placeholder="请输入参数名称"
-            :disabled="isDisable"
-          />
-        </a-form-item>
+        <a-input
+          v-model="formData.paramName"
+          :disabled="isDisable"
+          placeholder="请输入参数名称"
+        />
+      </a-form-model-item>
 
-        <a-form-item label="参数键名" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-          <a-input
-            v-decorator="['paramKey', { rules: [{ required: true, message: '请输入参数键名' }] }]"
-            placeholder="请输入参数键名"
-            :disabled="isDisable"
-          />
-        </a-form-item>
+      <a-form-model-item
+        label="参数键名"
+        prop="paramKey"
+        :rules="[{ required: true, message: '请输入参数键名' }]"
+      >
+        <a-input
+          v-model="formData.paramKey"
+          :disabled="isDisable"
+          placeholder="请输入参数键名"
+        />
+      </a-form-model-item>
 
-        <a-form-item label="参数键值" style="width: 100%" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-          <a-input
-            v-decorator="[
-              'paramValue',
-              { rules: [{
-                required: true,
-                message: '请输入参数键值'
-              }] },
-            ]"
-            placeholder="请输入参数键值"
-            :disabled="isDisable"
-          />
-        </a-form-item>
-      </a-form>
-    </a-modal>
-  </div>
+      <a-form-model-item
+        label="参数键值"
+        prop="paramValue"
+        :rules="[{ required: true, message: '请输入参数键值' }]"
+      >
+        <a-input
+          v-model="formData.paramValue"
+          :disabled="isDisable"
+          placeholder="请输入参数键值"
+        />
+      </a-form-model-item>
+    </a-form-model>
+  </a-modal>
 </template>
 
 <script>
@@ -53,51 +52,30 @@ import {
   update,
   getById
 } from '@/api/system/param'
-import { ModelMixin } from '@/components/mixins/model-mixin'
+import { ModelMixin } from '@/components/mixins/common-crud-mixin'
 
-const EmptyFormData = {
-  paramName: '',
-  paramKey: '',
-  paramValue: ''
+/** 表单数据的模板，预定义后将更加一目了然 */
+class FormData {
+  constructor() {
+    /** 参数名称 */
+    this.paramName = ''
+    /** 参数键 */
+    this.paramKey = ''
+    /** 参数值 */
+    this.paramValue = ''
+  }
 }
 
 export default {
   name: 'ParamEdit',
   mixins: [ModelMixin],
-  data() {
-    return {
-    }
-  },
-  methods: {
-    open(type, id) {
-      this.modelTitle(type)
-
-      if (id) {
-        this.id = id
-        getById(id).then(res => {
-          const requestData = res.data
-          const formData = {}
-
-          Object.keys(EmptyFormData).forEach(key => {
-            formData[key] = requestData[key]
-          })
-
-          this.form.setFieldsValue(formData)
-        })
-      } else {
-        this.$nextTick(() => {
-          this.form.setFieldsValue({ ...EmptyFormData })
-        })
-      }
-    },
-    /** *添加信息 */
-    onInsert() {
-      this.doInsert(add)
-    },
-    /** *修改信息 */
-    onUpdate() {
-      this.doUpdate(update)
-    }
+  created() {
+    this.setup({
+      FormDataClass: FormData,
+      axiosGetById: getById,
+      axiosAdd: add,
+      axiosUpdate: update
+    })
   }
 }
 </script>
