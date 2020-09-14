@@ -1,29 +1,29 @@
 <template>
-  <a-spin class="warp" :spinning="isLoading">
-    <a-form layout="inline">
-      <a-form-item label="参数名称">
+  <a-spin class="table-list-warp" :spinning="isLoading">
+    <a-form-model layout="inline" :model="searchInfo">
+      <a-form-model-item label="参数名称">
         <a-input v-model="searchInfo.paramName" placeholder="参数名称" />
-      </a-form-item>
-      <a-form-item label="参数键名">
+      </a-form-model-item>
+      <a-form-model-item label="参数键名">
         <a-input v-model="searchInfo.paramKey" placeholder="参数键名" />
-      </a-form-item>
-      <a-form-item>
+      </a-form-model-item>
+      <a-form-model-item>
         <a-button type="primary" @click="onSearch">
           搜索
         </a-button>
-      </a-form-item>
-      <a-form-item>
+      </a-form-model-item>
+      <a-form-model-item>
         <a-button @click="clearSearch">
           清空
         </a-button>
-      </a-form-item>
-    </a-form>
+      </a-form-model-item>
+    </a-form-model>
 
-    <div class="operation-btn">
-      <a-button class="editable-add-btn" type="primary" @click="handleAdd">
+    <div class="operation-btn-container">
+      <a-button type="primary" @click="onAdd">
         添加
       </a-button>
-      <a-button class="editable-add-btn" type="danger" @click="handleBatchDelete">
+      <a-button type="danger" @click="onBatchDelete">
         批量删除
       </a-button>
     </div>
@@ -32,7 +32,7 @@
       bordered
       row-key="id"
       :columns="columns"
-      :data-source="tableDataList"
+      :data-source="tableData"
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       :pagination="false"
     >
@@ -60,9 +60,8 @@ import {
   batchRemove,
   removeById
 } from '@/api/system/param'
-import { ACTION_TYPE } from '@/config/env'
 import ParamEdit from './param-edit'
-import { myMixin } from '@/components/mixins/main-mixin'
+import mainMixin from '@/components/mixins/new-main-mixin'
 
 const columns = [
   {
@@ -88,7 +87,7 @@ export default {
   components: {
     ParamEdit
   },
-  mixins: [myMixin],
+  mixins: [mainMixin],
   data () {
     return {
       /** 搜索的条件  参数名称 参数键名 */
@@ -107,21 +106,12 @@ export default {
       this.isLoading = true
       listWithPagination(this.current - 1, this.pageSize, this.searchInfo)
         .then(res => {
-          this.tableDataList = res.data.content
+          this.tableData = res.data.content
         })
         .catch(err => console.error(err))
         .finally(() => {
           this.isLoading = false
         })
-    },
-    openCreateModal() {
-      this.$refs.modal.open(ACTION_TYPE.CREATION)
-    },
-    openUpdateModal(id) {
-      this.$refs.modal.open(ACTION_TYPE.UPDATE, id)
-    },
-    openDetailModal(id) {
-      this.$refs.modal.open(ACTION_TYPE.DETAIL, id)
     },
     /** 清空按钮事件 */
     clearSearch () {
@@ -136,25 +126,13 @@ export default {
       this.commonDeleteRecord(removeById, id)
     },
     /** 批量删除 */
-    handleBatchDelete () {
+    onBatchDelete () {
       this.commonBatchDelete(batchRemove)
     }
   }
 }
 </script>
 
-<style scoped>
-.warp{
-  margin: 20px;
-}
-.warp .operation-btn .editable-add-btn{
-  margin-right: 20px;
-}
-.editable-row-operations a {
-  margin-right: 8px;
-}
+<style lang="less" scoped>
 
-.warp .operation-btn{
-  margin: 20px 0;
-}
 </style>
