@@ -2,20 +2,19 @@
   <a-spin class="table-list-warp" :spinning="isLoading">
     <a-form-model ref="searchForm" layout="inline" :model="searchInfo">
       <a-form-model-item label="参数名称" prop="paramName">
-        <a-input v-model="searchInfo.paramName"
-                 placeholder="参数名称"
-        />
+        <a-input v-model="searchInfo.paramName" placeholder="参数名称" />
       </a-form-model-item>
+
       <a-form-model-item label="参数键名" prop="paramKey">
-        <a-input v-model="searchInfo.paramKey"
-                 placeholder="参数键名"
-        />
+        <a-input v-model="searchInfo.paramKey" placeholder="参数键名" />
       </a-form-model-item>
+
       <a-form-model-item>
         <a-button type="primary" @click="fetchTableData">
           搜索
         </a-button>
       </a-form-model-item>
+
       <a-form-model-item>
         <a-button @click="clearSearch">
           清空
@@ -44,17 +43,15 @@
       <template #operation="text, record">
         <div class="editable-row-operations">
           <a @click="openDetailModal(record.id)">
-            <a-icon type="eye" />
-            查看
+            <a-icon type="eye" /> 查看
           </a>
           <a @click="openUpdateModal(record.id)">
-            <a-icon type="edit" />
-            修改
+            <a-icon type="edit" /> 修改
           </a>
           <a-popconfirm title="是否删除?" @confirm="commonDeleteRecord(record.id)">
             <a>
-              <a-icon type="delete" />
-              删除</a>
+              <a-icon type="delete" /> 删除
+            </a>
           </a-popconfirm>
         </div>
       </template>

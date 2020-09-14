@@ -20,8 +20,7 @@
       </a-form-model-item>
 
       <a-form-model-item
-        label="参数键名"
-        prop="paramKey"
+        label="参数键名" prop="paramKey"
         :rules="[{ required: true, message: '请输入参数键名' }]"
       >
         <a-input
@@ -32,8 +31,7 @@
       </a-form-model-item>
 
       <a-form-model-item
-        label="参数键值"
-        prop="paramValue"
+        label="参数键值" prop="paramValue"
         :rules="[{ required: true, message: '请输入参数键值' }]"
       >
         <a-input
