@@ -57,7 +57,7 @@
       </template>
     </a-table>
 
-    <param-edit ref="modal" @ok="onModalOk" />
+    <edit-dialog ref="modal" @ok="onModalOk" />
   </a-spin>
 </template>
 <script>
@@ -86,11 +86,11 @@ const columns = [{
 
 export default {
   name: 'ParamList',
-  components: { ParamEdit },
+  components: { EditDialog: ParamEdit },
   mixins: [ListMixin],
   data() {
     return {
-      /** 搜索的条件  参数名称 参数键名 */
+      /** 查询条件 */
       searchInfo: {
         paramName: '',
         paramKey: ''
