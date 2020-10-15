@@ -3,7 +3,11 @@ export default {
   name: 'HotRefresh',
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.$router.replace(from.path)
+      vm.$router.replace({
+        path: from.path,
+        query: from.query,
+        params: from.params
+      })
     })
   },
   render() {
