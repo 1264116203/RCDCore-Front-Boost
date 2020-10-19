@@ -32,7 +32,7 @@ export default {
     async fetchTableData () {
       this.isLoading = true
       try {
-        const data = (await this.axiosListWithPagination(this.current - 1, this.pageSize, this.searchInfo)).data
+        const data = (await this.axiosListWithPagination(this.pagination.current - 1, this.pagination.pageSize, this.searchInfo)).data
         this.tableData = data.content
         this.pagination.total = data.totalElements
       } catch (error) {
