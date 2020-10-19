@@ -129,7 +129,7 @@ export default {
       const formData = this.getFormDataForUpdate()
 
       try {
-        await this.axiosAdd(formData)
+        await this.axiosUpdate(formData)
         this.$emit('ok', this.actionType, formData)
         this.$message.success('数据更新成功!')
         this.formVisible = false
