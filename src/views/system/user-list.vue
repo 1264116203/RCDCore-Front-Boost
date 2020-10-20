@@ -191,6 +191,7 @@ export default {
         account: '',
         name: ''
       }
+      this.pagination.current = 1
       this.fetchTableData()
     },
     /** 单行删除按钮事件 */

@@ -34,7 +34,7 @@
       :columns="columns"
       :data-source="tableDataList"
       :row-selection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-      :pagination="false"
+      :pagination="pagination"
     >
       <template
         slot="operation"
@@ -136,7 +136,14 @@ export default {
       spinning: false,
       grantVisible: false,
       menuSelected: [],
-      nowId: []
+      nowId: [],
+      pagination: {
+        total: 200,
+        current: 1,
+        pageSize: 10,
+        showQuickJumper: true,
+        showSizeChanger: true
+      }
     }
   },
   computed: {
@@ -152,6 +159,7 @@ export default {
       listWithPagination(this.current - 1, this.pageSize, this.searchInfo)
         .then(res => {
           this.tableDataList = res.data.content
+          this.pagination.total = res.data.totalElements
           /** 数据从小到大排序 */
           this.tableDataList.sort(function(a, b) {
             return a.sort - b.sort
@@ -173,6 +181,7 @@ export default {
     },
     /** 清空按钮事件 */
     clearSearch () {
+      this.pagination.current = 1
       this.searchInfo = {
         name: '',
         code: ''

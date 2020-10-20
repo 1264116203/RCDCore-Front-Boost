@@ -10,7 +10,7 @@
       </a-form-model-item>
 
       <a-form-model-item>
-        <a-button type="primary" @click="fetchTableData">
+        <a-button type="primary" @click="onSearch">
           搜索
         </a-button>
       </a-form-model-item>

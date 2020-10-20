@@ -31,10 +31,12 @@ export const MainMixin = {
     },
     /** 搜索按钮事件 */
     onSearch () {
+      this.pagination.current = 1
       this.fetchTableData()
     },
     /** 清空按钮事件 */
     clearSearch () {
+      this.pagination.current = 1
       this.searchInfo = {
         serviceId: '',
         serverHost: ''

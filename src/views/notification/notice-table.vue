@@ -179,10 +179,12 @@ export default {
     },
     /** 搜索按钮事件 */
     onSearch () {
+      this.pagination.current = 1
       this.fetchNotificationData()
     },
     /** 清空按钮事件 */
     clearSearch () {
+      this.pagination.current = 1
       this.searchInfo = {
         read: '',
         title: '',

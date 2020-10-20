@@ -28,6 +28,9 @@ export const myMixin = {
     },
     /** 搜索按钮事件 */
     onSearch () {
+      if (this.pagination) {
+        this.pagination.current = 1
+      }
       this.fetchTableData()
     },
     /** 弹框确定事件 */

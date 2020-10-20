@@ -134,9 +134,14 @@ export default {
       this.$message.success('操作成功!')
       await this.fetchTableData()
     },
+    async onSearch() {
+      this.pagination.current = 1
+      await this.fetchTableData()
+    },
     /** 清空按钮事件 */
     async clearSearch() {
       this.$refs.searchForm.resetFields()
+      this.pagination.current = 1
       await this.fetchTableData()
     }
   }
