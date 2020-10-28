@@ -16,7 +16,7 @@
 
       <tabs />
 
-      <a-layout-content style="min-height: auto;">
+      <a-layout-content style="min-height: auto; display: flex">
         <div id="main-content" class="main-content padding-content">
           <div v-show="!isIframeShow">
             <keep-alive :include="keepAliveComponentNames">
@@ -130,6 +130,6 @@ export default {
     overflow: auto
   }
   .main-content {
-    height: 100%;
+    flex-grow: 1;
   }
 </style>

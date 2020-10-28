@@ -136,7 +136,7 @@ export default {
       })
     },
     getMenuItemByPath({ state }, path) {
-      const found = deepSearch(state.menuList, path)
+      const found = deepSearch(state.menuList, path, 'path')
       // eslint-disable-next-line prefer-promise-reject-errors
       return found ? Promise.resolve(found) : Promise.reject()
     }

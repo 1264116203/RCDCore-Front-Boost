@@ -57,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
           params: to.params,
           query: to.query,
           // 标签名直接使用路由表中的name
-          label: to.name,
+          label: to.query.tabName || to.name,
           meta: {
             ...meta,
             isIframe: path.indexOf('http') === 0
