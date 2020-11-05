@@ -27,7 +27,7 @@
           </a-form-item>
           <a-form-item label="用户姓名">
             <a-input
-              v-decorator="['name', { rules: [
+              v-decorator="['realName', { rules: [
                 { required: true, message: '请输入用户姓名' },
                 { min: 2, max: 5, message: '姓名长度在2到5个字符' }
               ]}]"
@@ -58,7 +58,7 @@
 
           <a-form-item label="用户昵称">
             <a-input
-              v-decorator="['realName', { rules: [
+              v-decorator="['name', { rules: [
                 { required: true, message: '请输入用户昵称' },
                 { whitespace: true, message:'用户昵称不能为空' }
               ]}]"
