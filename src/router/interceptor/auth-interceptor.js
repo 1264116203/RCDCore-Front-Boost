@@ -1,8 +1,5 @@
 import router from '@/router'
 import store from '@/store'
-import NProgress from 'nprogress'
-
-NProgress.configure({ showSpinner: false })
 
 router.beforeEach((to, from, next) => {
   const authenticated = store.getters.authenticated
