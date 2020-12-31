@@ -7,6 +7,7 @@ import system from './modules/system'
 import monitor from './modules/monitor'
 import notification from './modules/notification'
 import demos from './modules/demo'
+import leaveNote from './modules/leave-note'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,7 @@ layoutChildrenRoutes.push(...system)
 layoutChildrenRoutes.push(...monitor)
 layoutChildrenRoutes.push(...notification)
 layoutChildrenRoutes.push(...demos)
+layoutChildrenRoutes.push(...leaveNote)
 
 // 添加主框架页面到总路由表
 routes.push({
