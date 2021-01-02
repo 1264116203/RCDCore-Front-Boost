@@ -31,7 +31,6 @@
           allow-clear
           placeholder="请选择请假时间起"
         />
-        {{ formData.leaveStart }}
       </a-form-model-item>
       <a-form-model-item
         label="请假时间止" prop="leaveEnd"
@@ -45,7 +44,6 @@
           allow-clear
           placeholder="请选择请假时间止"
         />
-        {{ formData.leaveEnd }}
       </a-form-model-item>
       <a-form-model-item
         v-show="isDisplay" label="提交时间"

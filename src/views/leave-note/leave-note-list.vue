@@ -23,7 +23,7 @@
       <a-button v-show="!isDisplay" type="primary" @click="openCreateModal">
         添加
       </a-button>
-      <a-button type="danger" @click="commonBatchDelete">
+      <a-button v-show="!isDisplay" type="danger" @click="commonBatchDelete">
         批量删除
       </a-button>
     </div>
@@ -43,7 +43,7 @@
       <template #roverState="text">
         <span v-if="text === 0" style="color: #eadb5b">未审核</span>
         <span v-else-if="text === 1" style="color: #4dfd04">申请通过</span>
-        <span v-else style="color: #f5222d">申请被拒绝</span>
+        <span v-else-if="text === 2" style="color: #f5222d">申请被拒绝</span>
       </template>
       <template #operation="text, record">
         <div class="editable-row-operations">
@@ -55,7 +55,7 @@
             <a-icon type="edit" />
             修改
           </a>
-          <a-popconfirm title="是否删除?" @confirm="commonDeleteRecord(record.id)">
+          <a-popconfirm v-show="!isDisplay&&(tableData[0].approverState===0)" title="是否删除?" @confirm="commonDeleteRecord(record.id)">
             <a>
               <a-icon type="delete" />
               删除
@@ -154,6 +154,7 @@ export default {
       axiosBatchDelete: batchRemove
     })
     this.fetchTableData()
+    console.log('fetchTableData' + this.fetchTableData())
     this.roleList = JSON.parse(localStorage.getItem('RCDCore-userInfo')).content.roleList
     this.isDisplay = this.roleList.filter(e => {
       return e.roleAlias === 'minister'
