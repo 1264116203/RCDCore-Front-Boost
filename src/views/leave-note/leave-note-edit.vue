@@ -10,6 +10,17 @@
     <a-form-model ref="form" :model="formData" layout="vertical">
       <a-form-model-item
         v-show="false"
+        label="请假条id" prop="id"
+        :rules="[{ required: false, message: 'id' }]"
+      >
+        <a-input
+          v-model="formData.id"
+          :disabled="disable"
+          placeholder="请输入请假人姓名"
+        />
+      </a-form-model-item>
+      <a-form-model-item
+        v-show="false"
         label="请假人姓名" prop="realName"
         :rules="[{ required: false, message: '请输入请假人姓名' }]"
       >
@@ -58,7 +69,6 @@
           allow-clear
           placeholder="请选择提交时间"
         />
-        {{ formData.submitTime }}
       </a-form-model-item>
       <a-form-model-item
         label="请假事由" prop="leaveReason"
@@ -72,23 +82,19 @@
       </a-form-model-item>
       <a-form-model-item
         v-show="isDisplay"
-
         label="审批状态" prop="approverState"
         :rules="[{ required: false, message: '请输入审批状态' }]"
       >
-        <a-input-number
-          v-model="formData.approverState"
-          :setp="1"
-          :min="0"
-          :max="100"
-          style="width: 100%;"
-          allow-clear
-          placeholder="请输入审批状态"
-        />
+        <a-select v-model="formData.approverState" :size="size" default-value="未审核"
+                  style="width: 200px" @change="handleChange"
+        >
+          <a-select-option v-for="i in approverStates" :key="i.value">
+            {{ i.states }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item
         v-show="isDisplay"
-
         label="审批意见" prop="approverOpinion"
         :rules="[{ required: false, message: '请输入审批意见' }]"
       >
@@ -126,7 +132,7 @@ class FormData {
     /** 审批者 */
     this.approver = ''
     /** 审批状态 */
-    this.approverState = null
+    this.approverState = '0'
     /** 审批意见 */
     this.approverOpinion = ''
     /** 审批时间 */
@@ -139,6 +145,7 @@ export default {
   mixins: [ModelMixin],
   data() {
     return {
+      approverStates: [{ value: 0, states: '未审核' }, { value: 1, states: '通过' }, { value: 2, states: '未通过' }],
       // 使用角色权限控制是否显示
       isDisplay: false,
       // 角色列表
@@ -182,6 +189,29 @@ export default {
       } catch (error) {
         console.error(error)
       }
+      this.spinning = false
+    },
+    /**
+     * 缺省的修改记录处理
+     *
+     * 自带一系列默认行为，如管理对话框加载状态等
+     * 如果不符合需求可以重写
+     */
+    async commonUpdate() {
+      this.spinning = true
+      const formData = this.getFormDataForUpdate()
+      formData.leaveStart = moment(formData.leaveStart).valueOf()
+      formData.leaveEnd = moment(formData.leaveEnd).valueOf()
+      formData.submitTime = moment(formData.submitTime).valueOf()
+      try {
+        await this.axiosUpdate(formData)
+        this.$emit('ok', this.actionType, formData)
+        this.$message.success('数据更新成功!')
+        this.formVisible = false
+      } catch (error) {
+        console.error(error)
+      }
+
       this.spinning = false
     },
     /**
